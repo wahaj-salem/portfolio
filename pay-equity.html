@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تحليل عدالة الرواتب — وهج الكبيري</title>
+<meta name="description" content="مشروع تحليل عدالة الأجور على بيانات تركيبية لـ 420 موظفاً باستخدام Power BI: تفكيك الفجوة الخام إلى أثر التوزيع الوظيفي وفجوة غير مُفسَّرة.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#070B1E;
+  --navy-800:#0B1130;
+  --navy-700:#121A44;
+  --line:rgba(255,255,255,.09);
+  --text:#EEF1FF;
+  --muted:#969FCE;
+  --cyan:#4FD2FF;
+  --purple:#9D7BFF;
+  --pink:#F2A6E0;
+  --grad:linear-gradient(115deg,#4FD2FF 0%,#9D7BFF 48%,#F2A6E0 100%);
+  --display:'El Messiri',serif;
+  --mono:'Space Grotesk',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--navy-900);
+  color:var(--text);
+  font-family:'Tajawal',system-ui,sans-serif;
+  font-weight:300;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60rem 34rem at 88% -8%,rgba(56,225,255,.13),transparent 62%),
+    radial-gradient(52rem 32rem at 4% 18%,rgba(139,92,246,.15),transparent 60%),
+    radial-gradient(46rem 30rem at 62% 104%,rgba(255,95,162,.10),transparent 62%);
+}
+::selection{background:rgba(157,123,255,.35);color:#fff}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* ---------- header ---------- */
+.top{padding:34px 0 0}
+.back{
+  display:inline-flex;align-items:center;gap:9px;
+  color:var(--muted);text-decoration:none;font-size:.86rem;
+  border:1px solid var(--line);border-radius:999px;padding:7px 16px;
+  transition:.25s;
+}
+.back:hover{color:var(--text);border-color:rgba(56,225,255,.45)}
+
+/* ---------- hero ---------- */
+.hero{padding:56px 0 30px}
+.eyebrow{
+  font-family:var(--mono);font-size:.73rem;letter-spacing:.16em;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:var(--display);
+  font-size:clamp(2.1rem,5.6vw,3.6rem);font-weight:600;line-height:1.25;
+  letter-spacing:-.01em;margin-bottom:22px;
+}
+h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:clamp(1.02rem,2.1vw,1.16rem);color:#c3cce4;max-width:62ch}
+
+.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
+.tag{
+  font-family:var(--mono);font-size:.75rem;color:var(--muted);
+  border:1px solid var(--line);border-radius:6px;padding:5px 12px;
+}
+
+/* ---------- headline stats ---------- */
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;margin:46px 0 8px;
+}
+.stat{background:var(--navy-800);padding:26px 22px}
+.stat b{
+  display:block;font-family:var(--mono);font-size:1.95rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:5px;
+}
+.stat.c1 b{color:var(--cyan)} .stat.c2 b{color:var(--purple)}
+.stat.c3 b{color:var(--pink)} .stat.c4 b{color:#e8ecf8}
+.stat span{font-size:.83rem;color:var(--muted);line-height:1.6;display:block}
+
+/* ---------- sections ---------- */
+section{padding:62px 0;border-top:1px solid var(--line);margin-top:56px}
+h2{
+  font-family:var(--display);
+  font-size:clamp(1.4rem,3vw,1.85rem);font-weight:600;
+  letter-spacing:-.01em;margin-bottom:10px;
+}
+h2::before{
+  content:"";display:block;width:46px;height:3px;border-radius:2px;
+  background:var(--grad);margin-bottom:18px;
+}
+h3{font-size:1.06rem;font-weight:600;margin:34px 0 10px;color:#eef2ff}
+p{margin-bottom:16px;color:#c3cce4;max-width:70ch}
+p.tight{margin-bottom:8px}
+strong{font-weight:600;color:#fff}
+
+/* ---------- steps ---------- */
+.step{
+  border-inline-start:2px solid var(--line);
+  padding:0 24px 30px;position:relative;
+}
+.step:last-child{padding-bottom:4px}
+.step::before{
+  content:"";position:absolute;inset-inline-start:-6px;top:9px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 0 4px rgba(56,225,255,.14);
+}
+.step:nth-child(2)::before{background:var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,.16)}
+.step:nth-child(3)::before{background:var(--pink);box-shadow:0 0 0 4px rgba(255,95,162,.14)}
+.step:nth-child(4)::before{background:var(--cyan);box-shadow:0 0 0 4px rgba(56,225,255,.14)}
+.step:nth-child(5)::before{background:var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,.16)}
+.step h3{margin-top:0}
+.why{
+  font-size:.9rem;color:var(--muted);border-inline-start:2px solid rgba(139,92,246,.4);
+  padding-inline-start:14px;margin-top:12px;max-width:66ch;
+}
+.why b{color:#cbd4ee;font-weight:500}
+
+/* ---------- table ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:26px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:560px}
+th,td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line)}
+th{
+  background:var(--navy-700);font-family:var(--mono);font-size:.74rem;
+  font-weight:500;color:#b9c5e6;letter-spacing:.04em;
+}
+td{font-family:var(--mono);font-weight:400;color:#d5ddf2}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even) td{background:rgba(255,255,255,.017)}
+.gap-hi{color:var(--pink);font-weight:500}
+.gap-neg{color:var(--cyan);font-weight:500}
+.thin{color:var(--muted)}
+.note{font-size:.83rem;color:var(--muted);margin-top:10px}
+
+/* ---------- findings ---------- */
+.find{
+  background:var(--navy-800);border:1px solid var(--line);
+  border-radius:14px;padding:26px 26px 22px;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.find::after{
+  content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad);
+}
+.find .num{
+  font-family:var(--mono);font-size:.73rem;color:var(--cyan);
+  letter-spacing:.14em;display:block;margin-bottom:8px;
+}
+.find h3{margin:0 0 10px}
+.find p:last-child{margin-bottom:0}
+
+/* ---------- recommendations ---------- */
+.rec{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.rec:last-child{border-bottom:none}
+.rec .mark{
+  flex:0 0 auto;width:30px;height:30px;border-radius:9px;
+  display:grid;place-items:center;font-family:var(--mono);font-size:.82rem;
+  background:rgba(139,92,246,.14);color:#c4b5fd;border:1px solid rgba(139,92,246,.3);
+}
+.rec div p{margin-bottom:0}
+.rec h3{margin:0 0 5px;font-size:1rem}
+
+/* ---------- interactive viz ---------- */
+.viz{
+  background:var(--navy-800);border:1px solid var(--line);
+  border-radius:16px;padding:24px;margin-top:28px;
+}
+.viz-head h3{margin:0;font-size:1.15rem}
+.viz-sub{font-size:.82rem;color:var(--muted);margin:2px 0 0}
+.grades{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0 22px}
+.gbtn{
+  font-family:var(--mono);font-size:.86rem;color:var(--muted);
+  background:transparent;border:1px solid var(--line);border-radius:9px;
+  min-width:42px;padding:8px 10px;cursor:pointer;transition:.18s;
+}
+.gbtn:hover{color:var(--text);border-color:rgba(56,225,255,.4)}
+.gbtn[aria-selected="true"]{
+  color:#061225;font-weight:600;border-color:transparent;background:var(--grad);
+}
+.gbtn.empty{opacity:.45}
+
+.panel{display:grid;grid-template-columns:1.35fr 1fr;gap:26px;align-items:start}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.bar-lbl{flex:0 0 54px;font-size:.85rem;color:var(--muted)}
+.bar-track{
+  flex:1;height:30px;border-radius:7px;
+  background:rgba(255,255,255,.04);overflow:hidden;
+}
+.bar{
+  height:100%;width:0;border-radius:7px;
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+.bar.f{background:linear-gradient(90deg,var(--pink),var(--purple))}
+.bar.m{background:linear-gradient(90deg,var(--purple),var(--cyan))}
+.bar-val{flex:0 0 76px;font-family:var(--mono);font-size:.86rem;text-align:start;color:#dfe6f8}
+.bar-note{font-family:var(--mono);font-size:.83rem;margin:6px 0 0;color:var(--muted)}
+
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.fact{background:var(--navy-700);padding:13px 14px}
+.fact span{display:block;font-size:.74rem;color:var(--muted);margin-bottom:3px}
+.fact b{font-family:var(--mono);font-size:.98rem;font-weight:500;color:#e6ecfb}
+
+.viz-read{
+  margin:22px 0 0;font-size:.92rem;color:#c3cce4;
+  border-top:1px solid var(--line);padding-top:18px;max-width:none;
+}
+
+/* ---------- distribution ---------- */
+.dist{margin-top:22px;display:grid;gap:7px}
+.drow{display:flex;align-items:center;gap:11px}
+.drow .lbl{flex:0 0 62px;font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.dtrack{flex:1;display:flex;height:22px;border-radius:6px;overflow:hidden;background:rgba(255,255,255,.04)}
+.dseg{height:100%;transition:width .5s ease}
+.dseg.f{background:linear-gradient(90deg,var(--pink),rgba(255,95,162,.65))}
+.dseg.m{background:rgba(120,150,220,.28)}
+.drow .pct{flex:0 0 46px;font-family:var(--mono);font-size:.78rem;color:#d9c2d6;text-align:start}
+
+/* ---------- disclosure ---------- */
+.disc{
+  border:1px dashed rgba(255,95,162,.34);border-radius:12px;
+  padding:20px 22px;background:rgba(255,95,162,.045);
+}
+.disc p{margin-bottom:0;color:#dfd0e2;font-size:.94rem}
+
+footer{
+  border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
+  color:var(--muted);font-size:.85rem;
+}
+footer a{color:var(--cyan);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:760px){
+  .panel{grid-template-columns:1fr;gap:20px}
+}
+@media (max-width:640px){
+  section{padding:46px 0;margin-top:38px}
+  .hero{padding:38px 0 18px}
+  .step{padding-inline:18px}
+  .viz{padding:18px}
+  .bar-lbl{flex-basis:44px;font-size:.8rem}
+  .bar-val{flex-basis:66px;font-size:.8rem}
+  .drow .lbl{flex-basis:52px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">→ العودة إلى الملف التعريفي</a>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">HR Analytics · Power BI</div>
+    <h1>تحليل <span class="g">عدالة الرواتب</span><br>في شركة مقاولات</h1>
+    <p class="lede">
+      بدأت هذا المشروع بسؤال واحد: لو طلع لدينا فرق في متوسط رواتب الرجال والنساء، هل هذا دليل على تمييز؟
+      الإجابة أعقد من نعم أو لا، وهذا التحليل يشرح كيف نفكّك الرقم بدل ما نأخذه كما هو.
+    </p>
+    <div class="tags">
+      <span class="tag">Power BI</span>
+      <span class="tag">Power Query</span>
+      <span class="tag">DAX</span>
+      <span class="tag">Excel</span>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat c1"><b>25.24%</b><span>الفجوة الخام في وسيط الأجر</span></div>
+    <div class="stat c2"><b>3–19%</b><span>الفجوة المتبقية داخل نفس الدرجة</span></div>
+    <div class="stat c3"><b>0</b><span>امرأة في الدرجتين 9 و 10</span></div>
+    <div class="stat c4"><b>420</b><span>سجل موظف بعد التنظيف</span></div>
+  </div>
+
+  <!-- ================= السياق ================= -->
+  <section>
+    <h2>لماذا هذا المشروع</h2>
+    <p>
+      تحليل عدالة الأجور من أكثر الملفات اللي يُساء استخدام الأرقام فيها. تطلع مؤسسة بخبر أن الفجوة عندها 20%،
+      ويقرأها البعض كإثبات تمييز، بينما تكون في الحقيقة انعكاساً لتوزيع الموظفين على الدرجات الوظيفية.
+      والعكس صحيح: مؤسسة تعلن أن الفجوة عندها 2% وتتجاهل أن نساءها كلهن في أسفل السلّم.
+    </p>
+    <p>
+      اللي يهمني كأخصائية موارد بشرية أن أفرّق بين الحالتين، لأن كل واحدة منهما لها علاج مختلف تماماً.
+      بنيت المشروع على بيانات تركيبية صُمّمت لتشبه هيكل شركة مقاولات سعودية، وفيها فجوة مخبأة عمداً،
+      عشان أختبر إذا كانت المنهجية قادرة على كشفها.
+    </p>
+
+    <div class="disc" style="margin-top:26px">
+      <p>
+        <strong>البيانات في هذا المشروع تركيبية بالكامل.</strong>
+        وُلّدت لأغراض التعلّم ولا تخص أي جهة أو موظفين حقيقيين. المنهجية وحدها هي القابلة للنقل على بيانات فعلية.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= المنهجية ================= -->
+  <section>
+    <h2>كيف اشتغلت عليه</h2>
+    <p>خمس مراحل، كل وحدة تجاوب على سؤال قبل ما ننتقل للي بعده.</p>
+
+    <div class="step">
+      <h3>تنظيف البيانات</h3>
+      <p class="tight">
+        حذف السجلات المكررة بالرقم الوظيفي، وتوحيد قيم الجنس والأقسام. كان في قسم مكتوب بصيغتين بسبب مسافة زائدة
+        في نهاية النص، وخمسة سجلات مختصرة في عمود الجنس.
+      </p>
+      <p class="why">
+        <b>التفسير:</b> Power BI ما يعطيك رسالة خطأ لو تكرر مسمى بصيغتين — يتعامل معها كفئتين مستقلتين
+        ويطلّع لك رقماً يبدو منطقياً وهو خاطئ. أول محاولة لحساب الفجوة عندي طلعت 25.88% بسبب خمسة سجلات ساقطة.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>توحيد الأجور على أساس الدوام الكامل</h3>
+      <p class="tight">
+        بنيت عمود <code style="font-family:var(--mono);font-size:.85em;color:#a5b4fc">Basic FTE</code>
+        يقسم الراتب على نسبة دوام الموظف.
+      </p>
+      <p class="why">
+        <b>التفسير:</b> موظف الدوام الجزئي راتبه أقل لأنه يشتغل ساعات أقل، مو لأن في ظلم. بدون هذا التعديل
+        يدخل فرق الساعات في حساب الفجوة ويشوّهها.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>قياس الفجوة الخام</h3>
+      <p class="tight">
+        قارنت وسيط أجر النساء بوسيط أجر الرجال على مستوى الشركة كاملة.
+      </p>
+      <p class="why">
+        <b>التفسير:</b> المتوسط يتأثر بعدد قليل من الرواتب المرتفعة جداً. في هذه البيانات كل شاغلي
+        الدرجتين العليا رجال، فالمتوسط كان بيضخّم الفجوة بسبب ستة أشخاص لا بسبب الوضع العام.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>فحص المبررات المشروعة</h3>
+      <p class="tight">
+        قبل ما أسمّي أي فرق "غير مبرر"، قست أربعة عوامل تفسّر عادةً اختلاف الأجور بين موظفَين في نفس الدرجة:
+        مدة الخدمة، الخبرة السابقة، تقييم الأداء، والدور الإشرافي.
+      </p>
+      <p class="why">
+        <b>التفسير:</b> بدون هذه الخطوة يكون التحليل اتهاماً لا تحليلاً. ولو ظهر أن العوامل تفسّر الفجوة،
+        فالنتيجة نتيجة صحيحة تستحق أن تُقال.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>المقارنة داخل نفس الدرجة</h3>
+      <p class="tight">
+        كررت المقارنة داخل كل درجة وظيفية على حدة، بحيث ما أقارن إلا أشخاصاً في نفس المستوى.
+      </p>
+      <p class="why">
+        <b>التفسير:</b> هنا يظهر الفرق بين مشكلة في <b>أجر الوظيفة الواحدة</b> ومشكلة في <b>توزيع الوظائف</b>.
+        وهذا الفرق هو ما يحدد التوصية.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= النتائج ================= -->
+  <section>
+    <h2>النتائج</h2>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>الدرجة</th><th>عدد النساء</th><th>عدد الرجال</th>
+            <th>وسيط أجر النساء</th><th>وسيط أجر الرجال</th><th>الفجوة</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>17</td><td>27</td><td>4,050</td><td>4,833</td><td class="gap-hi">16.21%</td></tr>
+          <tr><td>2</td><td>13</td><td>40</td><td>4,700</td><td>5,158</td><td>8.89%</td></tr>
+          <tr><td>3</td><td>19</td><td>57</td><td>5,800</td><td>6,150</td><td>5.69%</td></tr>
+          <tr><td>4</td><td>9</td><td>53</td><td>6,500</td><td>7,350</td><td class="gap-hi">11.56%</td></tr>
+          <tr><td>5</td><td>9</td><td>48</td><td>8,500</td><td>8,800</td><td>3.41%</td></tr>
+          <tr><td>6</td><td>7</td><td>41</td><td>9,950</td><td>10,950</td><td>9.13%</td></tr>
+          <tr><td>7</td><td>4</td><td>24</td><td>10,725</td><td>13,225</td><td class="gap-hi">18.90%</td></tr>
+          <tr><td>8</td><td>4</td><td>27</td><td>16,950</td><td>15,500</td><td class="gap-neg">−9.35%</td></tr>
+          <tr><td>9</td><td class="thin">0</td><td>15</td><td class="thin">—</td><td>19,950</td><td class="thin">—</td></tr>
+          <tr><td>10</td><td class="thin">0</td><td>6</td><td class="thin">—</td><td>22,342</td><td class="thin">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">
+      الأجور بالريال السعودي على أساس الدوام الكامل. الدرجات 7 و 8 فيها أربع موظفات فقط، فأرقامها أقل استقراراً
+      من غيرها ولا تصلح لبناء قرار عليها وحدها.
+    </p>
+
+    <div style="margin-top:34px">
+      <div class="find">
+        <span class="num">النتيجة الأولى</span>
+        <h3>ثلثا الفجوة سببها التوزيع، لا الأجر نفسه</h3>
+        <p>
+          الفجوة الخام 25.24%، لكنها تنكمش إلى ما بين 3% و 19% لما نقارن داخل نفس الدرجة.
+          هذا يعني أن الجزء الأكبر منها ناتج عن مكان النساء في الهيكل الوظيفي، لا عن الأجر المقرّر للوظيفة الواحدة.
+        </p>
+      </div>
+
+      <div class="find">
+        <span class="num">النتيجة الثانية</span>
+        <h3>انعدام كامل للتمثيل في القمة</h3>
+        <p>
+          نسبة النساء تنخفض بشكل مطّرد كلما ارتفعت الدرجة: 60% في الدرجات الدنيا، 10% في الدرجتين 7 و 8،
+          وصفر في الدرجتين 9 و 10.
+        </p>
+      </div>
+
+      <div class="find">
+        <span class="num">النتيجة الثالثة</span>
+        <h3>فجوة متبقية لم تفسّرها العوامل المشروعة</h3>
+        <p>
+          العوامل الأربعة لم تفسّر إلا جزءاً محدوداً. أوضح مثال في الدرجة الثالثة: النساء هناك
+          <strong>أقدم</strong> في الشركة (4.1 سنة مقابل 3.3)، وبخبرة سابقة متطابقة تقريباً،
+          ولا أحد من الطرفين في دور إشرافي — ومع ذلك وسيط أجرهن أقل بنسبة 5.69%.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= اللوحة ================= -->
+  <section>
+    <h2>استكشف الأرقام</h2>
+    <p>
+      اللوحة الأصلية مبنية في Power BI على مقاييس DAX تعيد الحساب مع كل فلتر. أعدت بناء مخرجاتها هنا
+      لتتصفّحها مباشرة: اختر درجة وظيفية وشوف تركيبتها والعوامل المفسّرة فيها.
+    </p>
+
+    <div class="viz">
+      <div class="viz-head">
+        <h3 id="gradeTitle">الدرجة 3</h3>
+        <p class="viz-sub">اضغط على أي درجة لتغيير العرض</p>
+      </div>
+
+      <div class="grades" role="tablist" aria-label="اختيار الدرجة الوظيفية"></div>
+
+      <div class="panel">
+        <div class="bars">
+          <div class="bar-row">
+            <span class="bar-lbl">النساء</span>
+            <div class="bar-track"><div class="bar f" id="barF"></div></div>
+            <span class="bar-val" id="valF">—</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-lbl">الرجال</span>
+            <div class="bar-track"><div class="bar m" id="barM"></div></div>
+            <span class="bar-val" id="valM">—</span>
+          </div>
+          <p class="bar-note" id="gapNote"></p>
+        </div>
+
+        <div class="facts">
+          <div class="fact"><span>العدد</span><b id="fCount">—</b></div>
+          <div class="fact"><span>مدة الخدمة (سنة)</span><b id="fTenure">—</b></div>
+          <div class="fact"><span>الخبرة السابقة (سنة)</span><b id="fExp">—</b></div>
+          <div class="fact"><span>تقييم الأداء</span><b id="fPerf">—</b></div>
+        </div>
+      </div>
+      <p class="viz-read" id="readOut"></p>
+    </div>
+
+    <h3 style="margin-top:44px">توزيع النساء والرجال على السلّم الوظيفي</h3>
+    <p>كل شريط يمثل درجة وظيفية، وعرض الجزء الملوّن هو نسبة كل جنس فيها.</p>
+    <div class="dist" id="dist"></div>
+    <p class="note">تنخفض نسبة النساء من 39% في الدرجة الأولى إلى صفر في الدرجتين التاسعة والعاشرة.</p>
+  </section>
+
+  <!-- ================= التوصيات ================= -->
+  <section>
+    <h2>التوصيات</h2>
+
+    <div class="rec">
+      <span class="mark">١</span>
+      <div>
+        <h3>مراجعة فردية للحالات داخل الدرجات ذات الفجوة الأعلى</h3>
+        <p>الدرجات 1 و 4 و 7 تستحق فحص ملفات أفرادها: تاريخ الالتحاق، الراتب الابتدائي، وسجل الزيادات. الرقم الإجمالي يحدد أين ننظر، والملف الفردي هو اللي يفسّر.</p>
+      </div>
+    </div>
+
+    <div class="rec">
+      <span class="mark">٢</span>
+      <div>
+        <h3>فحص مسار الترقية بدل جدول الرواتب</h3>
+        <p>غياب النساء عن الدرجتين العليا لا يُعالَج بزيادة رواتب. يُعالَج بمراجعة معايير الترشيح للأدوار الإشرافية ومن يُدعى إليها.</p>
+      </div>
+    </div>
+
+    <div class="rec">
+      <span class="mark">٣</span>
+      <div>
+        <h3>مراجعة الراتب عند التعيين</h3>
+        <p>الفجوة موجودة في الدرجات الدنيا حيث الخبرة السابقة قريبة من الصفر للطرفين، وهو ما يوجّه الشك نحو نقطة الدخول لا نحو الزيادات اللاحقة.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ماذا تعلمت ================= -->
+  <section>
+    <h2>ما خرجت به</h2>
+    <p>
+      أكثر شيء لفتني أن الخطأ الوحيد اللي كاد يفسد النتيجة كان خطأ إملائياً في خمس خلايا.
+      البرنامج ما اعترض، وأعطاني رقماً معقولاً تماماً — 25.88% بدل 25.24%. لو ما دققت في مصدر الفرق،
+      كان التقرير راح يطلع بأرقام خاطئة وهو يبدو سليماً.
+    </p>
+    <p>
+      والدرس الثاني أن الرقم الواحد نادراً ما يكون الإجابة. "الفجوة 25%" جملة صحيحة إحصائياً ومضللة إدارياً،
+      لأنها تدفع لعلاج خاطئ. تفكيكها هو اللي يحوّل التحليل من خبر إلى قرار.
+    </p>
+  </section>
+
+  <footer>
+    <p style="margin:0">
+      وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات ·
+      <a href="index.html">بقية المشاريع</a>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var D = [
+    {g:1,  f:17, m:27, pf:4050,  pm:4833,  gap:16.21, tf:2.50,  tm:4.00, ef:0.30, em:2.35, rf:3.12, rm:3.44},
+    {g:2,  f:13, m:40, pf:4700,  pm:5158,  gap:8.89,  tf:2.30,  tm:2.25, ef:0.55, em:1.10, rf:3.23, rm:3.29},
+    {g:3,  f:19, m:57, pf:5800,  pm:6150,  gap:5.69,  tf:4.10,  tm:3.30, ef:3.50, em:3.60, rf:3.26, rm:3.42},
+    {g:4,  f:9,  m:53, pf:6500,  pm:7350,  gap:11.56, tf:5.10,  tm:4.50, ef:3.20, em:3.90, rf:3.39, rm:3.33},
+    {g:5,  f:9,  m:48, pf:8500,  pm:8800,  gap:3.41,  tf:5.60,  tm:6.05, ef:5.90, em:3.80, rf:3.39, rm:3.25},
+    {g:6,  f:7,  m:41, pf:9950,  pm:10950, gap:9.13,  tf:4.80,  tm:5.70, ef:3.30, em:5.70, rf:3.21, rm:3.38},
+    {g:7,  f:4,  m:24, pf:10725, pm:13225, gap:18.90, tf:5.75,  tm:6.70, ef:7.45, em:6.20, rf:3.50, rm:3.09},
+    {g:8,  f:4,  m:27, pf:16950, pm:15500, gap:-9.35, tf:13.65, tm:6.70, ef:6.35, em:7.70, rf:3.80, rm:3.37},
+    {g:9,  f:0,  m:15, pf:null,  pm:19950, gap:null,  tf:null,  tm:7.90, ef:null, em:9.20, rf:null, rm:3.59},
+    {g:10, f:0,  m:6,  pf:null,  pm:22342, gap:null,  tf:null,  tm:8.85, ef:null, em:8.85, rf:null, rm:3.05}
+  ];
+
+  var MAXPAY = 23000;
+  var nf = new Intl.NumberFormat('en-US');
+  var $ = function (id) { return document.getElementById(id); };
+  var pair = function (a, b) {
+    if (a === null) return '— / ' + b.toFixed(2);
+    return a.toFixed(2) + ' / ' + b.toFixed(2);
+  };
+
+  function render(d) {
+    $('gradeTitle').textContent = 'الدرجة ' + d.g;
+
+    $('barF').style.width = d.pf ? (d.pf / MAXPAY * 100) + '%' : '0%';
+    $('barM').style.width = (d.pm / MAXPAY * 100) + '%';
+    $('valF').textContent = d.pf ? nf.format(d.pf) : '—';
+    $('valM').textContent = nf.format(d.pm);
+
+    $('fCount').textContent  = (d.f || '0') + ' / ' + d.m;
+    $('fTenure').textContent = pair(d.tf, d.tm);
+    $('fExp').textContent    = pair(d.ef, d.em);
+    $('fPerf').textContent   = pair(d.rf, d.rm);
+
+    var note = $('gapNote'), read = $('readOut');
+
+    if (d.gap === null) {
+      note.textContent = 'لا توجد موظفات في هذه الدرجة — المقارنة غير ممكنة.';
+      note.style.color = 'var(--pink)';
+      read.textContent = 'الدرجة ' + d.g + ' يشغلها ' + d.m +
+        ' موظفاً، جميعهم رجال. غياب أي تمثيل نسائي هنا هو ما يفسّر الجزء الأكبر من الفجوة الخام على مستوى الشركة.';
+      return;
+    }
+
+    var pos = d.gap > 0;
+    note.textContent = 'الفجوة: ' + (pos ? '' : '−') + Math.abs(d.gap).toFixed(2) + '% ' +
+      (pos ? 'لصالح الرجال' : 'لصالح النساء');
+    note.style.color = pos ? 'var(--pink)' : 'var(--cyan)';
+
+    var s = 'في هذه الدرجة ' + d.f + ' موظفات و' + d.m + ' موظفاً. ';
+    if (!pos) {
+      s += 'وسيط أجر النساء هنا يفوق أجر الرجال، ويرافقه فارق واضح في مدة الخدمة لصالحهن.';
+    } else if (d.tf >= d.tm && d.rf >= d.rm) {
+      s += 'النساء أطول خدمةً وأعلى تقييماً، ومع ذلك أجرهن أقل — لا يوجد عامل مشروع يفسّر الفارق.';
+    } else if (d.tf >= d.tm) {
+      s += 'النساء أطول خدمةً من الرجال، ومع ذلك أجرهن أقل.';
+    } else {
+      s += 'الفارق في العوامل المفسّرة محدود ولا يكفي لتبرير فجوة بهذا الحجم.';
+    }
+    if (d.f < 10) s += ' العينة صغيرة، فالرقم هنا إشارة لا قرار.';
+    read.textContent = s;
+  }
+
+  var bar = document.querySelector('.grades');
+  D.forEach(function (d, i) {
+    var b = document.createElement('button');
+    b.className = 'gbtn' + (d.f === 0 ? ' empty' : '');
+    b.type = 'button';
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', d.g === 3 ? 'true' : 'false');
+    b.textContent = d.g;
+    b.addEventListener('click', function () {
+      bar.querySelectorAll('.gbtn').forEach(function (x) { x.setAttribute('aria-selected', 'false'); });
+      b.setAttribute('aria-selected', 'true');
+      render(d);
+    });
+    bar.appendChild(b);
+  });
+
+  var dist = $('dist');
+  D.forEach(function (d) {
+    var total = d.f + d.m, p = Math.round(d.f / total * 100);
+    var row = document.createElement('div');
+    row.className = 'drow';
+    row.innerHTML =
+      '<span class="lbl">درجة ' + d.g + '</span>' +
+      '<div class="dtrack"><div class="dseg f" style="width:' + p + '%"></div>' +
+      '<div class="dseg m" style="width:' + (100 - p) + '%"></div></div>' +
+      '<span class="pct">' + p + '%</span>';
+    dist.appendChild(row);
+  });
+
+  render(D[2]);
+})();
+</script>
+</body>
+</html>

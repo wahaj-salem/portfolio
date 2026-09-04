@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>وهج الكبيري — حيث تلتقي الموارد البشرية بعلم البيانات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070B1E;
+    --bg-2:#0B1130;
+    --surface:rgba(255,255,255,.035);
+    --surface-2:rgba(255,255,255,.055);
+    --border:rgba(255,255,255,.09);
+    --border-glow:rgba(120,170,255,.35);
+    --cyan:#4FD2FF;
+    --violet:#9D7BFF;
+    --purple:#B66BFF;
+    --pink:#F2A6E0;
+    --text:#EEF1FF;
+    --muted:#969FCE;
+    --glow:linear-gradient(115deg,#4FD2FF 0%,#9D7BFF 48%,#F2A6E0 100%);
+    --display:'El Messiri',serif;
+    --body:'Tajawal',sans-serif;
+    --latin:'Space Grotesk',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.75;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(157,123,255,.35);color:#fff}
+
+  /* ---------- ambient aurora background ---------- */
+  .aurora{position:fixed;inset:0;z-index:-2;overflow:hidden}
+  .aurora::before,.aurora::after{
+    content:"";position:absolute;border-radius:50%;
+    filter:blur(90px);opacity:.55;
+    animation:drift 26s ease-in-out infinite alternate;
+  }
+  .aurora::before{
+    width:55vw;height:55vw;top:-12vw;right:-8vw;
+    background:radial-gradient(circle at 30% 30%,rgba(79,210,255,.55),transparent 62%);
+  }
+  .aurora::after{
+    width:50vw;height:50vw;bottom:-14vw;left:-6vw;
+    background:radial-gradient(circle at 60% 40%,rgba(182,107,255,.5),transparent 62%);
+    animation-duration:32s;
+  }
+  .aurora span{
+    position:absolute;width:42vw;height:42vw;border-radius:50%;
+    top:35%;left:42%;filter:blur(110px);opacity:.35;
+    background:radial-gradient(circle,rgba(242,166,224,.5),transparent 60%);
+    animation:drift 38s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    from{transform:translate(0,0) scale(1)}
+    to{transform:translate(4vw,3vh) scale(1.15)}
+  }
+  #stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.025;
+    background-image:radial-gradient(rgba(255,255,255,.8) .5px,transparent .5px);
+    background-size:3px 3px;}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;inset-inline:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px clamp(20px,5vw,72px);
+    backdrop-filter:blur(14px);
+    background:linear-gradient(to bottom,rgba(7,11,30,.72),rgba(7,11,30,0));
+    transition:background .4s,padding .4s;
+  }
+  nav.scrolled{background:rgba(7,11,30,.82);border-bottom:1px solid var(--border);padding-block:13px}
+  .brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:.5px;
+    background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 24px rgba(120,170,255,.25)}
+  .nav-links{display:flex;gap:34px;list-style:none}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:.96rem;font-weight:500;position:relative;transition:color .3s}
+  .nav-links a::after{content:"";position:absolute;bottom:-6px;right:0;width:0;height:2px;border-radius:2px;background:var(--glow);transition:width .35s}
+  .nav-links a:hover{color:var(--text)}
+  .nav-links a:hover::after{width:100%}
+  .nav-toggle{display:none;background:none;border:none;color:var(--text);font-size:1.6rem;cursor:pointer}
+
+  /* ---------- layout ---------- */
+  section{padding:clamp(80px,11vw,150px) clamp(20px,6vw,72px);position:relative}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.82rem;font-weight:500;
+    letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:22px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--glow)}
+  h2.section-title{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,4vw,2.9rem);
+    line-height:1.25;margin-bottom:18px}
+  .section-intro{color:var(--muted);max-width:620px;font-size:1.05rem;margin-bottom:56px}
+
+  /* ---------- hero ---------- */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding-top:120px}
+  .hero .kicker{font-size:.9rem;letter-spacing:5px;color:var(--muted);text-transform:uppercase;margin-bottom:24px;
+    opacity:0;animation:rise .9s .2s forwards}
+  .hero-emblem{margin-bottom:-4px;opacity:0;filter:drop-shadow(0 0 18px rgba(120,200,255,.5));
+    animation:rise 1s .25s forwards,pulse 5s 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{filter:drop-shadow(0 0 14px rgba(157,123,255,.4))}
+    50%{filter:drop-shadow(0 0 30px rgba(120,200,255,.7))}}
+  .glow-name{font-family:var(--display);font-weight:700;font-size:clamp(5rem,21vw,15rem);line-height:1.18;
+    padding:0 .12em .08em;position:relative;background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent;
+    opacity:0;animation:ignite 1.6s .35s cubic-bezier(.2,.7,.2,1) forwards}
+  .glow-name::after{content:"وهج";position:absolute;inset:0;background:var(--glow);
+    -webkit-background-clip:text;background-clip:text;color:transparent;filter:blur(26px);opacity:.65;z-index:-1}
+  .surname{font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,5vw,2.6rem);color:var(--text);
+    letter-spacing:8px;margin-top:8px;opacity:0;animation:rise 1s .9s forwards}
+  .hero .tagline{margin-top:34px;font-size:clamp(1rem,2.4vw,1.3rem);color:var(--muted);max-width:560px;
+    opacity:0;animation:rise 1s 1.15s forwards}
+  .hero .tagline b{color:var(--text);font-weight:500}
+  .hero-stats{display:flex;gap:clamp(26px,5vw,64px);margin-top:54px;opacity:0;animation:rise 1s 1.4s forwards}
+  .hero-stats .stat{text-align:center}
+  .hero-stats .num{font-family:var(--latin);font-size:clamp(1.7rem,4vw,2.3rem);font-weight:600;
+    background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-stats .lab{font-size:.82rem;color:var(--muted);letter-spacing:1px;margin-top:4px}
+  .scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:.75rem;letter-spacing:2px;
+    opacity:0;animation:rise 1s 1.7s forwards}
+  .scroll-cue .mouse{width:22px;height:36px;border:1.5px solid var(--border-glow);border-radius:12px;position:relative}
+  .scroll-cue .mouse::before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);
+    width:3px;height:7px;border-radius:2px;background:var(--cyan);animation:wheel 1.6s infinite}
+  @keyframes wheel{0%{opacity:1;top:7px}70%{opacity:0;top:18px}100%{opacity:0}}
+  @keyframes ignite{0%{opacity:0;filter:brightness(.4) blur(8px);transform:translateY(26px) scale(.97)}
+    60%{opacity:1;filter:brightness(1.25) blur(0)}100%{opacity:1;filter:brightness(1) blur(0);transform:none}}
+  @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+  /* ---------- about ---------- */
+  .about-grid{display:grid;grid-template-columns:1.4fr .9fr;gap:clamp(36px,5vw,70px);align-items:start}
+  .about-lead{font-family:var(--display);font-size:clamp(1.25rem,2.6vw,1.7rem);line-height:1.6;font-weight:500;margin-bottom:26px}
+  .about-lead em{font-style:normal;background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .about-body p{color:var(--muted);margin-bottom:18px}
+  .about-side{position:sticky;top:100px}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px 28px;margin-bottom:18px}
+  .panel h4{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+  .panel .row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed var(--border);font-size:.95rem}
+  .panel .row:last-child{border-bottom:none}
+  .panel .row span:first-child{color:var(--muted)}
+  .panel .row span:last-child{font-weight:500;text-align:left}
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{font-size:.84rem;padding:7px 14px;border-radius:999px;border:1px solid var(--border);
+    background:var(--surface);color:var(--text);transition:.3s}
+  .chip:hover{border-color:var(--border-glow);box-shadow:0 0 20px rgba(120,170,255,.18)}
+
+  /* ---------- research ---------- */
+  .research-list{display:flex;flex-direction:column;gap:20px}
+  .paper{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:clamp(18px,3vw,34px);align-items:center;
+    background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:30px clamp(22px,3vw,38px);
+    transition:transform .4s,border-color .4s,box-shadow .4s}
+  .paper:hover{transform:translateY(-4px);border-color:var(--border-glow);box-shadow:0 18px 50px -20px rgba(120,140,255,.5)}
+  .paper-idx{font-family:var(--latin);font-size:1.05rem;font-weight:600;width:46px;height:46px;display:grid;place-items:center;
+    border-radius:50%;border:1px solid var(--border-glow);color:var(--cyan);flex-shrink:0}
+  .paper-main h3{font-family:var(--latin);font-size:clamp(1.05rem,2vw,1.25rem);font-weight:600;line-height:1.4;margin-bottom:8px;
+    direction:ltr;text-align:right}
+  .paper-meta{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.85rem;color:var(--muted);margin-bottom:14px}
+  .paper-meta .venue{color:var(--pink)}
+  .paper-main p{color:var(--muted);font-size:.97rem;margin-bottom:14px}
+  .paper-tags{display:flex;flex-wrap:wrap;gap:7px}
+  .paper-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:4px}
+  .rg-link{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:500;color:var(--text);
+    text-decoration:none;padding:8px 15px;border-radius:10px;border:1px solid var(--border);background:var(--surface);
+    white-space:nowrap;transition:.3s}
+  .rg-link svg{color:var(--cyan)}
+  .rg-link span{transition:transform .3s;display:inline-block}
+  .rg-link:hover{border-color:var(--border-glow);background:var(--surface-2);box-shadow:0 0 22px rgba(120,170,255,.2)}
+  .rg-link:hover span{transform:translate(3px,-3px)}
+  .rg-profile{display:inline-flex;align-items:center;gap:10px;font-weight:500;color:var(--text);text-decoration:none;
+    padding:13px 24px;border-radius:13px;border:1px solid var(--border-glow);background:var(--surface);
+    margin-bottom:48px;transition:.35s}
+  .rg-profile svg{color:var(--cyan)}
+  .rg-profile:hover{background:var(--surface-2);transform:translateY(-3px);box-shadow:0 14px 36px -16px rgba(120,150,255,.6)}
+  .tag{font-family:var(--latin);font-size:.74rem;padding:4px 11px;border-radius:7px;background:var(--surface-2);
+    color:var(--muted);border:1px solid var(--border)}
+  .paper-role{flex-shrink:0;text-align:center;align-self:start;padding-top:4px}
+  .paper-role .role-lab{font-size:.7rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  .paper-role .role-val{font-family:var(--display);font-size:1rem;font-weight:600;margin-top:3px;white-space:nowrap}
+
+  /* ---------- projects ---------- */
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+  .card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:30px 28px;
+    overflow:hidden;transition:transform .4s,border-color .4s,box-shadow .4s}
+  .card::before{content:"";position:absolute;top:0;right:0;width:100%;height:3px;background:var(--glow);transform:scaleX(0);
+    transform-origin:right;transition:transform .5s}
+  .card:hover{transform:translateY(-6px);border-color:var(--border-glow);box-shadow:0 22px 55px -24px rgba(150,120,255,.55)}
+  .card:hover::before{transform:scaleX(1)}
+  .card .ctype{font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;display:block}
+  .card h3{font-family:var(--display);font-size:1.3rem;font-weight:600;margin-bottom:4px}
+  .card .name-en{font-family:var(--latin);font-size:.82rem;letter-spacing:.5px;color:var(--cyan);margin-bottom:14px;text-align:right}
+  .card p{color:var(--muted);font-size:.95rem;margin-bottom:18px}
+  .card .tag{margin-inline-start:0}
+  .card .ctags{display:flex;flex-wrap:wrap;gap:7px}
+  .tech-list{margin:0 0 18px;padding:16px 18px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px}
+  .tech-head{font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
+  .tech-row{display:flex;gap:12px;align-items:baseline;padding:5px 0;border-bottom:1px dashed var(--border)}
+  .tech-row:last-child{border-bottom:none}
+  .tech-n{font-family:var(--latin);font-size:.84rem;font-weight:500;color:var(--text);min-width:104px;flex-shrink:0}
+  .tech-d{font-size:.88rem;color:var(--muted)}
+  .status{position:absolute;top:26px;left:26px;font-size:.72rem;padding:4px 11px;border-radius:999px;font-weight:500}
+  .status.live{background:rgba(79,210,255,.13);color:var(--cyan);border:1px solid rgba(79,210,255,.3)}
+  .status.soon{background:rgba(242,166,224,.12);color:var(--pink);border:1px solid rgba(242,166,224,.3)}
+  .card .clink{display:inline-flex;align-items:center;gap:7px;font-size:.9rem;color:var(--text);text-decoration:none;font-weight:500}
+  .card .clink span{transition:transform .3s}
+  .card:hover .clink span{transform:translateX(-5px)}
+
+  /* ---------- contact ---------- */
+  .contact{text-align:center}
+  .contact .glow-line{font-family:var(--display);font-size:clamp(2rem,5vw,3.4rem);font-weight:600;line-height:1.3;margin-bottom:20px}
+  .contact .glow-line em{font-style:normal;background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 40px rgba(157,123,255,.3)}
+  .contact p{color:var(--muted);max-width:520px;margin:0 auto 44px}
+  .contact-links{display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
+  .clink-btn{display:inline-flex;align-items:center;gap:11px;padding:15px 28px;border-radius:14px;
+    background:var(--surface);border:1px solid var(--border);color:var(--text);text-decoration:none;font-weight:500;transition:.35s}
+  .clink-btn:hover{border-color:var(--border-glow);background:var(--surface-2);transform:translateY(-3px);
+    box-shadow:0 14px 36px -16px rgba(120,150,255,.6)}
+  .clink-btn .ic{width:18px;height:18px;color:var(--cyan)}
+  footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
+  footer b{background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:860px){
+    .nav-links{position:fixed;inset:0 0 0 auto;width:min(80vw,320px);flex-direction:column;justify-content:center;
+      gap:30px;background:rgba(9,13,34,.97);backdrop-filter:blur(16px);padding:60px;transform:translateX(100%);
+      transition:transform .4s;border-inline-start:1px solid var(--border)}
+    .nav-links.open{transform:none}
+    .nav-toggle{display:block;z-index:60}
+    .about-grid{grid-template-columns:1fr}
+    .about-side{position:static}
+    .paper{grid-template-columns:auto 1fr}
+    .paper-role{grid-column:1/-1;text-align:right;display:flex;gap:10px;align-items:baseline;border-top:1px dashed var(--border);padding-top:14px}
+    .paper-role .role-val{white-space:normal}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
+    .glow-name,.surname,.hero .kicker,.hero .tagline,.hero-stats,.scroll-cue,.hero-emblem{opacity:1}
+  }
+</style>
+</head>
+<body>
+<div class="aurora"><span></span></div>
+<canvas id="stars"></canvas>
+<div class="grain"></div>
+
+<nav id="nav">
+  <a href="#hero" class="brand">وهج</a>
+  <button class="nav-toggle" id="navToggle" aria-label="القائمة">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">عنّي</a></li>
+    <li><a href="#research">الأبحاث</a></li>
+    <li><a href="#projects">المشاريع</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="hero">
+  <p class="kicker">ملف تعريفي</p>
+  <!-- رمز الشروق يتوّج الاسم -->
+  <svg class="hero-emblem" viewBox="0 0 240 138" width="138" height="79" aria-hidden="true">
+    <defs>
+      <radialGradient id="hsun" gradientUnits="userSpaceOnUse" cx="120" cy="80" r="74">
+        <stop offset="0%" stop-color="#FFFFFF"/><stop offset="16%" stop-color="#CFF3FF"/>
+        <stop offset="42%" stop-color="#4FD2FF"/><stop offset="72%" stop-color="#9D7BFF"/>
+        <stop offset="100%" stop-color="#F2A6E0" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="hedge" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#4FD2FF"/><stop offset="50%" stop-color="#9D7BFF"/><stop offset="100%" stop-color="#F2A6E0"/>
+      </linearGradient>
+    </defs>
+    <circle cx="120" cy="80" r="40" fill="url(#hsun)" opacity="0"/>
+    <g fill="url(#hsun)">
+      <rect x="118.7" y="22" width="2.6" height="58" rx="1.3"/>
+      <rect x="118.7" y="28" width="2.6" height="52" rx="1.3" transform="rotate(13 120 80)"/>
+      <rect x="118.7" y="28" width="2.6" height="52" rx="1.3" transform="rotate(-13 120 80)"/>
+      <rect x="118.7" y="34" width="2.6" height="46" rx="1.3" transform="rotate(26 120 80)"/>
+      <rect x="118.7" y="34" width="2.6" height="46" rx="1.3" transform="rotate(-26 120 80)"/>
+      <rect x="118.7" y="42" width="2.6" height="38" rx="1.3" transform="rotate(40 120 80)"/>
+      <rect x="118.7" y="42" width="2.6" height="38" rx="1.3" transform="rotate(-40 120 80)"/>
+      <rect x="118.7" y="50" width="2.6" height="30" rx="1.3" transform="rotate(56 120 80)"/>
+      <rect x="118.7" y="50" width="2.6" height="30" rx="1.3" transform="rotate(-56 120 80)"/>
+      <rect x="118.7" y="44" width="2.6" height="36" rx="1.3" transform="rotate(90 120 80)"/>
+      <rect x="118.7" y="44" width="2.6" height="36" rx="1.3" transform="rotate(-90 120 80)"/>
+    </g>
+    <circle cx="120" cy="80" r="13" fill="url(#hsun)"/>
+    <circle cx="120" cy="80" r="6.5" fill="#fff"/>
+    <path d="M30,118 Q120,84 210,118" fill="none" stroke="url(#hedge)" stroke-width="3.4" stroke-linecap="round"/>
+  </svg>
+  <h1 class="glow-name">وهج</h1>
+  <div class="surname">الكبيري</div>
+  <div class="hero-stats">
+    <div class="stat"><div class="num">+1600</div><div class="lab">موظف ضمن أنظمة أعمل عليها</div></div>
+    <div class="stat"><div class="num">4</div><div class="lab">أبحاث علمية منشورة</div></div>
+    <div class="stat"><div class="num">CS</div><div class="lab">ماجستير علوم حاسب</div></div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <span class="eyebrow reveal">عنّي</span>
+    <div class="about-grid">
+      <div class="about-main reveal">
+        <p class="about-lead">أخصائية عمليات موارد بشرية بخلفية في <em>علوم الحاسب والذكاء الاصطناعي</em>.</p>
+        <div class="about-body">
+          <p>عملت على إدارة ومعالجة بيانات رواتب لأكثر من 1600 موظف بدقة تشغيلية عالية، وتحليل بيانات الإجازات والعمل الإضافي لكشف الأنماط ودعم التخطيط. أحوّل البيانات التشغيلية إلى مؤشرات أداء واضحة تساعد الإدارة على اتخاذ قرارات أفضل.</p>
+          <p>بحكم دراستي للماجستير في علوم الحاسب والهندسة، أوظّف أدوات التحليل والتعلّم الآلي داخل مجال الموارد البشرية — من لوحات المعلومات في Power BI إلى نماذج التنبؤ بـ Python. وأسعى دائمًا إلى أتمتة العمليات اليدوية وتحويلها إلى أنظمة رقمية أسرع وأدق، كما لا أتوقّف عن تطوير مهاراتي ومواكبة الجديد في هذا المجال.</p>
+          <p>هدفي أن تكون كل قرارٍ في المنظمة مدعومًا برؤية واضحة من بياناتها.</p>
+        </div>
+      </div>
+      <aside class="about-side reveal">
+        <div class="panel">
+          <h4>المسار</h4>
+          <div class="row"><span>أخصائي عمليات موارد بشرية</span><span>2023 — الآن</span></div>
+          <div class="row"><span>ماجستير علوم وهندسة الحاسب</span><span>جامعة جدة</span></div>
+          <div class="row"><span>بكالوريوس علوم الحاسب</span><span>جامعة بيشة</span></div>
+        </div>
+        <div class="panel">
+          <h4>المهارات</h4>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">SQL</span><span class="chip">Power BI</span>
+            <span class="chip">Excel متقدم</span><span class="chip">Pandas</span><span class="chip">NumPy</span>
+            <span class="chip">Data Analysis</span><span class="chip">Machine Learning</span><span class="chip">Deep Learning</span>
+            <span class="chip">AI Agent</span><span class="chip">HRIS / HRMS</span>
+            <span class="chip">Process Automation (RPA)</span><span class="chip">API Integration</span>
+            <span class="chip">Data Visualization</span><span class="chip">KPI Dashboards</span><span class="chip">Business Intelligence</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="wrap">
+    <span class="eyebrow reveal">الأبحاث المنشورة</span>
+    <h2 class="section-title reveal">أربعة أبحاث في التعلّم الآلي والعميق</h2>
+    <p class="section-intro reveal">أعمال بحثية منشورة في مجلات ومؤتمرات محكّمة، تتنقّل بين أنظمة التوصية، التنبؤ بجودة البرمجيات، كشف الأخبار الزائفة، واستخلاص البيانات.</p>
+    <a class="rg-profile reveal" href="https://www.researchgate.net/profile/Wahaj-Alkebiri" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19.586 0H4.414A4.414 4.414 0 0 0 0 4.414v15.172A4.414 4.414 0 0 0 4.414 24h15.172A4.414 4.414 0 0 0 24 19.586V4.414A4.414 4.414 0 0 0 19.586 0ZM8.25 16.5c-2.07 0-3.75-1.68-3.75-3.75V9.75C4.5 8.23 5.73 7 7.25 7h1.5v1.5h-1.5c-.69 0-1.25.56-1.25 1.25v3c0 1.24 1.01 2.25 2.25 2.25S10.5 14 10.5 12.75V12h-1.5v-1.5h3v2.25c0 2.07-1.68 3.75-3.75 3.75Zm9-7.25c0 .9-.53 1.68-1.3 2.04l1.55 2.71h-1.73l-1.37-2.4H12.5v2.4H11V7h3.25c1.52 0 2.75 1.23 2.75 2.75v-.5Zm-1.5.25c0-.69-.56-1.25-1.25-1.25H12.5v2.5h2c.69 0 1.25-.56 1.25-1.25Z"/></svg>
+      الملف البحثي الكامل على ResearchGate
+      <span style="color:var(--cyan)">↗</span>
+    </a>
+    <div class="research-list" id="researchList"></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <span class="eyebrow reveal">المشاريع</span>
+    <h2 class="section-title reveal">من البيانات التشغيلية إلى الأثر</h2>
+    <p class="section-intro reveal">مشاريع تطبيقية في تحليل بيانات الموارد البشرية وأتمتة العمليات، إضافةً إلى أعمال قيد التطوير.</p>
+    <div class="proj-grid" id="projGrid"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <span class="eyebrow reveal" style="justify-content:center">تواصل</span>
+    <div class="contact-links reveal">
+      <a class="clink-btn" href="mailto:whjalghamdi@gmail.com">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+        whjalghamdi@gmail.com
+      </a>
+      <a class="clink-btn" href="tel:+966596889517">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+        0596889517
+      </a>
+      <!-- لإضافة لينكدإن مستقبلاً: انسخي زر مثل هذا وضعي رابط حسابك -->
+      <a class="clink-btn" href="https://www.linkedin.com/in/wahaj-alkebiri-15664a189" target="_blank" rel="noopener">
+        <svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>صُمّم بـ <b>وهج</b> ✦ © <span id="yr"></span> وهج الكبيري — جميع الحقوق محفوظة</footer>
+
+<script>
+/* =========================================================
+   منطقة التحديث السهل — لإضافة بحث أو مشروع جديد مستقبلاً
+   فقط أضيفي عنصرًا جديدًا داخل المصفوفة وسيظهر تلقائيًا.
+   ========================================================= */
+
+const RG = "https://www.researchgate.net/profile/Wahaj-Alkebiri";
+
+const RESEARCH = [
+  {
+    title:"Machine Learning Predictive Model for an Intelligent Tourism Recommendation System",
+    venue:"Journal of Applied Research and Technology",
+    year:"2025",
+    role:"باحثة مشاركة",
+    summary:"نموذج تنبؤي لنظام توصية سياحي ذكي يساعد المسافرين على اختيار أفضل الوجهات والمسارات. قارن البحث بين خوارزميات Naive Bayes وأشجار القرار والانحدار الخطي على بيانات تقييم سياحية، وتفوّق الانحدار الخطي بأعلى دقة وأقل نسبة خطأ.",
+    tags:["Recommendation Systems","Linear Regression","Decision Trees","Naive Bayes"]
+  },
+  {
+    title:"Predicting the Number of Software Faults using Deep Learning",
+    venue:"Engineering, Technology & Applied Science Research (ETASR)",
+    year:"2024",
+    role:"باحثة رئيسية",
+    summary:"تصميم نهج تعلّم عميق يتنبأ بعدد الأعطال في وحدات البرمجيات لتوجيه جهود الاختبار. استخدم نموذجي CNN و MLP على 12 مشروعًا مفتوح المصدر مع معالجة عدم توازن البيانات عبر SMOTEND، وحقّق نموذج MLP أفضل أداء بأقل معدل خطأ.",
+    tags:["Deep Learning","CNN","MLP","SMOTEND","Fault Prediction"]
+  },
+  {
+    title:"Multi-scale Machine Learning Prediction of the Spread of Arabic Online Fake News",
+    venue:"Postmodern Openings",
+    year:"2022",
+    role:"باحثة مشاركة",
+    summary:"دراسة للعوامل التي تساهم في انتشار الأخبار الزائفة العربية على الإنترنت باستخدام التعلّم الآلي. اعتمد البحث على Naive Bayes والانحدار اللوجستي والغابات العشوائية مع تمثيل TF-IDF، وتفوّقت الغابات العشوائية بدقة بلغت 86٪.",
+    tags:["NLP","Arabic Fake News","Random Forest","TF-IDF","Logistic Regression"]
+  },
+  {
+    title:"Web Scraper Application for Extracting Scientific Journals Data",
+    venue:"ورقة مؤتمر — جامعة جدة",
+    year:"",
+    role:"باحثة مشاركة",
+    summary:"تطبيق ويب لاستخلاص بيانات المجلات العلمية وتجميع نتائج البحث من مصادر متعددة في مجموعة بيانات واحدة منظمة وقابلة للتحميل. بُني باستخدام Scrapy و BeautifulSoup وقاعدة بيانات MySQL لتسهيل البحث العلمي والتحليل.",
+    tags:["Web Scraping","Scrapy","BeautifulSoup","MySQL","Python"]
+  }
+];
+
+const PROJECTS = [
+  {
+    name:"لوحة معلومات القوى العاملة", nameEn:"HR Workforce Dashboard",
+    type:"HR Analytics · Power BI",
+    summary:"لوحة تشغيلية من ثلاث صفحات تقيس الغياب والعمل الإضافي والخصومات على مدى اثني عشر شهرًا. أبرز ما كشفته: ثلث ساعات العمل الإضافي يقع في نهاية الأسبوع، لكنه يستهلك 41% من تكلفتها — بفارق 17.26 ريال في تكلفة الساعة الواحدة.",
+    tech:[
+      {n:"Power Query", d:"ينظّف جدولي الموظفين والحضور وتبقى خطواته محفوظة لأي تحديث لاحق"},
+      {n:"Star Schema", d:"جدول موظفين وجدول تاريخ يغذّيان جدول الحضور عبر علاقات أحادية الاتجاه"},
+      {n:"DAX", d:"يبني مقاييس الغياب والعمل الإضافي والخصومات التي تعيد الحساب مع كل فلتر"},
+      {n:"Power BI", d:"ثلاث صفحات بثيم أخضر داكن صُمّم خصيصًا للتقرير"}
+    ],
+    tags:["Power BI","Power Query","DAX","Star Schema"],
+    status:"live", statusLabel:"منجز", link:"workforce-dashboard.html"
+  },
+  {
+    name:"تحليل بيانات الرواتب", nameEn:"Payroll Data Analysis",
+    type:"تحليل بيانات",
+    summary:"تحليل بيانات الرواتب لتحديد الاتجاهات الشهرية والانحرافات، وكشف ما يحتاج لمراجعة قبل أن يتحوّل إلى مشكلة.",
+    tags:["Python","Pandas","Excel"],
+    status:"live", statusLabel:"منجز", link:""
+  },
+  {
+    name:"أتمتة إدخال ساعات العمل الإضافي", nameEn:"HR Overtime Entry Agent",
+    type:"تطبيق ويب · أتمتة",
+    summary:"وكيل ذكي عبر تطبيق ويب يؤتمت إدخال ساعات العمل الإضافي انطلاقًا من صور كشوف الدوام: يُصفّي الصورة ويحسّنها أولًا (إزالة التشويش ورفع الوضوح والتباين) لضمان أعلى دقة، ثم يقرأ البيانات آليًا عبر OCR، ينظّمها، ويجهّزها للإدخال — ما يلغي الإدخال اليدوي ويقلّل الأخطاء ويوفّر وقت فريق الموارد البشرية. مُتاح للتجربة مباشرة عبر الرابط.",
+    tech:[
+      {n:"Streamlit", d:"يبني واجهة التطبيق على الويب"},
+      {n:"OpenCV", d:"يصفّي الصورة ويحسّن وضوحها قبل القراءة"},
+      {n:"Tesseract OCR", d:"يقرأ الأرقام والنصوص من الصورة آليًا"},
+      {n:"Pandas", d:"ينظّم البيانات ويجهّزها للإدخال"},
+      {n:"Python", d:"لغة البرمجة التي تربط المكوّنات معًا"}
+    ],
+    tags:["Streamlit","Python","OpenCV","Tesseract OCR","Pandas"],
+    status:"live", statusLabel:"منجز", link:"https://hr-overtime-agent-hjqfmzsazrrlgh9uoxddsd.streamlit.app/"
+  },
+  {
+    name:"تحليل دوران الموظفين", nameEn:"Employee Turnover Analysis",
+    type:"HR Analytics · Power BI",
+    summary:"لوحة تحليلية لقياس الدوران الوظيفي في شركة آل طاوي للتشييد والبناء على بيانات أكثر من 3,700 موظف — تكشف اتجاهات المغادرة عبر السنوات والفئات الأكثر تأثرًا لدعم قرارات الاحتفاظ بالكفاءات. تنظيف البيانات بـ Python ثم بناء اللوحة في Power BI.",
+    tags:["Power BI","Python","Pandas","DAX","Data Cleaning"],
+    status:"live", statusLabel:"منجز", link:"altawi-turnover.html"
+  },
+  {
+    name:"تحليل عدالة الرواتب", nameEn:"Pay Equity Analysis",
+    type:"HR Analytics · Power BI",
+    summary:"تحليل يفكّك فجوة الأجور بين الجنسين بدل أخذها كرقم واحد: الفجوة الخام بلغت 25.24%، لكنها تنكمش إلى 3–19% عند المقارنة داخل الدرجة الوظيفية الواحدة — ما يفصل بين مشكلة في توزيع الوظائف ومشكلة في الأجر نفسه. بُني على بيانات تركيبية لـ 420 موظفًا لأغراض التعلّم، والمنهجية وحدها قابلة للنقل على بيانات فعلية.",
+    tech:[
+      {n:"Power Query", d:"ينظّف البيانات ويوحّد المسميات، وتبقى خطواته محفوظة لأي تحديث لاحق"},
+      {n:"DAX", d:"يكتب مقاييس الوسيط والفجوة التي تعيد الحساب مع كل فلتر"},
+      {n:"Power BI", d:"يبني اللوحة والمقسّمات للتنقل بين الدرجات الوظيفية"},
+      {n:"Excel", d:"يحضّر ملف البيانات ويعالج التكرارات وتباين الصياغة"},
+      {n:"الإحصاء الوصفي", d:"الوسيط والمقارنة داخل الفئات لعزل أثر الدرجة عن أثر الجنس"}
+    ],
+    tags:["Power BI","Power Query","DAX","Excel","Pay Equity"],
+    status:"live", statusLabel:"منجز", link:"pay-equity.html"
+  }
+];
+
+/* ---- render research ---- */
+const rl = document.getElementById('researchList');
+RESEARCH.forEach((p,i)=>{
+  const meta = [p.venue && `<span class="venue">${p.venue}</span>`, p.year]
+    .filter(Boolean).join(' · ');
+  rl.insertAdjacentHTML('beforeend',`
+    <article class="paper reveal">
+      <div class="paper-idx">0${i+1}</div>
+      <div class="paper-main">
+        <h3 dir="ltr">${p.title}</h3>
+        <div class="paper-meta">${meta}</div>
+        <p>${p.summary}</p>
+        <div class="paper-foot">
+          <div class="paper-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+          <a class="rg-link" href="${RG}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M19.586 0H4.414A4.414 4.414 0 0 0 0 4.414v15.172A4.414 4.414 0 0 0 4.414 24h15.172A4.414 4.414 0 0 0 24 19.586V4.414A4.414 4.414 0 0 0 19.586 0ZM8.25 16.5c-2.07 0-3.75-1.68-3.75-3.75V9.75C4.5 8.23 5.73 7 7.25 7h1.5v1.5h-1.5c-.69 0-1.25.56-1.25 1.25v3c0 1.24 1.01 2.25 2.25 2.25S10.5 14 10.5 12.75V12h-1.5v-1.5h3v2.25c0 2.07-1.68 3.75-3.75 3.75Zm9-7.25c0 .9-.53 1.68-1.3 2.04l1.55 2.71h-1.73l-1.37-2.4H12.5v2.4H11V7h3.25c1.52 0 2.75 1.23 2.75 2.75v-.5Zm-1.5.25c0-.69-.56-1.25-1.25-1.25H12.5v2.5h2c.69 0 1.25-.56 1.25-1.25Z"/></svg>
+            عرض على ResearchGate
+            <span>↗</span>
+          </a>
+        </div>
+      </div>
+      <div class="paper-role">
+        <div class="role-lab">الدور</div>
+        <div class="role-val">${p.role}</div>
+      </div>
+    </article>`);
+});
+
+/* ---- render projects ---- */
+const pg = document.getElementById('projGrid');
+PROJECTS.forEach(p=>{
+  const linkHtml = p.link
+    ? `<a class="clink" href="${p.link}" target="_blank" rel="noopener">زيارة المشروع <span>←</span></a>` : '';
+  pg.insertAdjacentHTML('beforeend',`
+    <article class="card reveal">
+      <span class="status ${p.status}">${p.statusLabel}</span>
+      <span class="ctype">${p.type}</span>
+      <h3>${p.name}</h3>
+      ${p.nameEn ? `<div class="name-en" dir="ltr">${p.nameEn}</div>` : ''}
+      <p>${p.summary}</p>
+      ${p.tech ? `<div class="tech-list"><div class="tech-head">التقنيات المستخدمة</div>${p.tech.map(t=>`<div class="tech-row"><span class="tech-n">${t.n}</span><span class="tech-d">${t.d}</span></div>`).join('')}</div>` : ''}
+      <div class="ctags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      ${linkHtml}
+    </article>`);
+});
+
+/* ---- nav scroll + mobile ---- */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+const toggle=document.getElementById('navToggle'), links=document.getElementById('navLinks');
+toggle.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+
+/* ---- reveal on scroll ---- */
+const io=new IntersectionObserver((es)=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+}),{threshold:.14});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---- year ---- */
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+/* ---- starfield (light particles) ---- */
+const cv=document.getElementById('stars'), cx=cv.getContext('2d');
+let stars=[], reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function size(){cv.width=innerWidth;cv.height=innerHeight}
+function build(){stars=Array.from({length:Math.min(70,Math.floor(innerWidth/22))},()=>({
+  x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+  r:Math.random()*1.4+.3,vy:Math.random()*.22+.04,
+  a:Math.random()*.6+.2,tw:Math.random()*.02+.005
+}))}
+function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  for(const s of stars){
+    s.y-=s.vy; if(s.y<-4){s.y=innerHeight+4;s.x=Math.random()*innerWidth}
+    s.a+=s.tw; if(s.a>.85||s.a<.2)s.tw*=-1;
+    cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);
+    cx.fillStyle=`rgba(190,210,255,${s.a})`;cx.fill();
+  }
+  requestAnimationFrame(loop);
+}
+size();build();if(!reduce)loop();
+addEventListener('resize',()=>{size();build()});
+</script>
+</body>
+</html>

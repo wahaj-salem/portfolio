@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة معلومات القوى العاملة — وهج الكبيري</title>
+<meta name="description" content="لوحة Power BI لقياس الغياب والعمل الإضافي والخصومات في شركة مقاولات، مبنية على 1,000 موظف و10,744 سجل حضور شهري.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070F0C;
+  --panel:#0D1A16;
+  --panel-2:#122620;
+  --line:rgba(255,255,255,.08);
+  --text:#E8F4EF;
+  --muted:#8FAFA4;
+  --em:#10B981;
+  --em-light:#6EE7B7;
+  --em-pale:#A7F3D0;
+  --em-deep:#065F46;
+  --gold:#D9B44A;
+  --grad:linear-gradient(115deg,#6EE7B7 0%,#10B981 50%,#0E7C63 100%);
+  --display:'El Messiri',serif;
+  --mono:'Space Grotesk',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Tajawal',system-ui,sans-serif;font-weight:300;
+  line-height:1.85;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(58rem 34rem at 86% -10%,rgba(16,185,129,.15),transparent 62%),
+    radial-gradient(50rem 30rem at 2% 20%,rgba(6,95,70,.30),transparent 60%),
+    radial-gradient(44rem 28rem at 60% 105%,rgba(110,231,183,.08),transparent 62%);
+}
+::selection{background:rgba(16,185,129,.32);color:#fff}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+
+.top{padding:34px 0 0}
+.back{
+  display:inline-flex;align-items:center;gap:9px;color:var(--muted);
+  text-decoration:none;font-size:.86rem;border:1px solid var(--line);
+  border-radius:999px;padding:7px 16px;transition:.25s;
+}
+.back:hover{color:var(--text);border-color:rgba(16,185,129,.5)}
+
+.hero{padding:56px 0 30px}
+.eyebrow{
+  font-family:var(--mono);font-size:.73rem;letter-spacing:.16em;
+  color:var(--em-light);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:var(--display);font-size:clamp(2.1rem,5.6vw,3.6rem);
+  font-weight:600;line-height:1.25;letter-spacing:-.01em;margin-bottom:22px;
+}
+h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:clamp(1.02rem,2.1vw,1.16rem);color:#BFD8CF;max-width:64ch}
+.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
+.tag{font-family:var(--mono);font-size:.75rem;color:var(--muted);
+  border:1px solid var(--line);border-radius:6px;padding:5px 12px}
+
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;margin:46px 0 8px;
+}
+.stat{background:var(--panel);padding:26px 22px}
+.stat b{display:block;font-family:var(--mono);font-size:1.9rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:5px;color:var(--em-light)}
+.stat.alt b{color:var(--em-pale)}
+.stat.gold b{color:var(--gold)}
+.stat span{font-size:.83rem;color:var(--muted);line-height:1.6;display:block}
+
+section{padding:62px 0;border-top:1px solid var(--line);margin-top:56px}
+h2{font-family:var(--display);font-size:clamp(1.4rem,3vw,1.85rem);
+  font-weight:600;letter-spacing:-.01em;margin-bottom:10px}
+h2::before{content:"";display:block;width:46px;height:3px;border-radius:2px;
+  background:var(--grad);margin-bottom:18px}
+h3{font-size:1.06rem;font-weight:600;margin:34px 0 10px;color:#EDFBF5}
+p{margin-bottom:16px;color:#BFD8CF;max-width:70ch}
+strong{font-weight:600;color:#fff}
+code{font-family:var(--mono);font-size:.86em;color:var(--em-pale)}
+
+.disc{border:1px dashed rgba(217,180,74,.34);border-radius:12px;
+  padding:20px 22px;background:rgba(217,180,74,.05)}
+.disc p{margin-bottom:0;color:#E3DAC4;font-size:.94rem}
+
+/* cleaning table */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:26px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:540px}
+th,td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line)}
+th{background:var(--panel-2);font-family:var(--mono);font-size:.74rem;
+  font-weight:500;color:var(--em-pale);letter-spacing:.04em}
+td{color:#D3E6DE}
+td.n{font-family:var(--mono);text-align:center;color:var(--em-light)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even) td{background:rgba(255,255,255,.016)}
+.note{font-size:.83rem;color:var(--muted);margin-top:10px}
+
+/* findings */
+.find{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:26px 26px 22px;margin-bottom:16px;position:relative;overflow:hidden}
+.find::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad)}
+.find .num{font-family:var(--mono);font-size:.73rem;color:var(--em-light);
+  letter-spacing:.14em;display:block;margin-bottom:8px}
+.find h3{margin:0 0 10px}
+.find p:last-child{margin-bottom:0}
+
+/* compare bars */
+.cmp{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;margin:26px 0}
+.cmp h3{margin:0 0 18px;font-size:1rem}
+.crow{display:flex;align-items:center;gap:12px;margin-bottom:13px}
+.crow .l{flex:0 0 118px;font-size:.85rem;color:var(--muted)}
+.ctrack{flex:1;height:28px;border-radius:7px;background:rgba(255,255,255,.04);overflow:hidden}
+.cbar{height:100%;border-radius:7px}
+.cbar.a{background:linear-gradient(90deg,#0E7C63,#10B981)}
+.cbar.b{background:linear-gradient(90deg,#10B981,#6EE7B7)}
+.crow .v{flex:0 0 96px;font-family:var(--mono);font-size:.86rem;color:#DDEFE8}
+.cmp .foot{font-size:.86rem;color:var(--muted);margin:12px 0 0;border-top:1px solid var(--line);padding-top:14px}
+
+/* recs */
+.rec{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.rec:last-child{border-bottom:none}
+.rec .mark{flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:.82rem;background:rgba(16,185,129,.14);
+  color:var(--em-light);border:1px solid rgba(16,185,129,.3)}
+.rec h3{margin:0 0 5px;font-size:1rem}
+.rec div p{margin-bottom:0}
+.rec .rn{margin-top:9px;font-size:.83rem;color:var(--muted);
+  border-inline-start:2px solid rgba(16,185,129,.35);padding-inline-start:11px}
+
+/* decisions */
+.dec{
+  background:var(--panel);border:1px solid var(--line);border-left:0;
+  border-radius:12px;padding:20px 22px;margin-bottom:14px;
+  position:relative;overflow:hidden;
+}
+.dec::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;
+  width:3px;background:var(--grad)}
+.dec .k{display:block;font-family:var(--mono);font-size:.7rem;
+  letter-spacing:.14em;color:var(--em-light);margin-bottom:7px}
+.dec h4{font-size:1.02rem;font-weight:600;color:#EDFBF5;margin-bottom:8px}
+.dec p{margin-bottom:0;font-size:.96rem}
+
+/* lawha replica */
+.lawha{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.tb{font-family:'Tajawal',sans-serif;font-size:.9rem;color:var(--muted);background:transparent;
+  border:1px solid var(--line);border-radius:9px;padding:8px 16px;cursor:pointer;transition:.18s}
+.tb:hover{color:var(--text);border-color:rgba(16,185,129,.45)}
+.tb[aria-selected="true"]{background:var(--grad);color:#05231B;font-weight:600;border-color:transparent}
+.pg-q{font-family:var(--display);font-size:1.08rem;color:#EDFBF5;margin-bottom:20px;max-width:none}
+.pg-n{font-size:.85rem;color:var(--muted);margin:14px 0 0;max-width:none}
+.grp{margin-bottom:20px}
+.grp-t{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  color:var(--em-light);margin-bottom:10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
+.kpi{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 12px}
+.kpi b{display:block;font-family:var(--mono);font-size:1.32rem;font-weight:500;color:var(--em-light);margin-bottom:3px}
+.kpi span{font-size:.72rem;color:var(--muted);line-height:1.5}
+.ch-t{font-size:.98rem;font-weight:600;color:#EDFBF5;margin-bottom:10px}
+.lg{display:flex;gap:16px;font-size:.8rem;color:var(--muted);margin-bottom:14px}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:6px}
+.sw.a{background:#0E7C63}.sw.b{background:#6EE7B7}
+.mchart{display:flex;align-items:flex-end;gap:6px;height:190px;padding-top:6px;
+  border-bottom:1px solid var(--line);overflow-x:auto}
+.mcol{flex:1 0 42px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.mpair{display:flex;align-items:flex-end;gap:3px;height:150px;width:100%;justify-content:center}
+.mbar{width:13px;border-radius:3px 3px 0 0;transition:.2s}
+.mval{font-family:var(--mono);font-size:.58rem;color:var(--em-pale);white-space:nowrap;line-height:1}
+.mpair{position:relative}
+.mbar.a{background:#0E7C63}.mbar.b{background:#6EE7B7}
+.mcol:hover .mbar,.mcol.on .mbar{filter:brightness(1.3)}
+.mlbl{font-family:var(--mono);font-size:.62rem;color:var(--muted);white-space:nowrap}
+.crow{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.crow .l{flex:0 0 100px;font-size:.85rem;color:var(--muted)}
+.ctrack{flex:1;height:26px;border-radius:7px;background:rgba(255,255,255,.04);overflow:hidden}
+.cbar{height:100%;border-radius:7px}
+.cbar.a{background:linear-gradient(90deg,#0E7C63,#10B981)}
+.cbar.b{background:linear-gradient(90deg,#10B981,#6EE7B7)}
+.crow .v{flex:0 0 60px;font-family:var(--mono);font-size:.86rem;color:#DDEFE8}
+.tg{display:flex;gap:6px;margin-bottom:16px}
+.tgb{font-family:var(--mono);font-size:.76rem;color:var(--muted);background:transparent;
+  border:1px solid var(--line);border-radius:7px;padding:6px 13px;cursor:pointer;transition:.18s}
+.tgb[aria-selected="true"]{background:rgba(16,185,129,.16);color:var(--em-pale);border-color:rgba(16,185,129,.4)}
+.drow{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.drow .l{flex:0 0 100px;font-size:.85rem;color:var(--muted)}
+.dtrack{flex:1;height:26px;border-radius:7px;background:rgba(255,255,255,.04);overflow:hidden}
+.dbar{height:100%;border-radius:7px;transition:width .45s cubic-bezier(.4,0,.2,1)}
+.drow .v{flex:0 0 74px;font-family:var(--mono);font-size:.86rem;color:#DDEFE8}
+@media (max-width:640px){.crow .l,.drow .l{flex-basis:78px;font-size:.79rem}}
+
+footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
+  color:var(--muted);font-size:.85rem}
+footer a{color:var(--em-light);text-decoration:none}
+footer a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--em);outline-offset:3px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:640px){
+  section{padding:46px 0;margin-top:38px}
+  .hero{padding:38px 0 18px}
+  .crow .l{flex-basis:92px;font-size:.8rem}
+  .crow .v{flex-basis:80px;font-size:.8rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">→ العودة إلى الملف التعريفي</a>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">HR Analytics · Power BI</div>
+    <h1>لوحة معلومات <span class="g">القوى العاملة</span></h1>
+    <p class="lede">
+      لوحة تشغيلية لشركة مقاولات — أشير إليها بـ «شركة X» — تقيس الغياب والعمل الإضافي والخصومات
+      على مدى اثني عشر شهرًا. الهدف منها أن تجيب على سؤال الإدارة قبل أن يُطرح: أين تذهب الساعات، وأين يذهب المال؟
+    </p>
+    <div class="tags">
+      <span class="tag">Power BI</span>
+      <span class="tag">Power Query</span>
+      <span class="tag">DAX</span>
+      <span class="tag">Star Schema</span>
+      <span class="tag">Custom Theme</span>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b>1,000</b><span>موظف في جدول القوى العاملة</span></div>
+    <div class="stat alt"><b>10,744</b><span>سجل حضور شهري</span></div>
+    <div class="stat gold"><b>8.91M</b><span>تكلفة العمل الإضافي (ريال)</span></div>
+    <div class="stat"><b>17.26</b><span>فرق تكلفة الساعة الواحدة (ريال)</span></div>
+  </div>
+
+  <!-- ============ البيانات ============ -->
+  <section>
+    <h2>البيانات</h2>
+    <p>
+      جدولان مرتبطان عبر الرقم الوظيفي: جدول للموظفين وبياناتهم، وجدول للحضور لكل موظف من كل شهر،
+      من يوليو 2025 إلى يونيو 2026. أُضيف إليهما جدول تاريخ منفصل تم بناؤه خلال التحليل بـ <code>CALENDAR</code>،
+      ليصبح النموذج على شكل نجمة (Star Schema).
+    </p>
+    <p>
+      جدول التاريخ مهم. بدونه يختفي أي شهر لا يحمل بيانات من الرسم بدل أن يظهر بصفر —
+      والاختفاء أخطر من الصفر، لأن قارئ التقرير لا ينتبه لغياب شهر كامل.
+    </p>
+
+  </section>
+
+  <!-- ============ التنظيف ============ -->
+  <section>
+    <h2>التنظيف</h2>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>المشكلة</th><th>العدد</th><th>المعالجة</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>صفوف موظفين مكررة</td><td class="n">3</td><td>حذف بناءً على الرقم الوظيفي</td></tr>
+          <tr><td>قيمة جنس مختصرة <code>M</code></td><td class="n">7</td><td>استبدال بمطابقة الخلية كاملة</td></tr>
+          <tr><td>اسم قسم بمسافة زائدة وأحرف صغيرة</td><td class="n">12</td><td><code>Trim</code> ثم توحيد الأحرف</td></tr>
+          <tr><td>أيام غياب بقيمة سالبة</td><td class="n">10</td><td>استبدال بصفر مع توثيق الافتراض</td></tr>
+          <tr><td>ساعات إضافية ومرات تأخر ناقصة</td><td class="n">30</td><td>تُركت فارغة عمدًا</td></tr>
+          <tr><td>مواقع عمل ناقصة</td><td class="n">9</td><td>تُركت فارغة عمدًا</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>قراران يستحقان الشرح</h3>
+
+    <div class="dec">
+      <span class="k">القرار الأول</span>
+      <h4>الفراغ لا يُملأ بصفر</h4>
+      <p>
+        الفراغ يعني «لا نعرف»، والصفر يعني «لا توجد ساعات إضافية».
+        تحويل الأول إلى الثاني يخفض متوسط العمل الإضافي بشكل وهمي.
+        وDAX يتجاهل الفراغات في الحسابات، فلا حاجة لملئها.
+      </p>
+    </div>
+
+    <div class="dec">
+      <span class="k">القرار الثاني</span>
+      <h4>القيمة السالبة استُبدلت بصفر</h4>
+      <p>
+        لأن الصف يحمل ساعات وتأخيرات صحيحة، وحذفه يضعف من صحة البيانات.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ اللوحة ============ -->
+  <section>
+    <h2>اللوحة</h2>
+    <div class="lawha">
+      <div class="tabs" role="tablist" aria-label="صفحات اللوحة">
+        <button class="tb" type="button" data-p="0" aria-selected="true">نظرة عامة</button>
+        <button class="tb" type="button" data-p="1" aria-selected="false">العمل الإضافي</button>
+        <button class="tb" type="button" data-p="2" aria-selected="false">الخصومات</button>
+      </div>
+
+      <!-- ---- page 0 ---- -->
+      <div class="pg" data-p="0">
+        <p class="pg-q">ما حجم الشركة وكيف تنضبط؟</p>
+        <div class="grp">
+          <span class="grp-t">القوى العاملة</span>
+          <div class="kpis">
+            <div class="kpi"><b>1,000</b><span>Headcount</span></div>
+            <div class="kpi"><b>890</b><span>Active Headcount</span></div>
+            <div class="kpi"><b>110</b><span>Leavers</span></div>
+            <div class="kpi"><b>42.58%</b><span>Saudization %</span></div>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="grp-t">الحضور والغياب</span>
+          <div class="kpis">
+            <div class="kpi"><b>7.18K</b><span>Total Absent Days</span></div>
+            <div class="kpi"><b>227.69K</b><span>Total Scheduled Days</span></div>
+            <div class="kpi"><b>3.15%</b><span>Absence Rate %</span></div>
+            <div class="kpi"><b>7.18</b><span>Avg Absent Days / Emp</span></div>
+            <div class="kpi"><b>12.16K</b><span>Total Late Arrivals</span></div>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="grp-t">العمل الإضافي</span>
+          <div class="kpis">
+            <div class="kpi"><b>191.21K</b><span>Total OT Hours</span></div>
+            <div class="kpi"><b>8.91M</b><span>Total OT Cost</span></div>
+            <div class="kpi"><b>191.21</b><span>Avg OT Hours / Emp</span></div>
+            <div class="kpi"><b>33.04%</b><span>Weekend OT Share %</span></div>
+            <div class="kpi"><b>41.27%</b><span>Weekend OT Cost Share %</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- page 1 ---- -->
+      <div class="pg" data-p="1" hidden>
+        <p class="pg-q">أين تذهب التكلفة؟</p>
+        <h4 class="ch-t" id="mtitle">ساعات العمل الإضافي شهريًا</h4>
+        <div class="tg">
+          <button class="tgb" type="button" data-v="hrs" aria-selected="true">الساعات</button>
+          <button class="tgb" type="button" data-v="shr" aria-selected="false">نصيب نهاية الأسبوع</button>
+        </div>
+        <div class="lg" id="mlg"></div>
+        <div class="mchart" id="mchart"></div>
+        <p class="pg-n" id="mnote"></p>
+
+        <h4 class="ch-t" style="margin-top:30px">تكلفة ساعة العمل الإضافي (ريال)</h4>
+        <div class="crow">
+          <span class="l">أيام العمل</span>
+          <div class="ctrack"><div class="cbar a" style="width:70%"></div></div>
+          <span class="v">40.94</span>
+        </div>
+        <div class="crow">
+          <span class="l">نهاية الأسبوع</span>
+          <div class="ctrack"><div class="cbar b" style="width:100%"></div></div>
+          <span class="v">58.20</span>
+        </div>
+        <p class="pg-n">الفجوة بين العمودين الشهريين ثابتة على مدار السنة، وهي جوهر النتيجة.</p>
+      </div>
+
+      <!-- ---- page 2 ---- -->
+      <div class="pg" data-p="2" hidden>
+        <p class="pg-q">على ماذا تُخصم الرواتب؟</p>
+        <div class="kpis" style="margin-bottom:22px">
+          <div class="kpi"><b>2.52M</b><span>Total Deductions</span></div>
+        </div>
+        <h4 class="ch-t">توزيع الخصومات حسب النوع</h4>
+        <div class="tg">
+          <button class="tgb" type="button" data-m="sar" aria-selected="true">بالريال</button>
+          <button class="tgb" type="button" data-m="pct" aria-selected="false">بالنسبة</button>
+        </div>
+        <div id="dchart"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ النتائج ============ -->
+  <section>
+    <h2>النتائج</h2>
+
+    <div class="find">
+      <span class="num">النتيجة الأولى</span>
+      <h3>ثلث الساعات يلتهم أربعين بالمئة من الميزانية</h3>
+      <p>
+        العمل الإضافي في نهاية الأسبوع يمثّل <strong>33.04%</strong> من الساعات، لكنه يستهلك
+        <strong>41.27%</strong> من التكلفة — لأن أجره مضاعف بينما أيام العمل بواحد ونصف.
+        بالريال: 3.68 مليون من أصل 8.91 مليون.
+      </p>
+    </div>
+
+    <div class="cmp">
+      <h3>تكلفة ساعة العمل الإضافي</h3>
+      <div class="crow">
+        <span class="l">أيام العمل</span>
+        <div class="ctrack"><div class="cbar a" style="width:70%"></div></div>
+        <span class="v">40.94 ريال</span>
+      </div>
+      <div class="crow">
+        <span class="l">نهاية الأسبوع</span>
+        <div class="ctrack"><div class="cbar b" style="width:100%"></div></div>
+        <span class="v">58.20 ريال</span>
+      </div>
+      <p class="foot">
+        الفارق 17.26 ريال لكل ساعة. نقل ربع ساعات نهاية الأسبوع إلى أيام العمل — نحو 15,800 ساعة —
+        يوفّر قرابة <strong>273 ألف ريال سنويًا</strong> بنفس عدد الساعات ونفس الإنتاجية.
+      </p>
+    </div>
+
+    <div class="find">
+      <span class="num">النتيجة الثانية</span>
+      <h3>الجهد الإداري في مكان، والمال في مكان آخر</h3>
+      <p>
+        الخصومات بلغت 2.52 مليون ريال، منها <strong>66% من الغياب</strong> و27% من بنود متفرقة
+        و<strong>7% فقط من التأخير</strong>. التأخير هو ما يستهلك وقت المشرفين في المتابعة اليومية،
+        بينما المال الحقيقي في الغياب الكامل.
+      </p>
+    </div>
+
+    <div class="find">
+      <span class="num">النتيجة الثالثة</span>
+      <h3>ما تدفعه الشركة أضعاف ما تسترده</h3>
+      <p>
+        تكلفة العمل الإضافي 8.91 مليون ريال مقابل 2.52 مليون خصومات — نسبة <strong>3.5 إلى 1</strong>.
+        معدل الغياب 3.15% ومتوسطه 7.18 يوم للموظف سنويًا، وهي أرقام منضبطة.
+        الضغط على الميزانية لا يأتي من غياب الموظفين، بل من ساعات حضورهم الإضافية.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ التوصيات ============ -->
+  <section>
+    <h2>التوصيات</h2>
+
+    <div class="rec">
+      <span class="mark">١</span>
+      <div>
+        <h3>إعادة جدولة العمل الإضافي قبل التفكير في تقليصه</h3>
+        <p>نقل جزء من ساعات نهاية الأسبوع إلى أيام العمل يخفّض التكلفة دون المساس بالإنتاج. الرقم قابل للحساب مسبقًا: 17.26 ريال عن كل ساعة تُنقل.</p>
+      </div>
+    </div>
+
+    <div class="rec">
+      <span class="mark">٢</span>
+      <div>
+        <h3>مراجعة ذروة الصيف قبل حدوثها</h3>
+        <p>ساعات العمل الإضافي ترتفع في أشهر الصيف: نحو 20 ألف ساعة في أغسطس ويونيو، مقابل 11 ألفًا في مارس. تغطية الذروة بالساعات الإضافية تكلّف 41 إلى 58 ريالًا للساعة، بينما التخطيط لها مسبقًا يجعلها بالأجر العادي.</p>
+      </div>
+    </div>
+
+    <div class="rec">
+      <span class="mark">٣</span>
+      <div>
+        <h3>معالجة الغياب من مصدره</h3>
+        <p>معدل 3.15% على مستوى الشركة رقم منضبط، لكنه متوسط قد يخفي تركّزًا في موقع أو قسم بعينه. تبدأ المعالجة بفحص توزيع أيام الغياب على الموظفين والمواقع، لأن الإجراء يختلف بين غياب موزّع على الجميع وغياب متكرر من عدد محدود.</p>
+        <p class="rn">الغياب في هذه البيانات لا يشمل الإجازات السنوية أو المرضية أو الغيابات بإذن.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ خلاصة ============ -->
+  <section>
+    <h2>ما خرجت به</h2>
+    <p>
+      ساعات العمل الإضافي ترتفع في أشهر بعينها، وهي أشهر الصيف: بلغت ذروتها في أغسطس ويونيو
+      قرابة 20 ألف ساعة، مقابل 11 ألفًا فقط في مارس. المعالجة تبدأ من توزيع الأعمال على أشهر السنة
+      بدل تغطية الذروة بالساعات الإضافية بعد وقوعها.
+    </p>
+    <p>
+      والدرس الثاني أن اللوحة الجيدة تنتهي برقم يمكن التصرف بناءً عليه.
+      «العمل الإضافي مرتفع» ملاحظة، و«كل ساعة تُنقل توفّر 17.26 ريال» قرار.
+    </p>
+  </section>
+
+  <footer>
+    <p style="margin:0">
+      وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات ·
+      <a href="index.html">بقية المشاريع</a>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var M=[
+    ["Jul 2025",42.48,33.9,17553],["Aug 2025",40.92,32.9,19903],["Sep 2025",40.82,32.4,16667],
+    ["Oct 2025",41.21,32.9,14991],["Nov 2025",40.23,31.9,14178],["Dec 2025",41.96,33.5,12576],
+    ["Jan 2026",40.58,32.4,14149],["Feb 2026",42.40,33.8,14111],["Mar 2026",40.83,32.8,11155],
+    ["Apr 2026",40.38,32.6,16298],["May 2026",41.57,33.5,19599],["Jun 2026",41.67,33.6,20030]
+  ];
+  var mc=document.getElementById('mchart'), note=document.getElementById('mnote');
+  var mt=document.getElementById('mtitle'), mlg=document.getElementById('mlg');
+  var view='hrs', HMAX=21000, SMAX=46;
+  var nf0=new Intl.NumberFormat('en-US');
+
+  function drawM(){
+    mc.innerHTML='';
+    if(view==='hrs'){
+      mt.textContent='ساعات العمل الإضافي شهريًا';
+      mlg.innerHTML='<span><i class="sw a"></i>إجمالي الساعات</span>';
+      note.textContent='الذروة في مايو–أغسطس، والأدنى في ديسمبر–مارس.';
+    }else{
+      mt.textContent='نصيب نهاية الأسبوع: من الساعات مقابل التكلفة';
+      mlg.innerHTML='<span><i class="sw a"></i>من التكلفة</span><span><i class="sw b"></i>من الساعات</span>';
+      note.textContent='مرّر على أي شهر لقراءة قيمه.';
+    }
+
+    M.forEach(function(m){
+      var c=document.createElement('div'); c.className='mcol';
+      var inner;
+      if(view==='hrs'){
+        inner='<span class="mval">'+(m[3]/1000).toFixed(1)+'K</span>'+
+              '<div class="mpair"><div class="mbar a" style="width:26px;height:'+(m[3]/HMAX*100)+'%"></div></div>';
+      }else{
+        inner='<span class="mval">'+m[1].toFixed(1)+' / '+m[2].toFixed(1)+'</span>'+
+              '<div class="mpair">'+
+              '<div class="mbar a" style="height:'+(m[1]/SMAX*100)+'%"></div>'+
+              '<div class="mbar b" style="height:'+(m[2]/SMAX*100)+'%"></div></div>';
+      }
+      c.innerHTML=inner+'<span class="mlbl">'+m[0].split(' ')[0]+'</span>';
+      function show(){
+        mc.querySelectorAll('.mcol').forEach(function(x){x.classList.remove('on');});
+        c.classList.add('on');
+        note.textContent = view==='hrs'
+          ? m[0]+' — '+nf0.format(m[3])+' ساعة عمل إضافي'
+          : m[0]+' — التكلفة '+m[1].toFixed(2)+'% مقابل الساعات '+m[2].toFixed(1)+
+            '% · فارق '+(m[1]-m[2]).toFixed(1)+' نقطة';
+      }
+      c.addEventListener('mouseenter',show);
+      c.addEventListener('click',show);
+      mc.appendChild(c);
+    });
+  }
+  drawM();
+
+  document.querySelectorAll('.tgb[data-v]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.tgb[data-v]').forEach(function(x){x.setAttribute('aria-selected','false');});
+      b.setAttribute('aria-selected','true');
+      view=b.dataset.v; drawM();
+    });
+  });
+
+  var D=[["الغياب",1667344,66.09,"linear-gradient(90deg,#065F46,#10B981)"],
+         ["بنود أخرى",678650,26.90,"linear-gradient(90deg,#0E7C63,#34D399)"],
+         ["التأخير",176705,7.00,"linear-gradient(90deg,#10B981,#A7F3D0)"]];
+  var dc=document.getElementById('dchart'), mode='sar';
+  var nf=new Intl.NumberFormat('en-US');
+
+  function drawD(){
+    dc.innerHTML='';
+    D.forEach(function(d){
+      var w = mode==='sar' ? d[1]/D[0][1]*100 : d[2]/D[0][2]*100;
+      var v = mode==='sar' ? (d[1]/1e6).toFixed(2)+'M' : d[2].toFixed(1)+'%';
+      var r=document.createElement('div'); r.className='drow';
+      r.innerHTML='<span class="l">'+d[0]+'</span>'+
+        '<div class="dtrack"><div class="dbar" style="width:'+w+'%;background:'+d[3]+'"></div></div>'+
+        '<span class="v">'+v+'</span>';
+      dc.appendChild(r);
+    });
+  }
+  drawD();
+
+  document.querySelectorAll('.tgb[data-m]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.tgb[data-m]').forEach(function(x){x.setAttribute('aria-selected','false');});
+      b.setAttribute('aria-selected','true');
+      mode=b.dataset.m; drawD();
+    });
+  });
+
+  document.querySelectorAll('.tb').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
+      t.setAttribute('aria-selected','true');
+      document.querySelectorAll('.pg').forEach(function(p){
+        p.hidden = (p.dataset.p !== t.dataset.p);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
