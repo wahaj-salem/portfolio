@@ -232,6 +232,16 @@ tbody tr:nth-child(even) td{background:rgba(255,255,255,.017)}
 }
 .disc p{margin-bottom:0;color:#dfd0e2;font-size:.94rem}
 
+.shotbtn{display:inline-flex;align-items:center;gap:9px;margin-top:30px;
+  font-family:'Tajawal',sans-serif;font-size:.92rem;color:var(--cyan);
+  background:var(--navy-800);border:1px solid rgba(56,225,255,.3);border-radius:10px;
+  padding:11px 20px;cursor:pointer;transition:.2s}
+.shotbtn:hover{background:var(--navy-700);border-color:rgba(56,225,255,.6)}
+.shotbtn .ic{font-family:var(--mono);font-size:.8rem;transition:transform .25s}
+.shotbtn[aria-expanded="true"] .ic{transform:rotate(180deg)}
+figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--navy-800);margin-top:16px}
+figure img{display:block;width:100%;height:auto}
+figcaption{padding:12px 16px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
 footer{
   border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
   color:var(--muted);font-size:.85rem;
@@ -400,6 +410,14 @@ footer a:hover{text-decoration:underline}
       الأجور بالريال السعودي على أساس الدوام الكامل. الدرجات 7 و 8 فيها أربع موظفات فقط، فأرقامها أقل استقراراً
       من غيرها ولا تصلح لبناء قرار عليها وحدها.
     </p>
+
+    <button class="shotbtn" type="button" id="shotbtn" aria-expanded="false">
+      <span class="ic">▾</span><span id="shotlbl">عرض اللقطات الأصلية من Power BI</span>
+    </button>
+    <figure id="shotfig" hidden>
+      <img src="pay-equity-powerbi.png" alt="لقطات من التقرير في Power BI: النظرة العامة، الأجر داخل كل درجة، والدرجة الثالثة">
+      <figcaption>ثلاث لقطات من التقرير في Power BI Desktop.</figcaption>
+    </figure>
 
     <div style="margin-top:34px">
       <div class="find">
@@ -626,6 +644,16 @@ footer a:hover{text-decoration:underline}
   });
 
   render(D[2]);
+
+  var sb=document.getElementById('shotbtn'), sf=document.getElementById('shotfig'), sl=document.getElementById('shotlbl');
+  if(sb){
+    sb.addEventListener('click',function(){
+      var open = sb.getAttribute('aria-expanded')==='true';
+      sb.setAttribute('aria-expanded', String(!open));
+      sf.hidden = open;
+      sl.textContent = open ? 'عرض اللقطات الأصلية من Power BI' : 'إخفاء اللقطات';
+    });
+  }
 })();
 </script>
 </body>

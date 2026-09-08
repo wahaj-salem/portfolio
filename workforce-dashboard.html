@@ -196,6 +196,16 @@ tbody tr:nth-child(even) td{background:rgba(255,255,255,.016)}
 .drow .v{flex:0 0 74px;font-family:var(--mono);font-size:.86rem;color:#DDEFE8}
 @media (max-width:640px){.crow .l,.drow .l{flex-basis:78px;font-size:.79rem}}
 
+.shotbtn{display:inline-flex;align-items:center;gap:9px;margin-top:34px;
+  font-family:'Tajawal',sans-serif;font-size:.92rem;color:var(--em-pale);
+  background:var(--panel);border:1px solid rgba(16,185,129,.32);border-radius:10px;
+  padding:11px 20px;cursor:pointer;transition:.2s}
+.shotbtn:hover{background:var(--panel-2);border-color:rgba(16,185,129,.6)}
+.shotbtn .ic{font-family:var(--mono);font-size:.8rem;transition:transform .25s}
+.shotbtn[aria-expanded="true"] .ic{transform:rotate(180deg)}
+figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);margin-top:16px}
+figure img{display:block;width:100%;height:auto}
+figcaption{padding:12px 16px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
 footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
   color:var(--muted);font-size:.85rem}
 footer a{color:var(--em-light);text-decoration:none}
@@ -380,6 +390,14 @@ footer a:hover{text-decoration:underline}
         <div id="dchart"></div>
       </div>
     </div>
+
+    <button class="shotbtn" type="button" id="shotbtn" aria-expanded="false">
+      <span class="ic">▾</span><span id="shotlbl">عرض اللقطات الأصلية من Power BI</span>
+    </button>
+    <figure id="shotfig" hidden>
+      <img src="workforce-dashboard-powerbi.png" alt="لقطات من صفحات التقرير الثلاث في Power BI: نظرة عامة، العمل الإضافي، والخصومات">
+      <figcaption>الصفحات الثلاث كما تظهر في Power BI Desktop بالثيم الأخضر الداكن.</figcaption>
+    </figure>
   </section>
 
   <!-- ============ النتائج ============ -->
@@ -586,6 +604,16 @@ footer a:hover{text-decoration:underline}
       });
     });
   });
+
+  var sb=document.getElementById('shotbtn'), sf=document.getElementById('shotfig'), sl=document.getElementById('shotlbl');
+  if(sb){
+    sb.addEventListener('click',function(){
+      var open = sb.getAttribute('aria-expanded')==='true';
+      sb.setAttribute('aria-expanded', String(!open));
+      sf.hidden = open;
+      sl.textContent = open ? 'عرض اللقطات الأصلية من Power BI' : 'إخفاء اللقطات';
+    });
+  }
 })();
 </script>
 </body>
