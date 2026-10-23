@@ -7,320 +7,435 @@
 <meta name="description" content="تحليل الدوران الوظيفي في شركة آل طاوي للتشييد والبناء على بيانات أكثر من 3,700 موظف بين 2020 و2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0B1330;
-  --panel:#141D45;
-  --panel-2:#1B2552;
-  --line:rgba(255,255,255,.08);
-  --text:#E8EDFB;
-  --muted:#AFB8D8;
-  --ac:#F4C81E;
-  --ac-light:#F4C81E;
-  --ac-pale:#FBE38A;
-  --teal:#00B8A9;
-  --amber:#F6A623;
-  --grad:linear-gradient(115deg,#FBE38A 0%,#F4C81E 45%,#6FA0FF 100%);
-  --display:'El Messiri',serif;
+  --bg:#08090F; --card:#12131C; --line:rgba(255,255,255,.09);
+  --text:#F3EFE8; --muted:#BDB6AB; --dim:#9A948A;
+  --coral:#FF5E3A; --coral2:#FF7A4D; --gold:#FFB547; --mint:#5EEAD4;
+  --ease:cubic-bezier(.16,1,.3,1);
   --mono:'Space Grotesk',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:'Tajawal',system-ui,sans-serif;font-weight:300;
-  line-height:1.85;-webkit-font-smoothing:antialiased;
+body{background:var(--bg);color:var(--text);font-family:'Alexandria',system-ui,sans-serif;font-weight:400;line-height:1.85;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:rgba(255,94,58,.35);color:#fff}
+a{color:var(--gold)}
+.wrap{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:0 24px}
+
+/* background glows + cursor */
+.glow{position:fixed;pointer-events:none;z-index:0;border-radius:50%;animation:glow 6s ease-in-out infinite}
+.glow.a{top:-260px;right:8%;width:900px;height:700px;background:radial-gradient(ellipse,rgba(255,94,58,.26),transparent 62%)}
+.glow.b{top:45vh;left:-220px;width:700px;height:700px;background:radial-gradient(circle,rgba(94,234,212,.13),transparent 62%);animation-delay:-3s}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+.cursor{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(255,122,77,.20),rgba(255,181,71,.07) 35%,transparent 65%);opacity:0;transition:opacity .5s;will-change:transform}
+.cursor.on{opacity:1}
+
+/* top */
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:28px 0 0}
+.pill{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-size:.88rem;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);transition:.3s var(--ease)}
+.pill:hover{border-color:rgba(255,181,71,.6);background:rgba(255,181,71,.08)}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.24em;color:var(--dim)}
+
+/* hero */
+.hero{text-align:center;padding:70px 0 40px;display:flex;flex-direction:column;align-items:center;gap:26px}
+.badge{font-family:var(--mono);font-size:.78rem;letter-spacing:.2em;padding:8px 16px;border-radius:999px;background:rgba(255,94,58,.12);color:var(--gold);border:1px solid rgba(255,94,58,.35)}
+h1{font-size:clamp(2.8rem,8.4vw,5.8rem);line-height:1.12;font-weight:800;letter-spacing:-.02em;perspective:600px}
+.w{display:inline-block;opacity:0;transform-origin:bottom;animation:word .95s var(--ease) forwards}
+.w:nth-child(1){animation-delay:.05s}.w:nth-child(2){animation-delay:.18s}.w:nth-child(4){animation-delay:.31s}
+@keyframes word{from{opacity:0;transform:translateY(60%) rotateX(-70deg)}to{opacity:1;transform:none}}
+.grad{background:linear-gradient(90deg,var(--coral),var(--gold) 55%,var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{max-width:720px;font-size:clamp(1.02rem,2vw,1.2rem);font-weight:300;color:var(--muted)}
+.fade{opacity:0;animation:rise 1s var(--ease) .45s forwards}
+@keyframes rise{from{opacity:0;transform:translateY(46px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+
+/* hero shot */
+.shot-wrap{perspective:1400px;margin-top:10px}
+.shot{transform:rotateX(28deg) scale(.86) translateY(40px);transform-origin:center top;transition:transform 1.2s var(--ease)}
+.shot.flat{transform:none}
+.tilt{border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.55),rgba(255,255,255,.06) 40%,rgba(94,234,212,.4));
+  box-shadow:0 60px 140px -40px rgba(255,94,58,.45);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tilt:hover{box-shadow:0 70px 150px -30px rgba(255,94,58,.6)}
+.zoom{display:block;position:relative;overflow:hidden;width:100%;padding:0;border:0;background:none;border-radius:16px;cursor:zoom-in}
+.zoom img{display:block;width:100%;border-radius:16px}
+.shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);transform:translateX(120%);animation:sweep 3.4s ease-in-out 2s infinite}
+@keyframes sweep{from{transform:translateX(120%)}to{transform:translateX(-120%)}}
+
+/* sections */
+section{padding:110px 0 0}
+h2{font-size:clamp(1.9rem,4.4vw,2.9rem);font-weight:800;line-height:1.2;margin-bottom:26px}
+.rv{opacity:0;transform:translateY(46px) scale(.98);filter:blur(6px);transition:opacity 1s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}.rv.d5{transition-delay:.4s}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:210px;gap:16px}
+.tile{height:100%;border-radius:26px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  background:var(--card);border:1px solid var(--line);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tile:hover{box-shadow:0 40px 90px -30px rgba(255,94,58,.5)}
+.tile .k{font-size:.95rem;color:var(--muted)}
+.tile .v{font-family:var(--mono);font-weight:700;font-size:3.6rem;line-height:1}
+.tile .s{font-size:.82rem;color:var(--dim)}
+.t-sales{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#1A120F,#0F0C0B);border-color:rgba(255,94,58,.25)}
+.t-sales .v{font-size:clamp(3.6rem,7vw,6rem);color:var(--gold);margin-top:10px}
+.t-ring{grid-row:span 2;align-items:center;text-align:center;background:linear-gradient(180deg,#0D1A18,#0A0F0E);border-color:rgba(94,234,212,.25)}
+.ring{position:relative;width:170px;height:170px}
+.ring svg{width:170px;height:170px;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:2.8rem}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width 1.8s var(--ease)}
+.t-rep{grid-column:span 4;flex-direction:row;align-items:center;gap:36px;flex-wrap:wrap;background:linear-gradient(90deg,#1A0F12,#12131C 60%);border-color:rgba(255,94,58,.25)}
+.t-rep .v{font-size:4.4rem;color:var(--coral2)}
+.dots{flex:1 1 400px;display:grid;grid-template-columns:repeat(25,minmax(0,1fr));gap:7px}
+.dots span{aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.12);transform:scale(0);transition:transform .5s var(--ease)}
+.dots span.hot{background:var(--coral2);box-shadow:0 0 14px var(--coral)}
+.in .dots span{transform:scale(1)}
+.spark{width:100%;height:150px}
+.spark .ln{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 2.4s var(--ease) .3s}
+.in .spark .ln{stroke-dashoffset:0}
+.spark .pk{transform:scale(0);transform-box:fill-box;transform-origin:center;transition:transform .6s var(--ease) 2.4s}
+.in .spark .pk{transform:scale(1)}
+
+/* tour (sticky gallery) */
+.tour{display:flex;gap:44px;align-items:flex-start}
+.tour-text{flex:1 1 320px}
+.tstep{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:14px;opacity:.3;transform:translateX(-14px);transition:opacity .5s,transform .6s var(--ease)}
+.tstep.on{opacity:1;transform:none}
+.tstep .n{align-self:flex-start;font-family:var(--mono);font-size:.86rem;letter-spacing:.2em;color:var(--gold)}
+.tstep h3{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;line-height:1.3}
+.tstep p{font-size:1.06rem;font-weight:300;color:var(--muted)}
+.gbtn{align-self:flex-start;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-family:inherit;font-size:.9rem;cursor:pointer;transition:background .25s,transform .25s}
+.gbtn:hover{background:rgba(255,181,71,.18);transform:scale(1.05)}
+.tour-media{flex:1.4 1 480px;position:sticky;top:90px}
+.frame{transition:transform .25s ease-out;transform-style:preserve-3d;will-change:transform;position:relative;border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.45),rgba(255,255,255,.05) 45%,rgba(94,234,212,.35));box-shadow:0 50px 120px -40px rgba(255,94,58,.4)}
+.stage{position:relative;aspect-ratio:1300/715;border-radius:16px;overflow:hidden;background:#0F0F16}
+.gimg{position:absolute;inset:0;padding:0;border:0;background:none;cursor:zoom-in;opacity:0;transform:scale(.94);filter:blur(10px);pointer-events:none;
+  transition:opacity .8s var(--ease),transform .9s var(--ease),filter .8s}
+.gimg.past{transform:scale(1.08)}
+.gimg.on{opacity:1;transform:none;filter:none;pointer-events:auto}
+.gimg img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.play{position:absolute;inset:0;display:grid;place-items:center}
+.play span{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:rgba(255,94,58,.9);color:#fff;font-size:1.6rem;box-shadow:0 0 0 12px rgba(255,94,58,.2)}
+.gfoot{display:flex;justify-content:space-between;align-items:center;padding:14px 6px 2px;font-family:var(--mono);font-size:.88rem}
+.gfoot .bar{flex:0 0 55%;height:4px}
+.gfoot .bar i{transition:width .6s var(--ease)}
+
+/* steps / problems / summary */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.step{padding:26px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.02);display:flex;flex-direction:column;gap:10px;transition:background .35s,border-color .35s,transform .35s var(--ease)}
+.step:hover{background:rgba(255,181,71,.07);border-color:rgba(255,181,71,.5);transform:translateY(-6px)}
+.step .n{font-family:var(--mono);font-weight:700;font-size:2.6rem;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+.step h4{font-size:1.12rem;font-weight:600}
+.step p{font-size:.95rem;font-weight:300;color:var(--muted)}
+.prob{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.pcard{position:relative;padding:28px;border-radius:24px;background:var(--card);border:1px solid var(--line);overflow:hidden;transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d}
+.pcard:hover{box-shadow:0 40px 90px -30px rgba(94,234,212,.35)}
+.pcard .tag{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;color:var(--mint)}
+.pcard h4{font-size:1.15rem;font-weight:700;margin:10px 0}
+.pcard p{font-size:.96rem;font-weight:300;color:var(--muted)}
+.pcard code{font-family:var(--mono);font-size:.88em;color:var(--gold)}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.scard{padding:26px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;gap:20px;align-items:flex-start;transition:border-color .35s,transform .35s var(--ease)}
+.scard:hover{border-color:rgba(255,181,71,.45);transform:translateY(-4px)}
+.scard .big{flex:0 0 auto;font-family:var(--mono);font-weight:700;font-size:1.7rem;color:var(--gold);direction:ltr;min-width:96px;text-align:center;line-height:1.3}
+.scard p{font-size:.97rem;font-weight:300;color:var(--muted)}
+.scard strong{color:var(--text);font-weight:600}
+.scard.wide{grid-column:1/-1}
+.recs{list-style:none;display:grid;gap:10px;margin-top:14px}
+.recs li{padding:12px 16px;border-radius:14px;background:rgba(255,181,71,.06);border:1px solid rgba(255,181,71,.18);font-size:.95rem;color:var(--muted)}
+.recs b{color:var(--gold);font-weight:600}
+
+/* marquee */
+.marq{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-top:110px}
+.marq div{display:flex;gap:60px;width:max-content;font-family:var(--mono);font-size:2.1rem;font-weight:700;color:rgba(243,239,232,.18);white-space:nowrap;animation:marq 24s linear infinite}
+.marq em{font-style:normal;color:var(--coral2)}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(50%)}}
+.src{font-size:.85rem;color:var(--dim);margin-top:18px}
+footer{padding:50px 0 60px;color:var(--dim);font-size:.86rem}
+footer a{text-decoration:none}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(5,5,9,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;opacity:0;pointer-events:none;transition:opacity .35s}
+.lb.open{opacity:1;pointer-events:auto}
+.lb-top,.lb-mid{display:flex;align-items:center;gap:16px;width:min(1200px,100%)}
+.lb-top{justify-content:space-between;font-size:1.1rem;font-weight:600}
+.lb-media{flex:1;min-width:0;display:flex;justify-content:center}
+.lb-media img,.lb-media video{max-width:100%;max-height:72vh;border-radius:14px;box-shadow:0 40px 120px -20px rgba(255,94,58,.45);animation:lbzoom .55s var(--ease) both}
+@keyframes lbzoom{from{opacity:0;transform:scale(.86) translateY(30px)}to{opacity:1;transform:none}}
+.cbtn{flex:0 0 52px;width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-size:1.4rem;cursor:pointer;transition:background .25s,transform .25s}
+.cbtn:hover{background:rgba(255,181,71,.2);transform:scale(1.08)}
+.cbtn.x{color:var(--text);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.thumbs{display:flex;gap:10px}
+.thumbs button{width:96px;height:54px;padding:0;border-radius:10px;overflow:hidden;border:2px solid transparent;background:none;cursor:pointer;opacity:.55;transition:.25s}
+.thumbs button.on{border-color:var(--gold);opacity:1}
+.thumbs img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+@media (max-width:900px){
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:190px}
+  .t-sales,.t-rep{grid-column:span 2}
+  .tour{flex-direction:column}
+  .tour-media{position:relative;top:0;order:-1;width:100%}
+  .tstep{min-height:auto;padding:26px 0;opacity:1;transform:none}
 }
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(58rem 34rem at 86% -10%,rgba(244,200,30,.10),transparent 62%),
-    radial-gradient(50rem 30rem at 2% 20%,rgba(59,111,224,.28),transparent 60%),
-    radial-gradient(44rem 28rem at 60% 105%,rgba(0,184,169,.07),transparent 62%);
+@media (max-width:560px){
+  .bento{grid-template-columns:1fr;grid-auto-rows:auto}
+  .t-sales,.t-rep,.t-ring{grid-column:auto;grid-row:auto}
+  .tile{min-height:190px}
+  .t-sales .spark{height:110px}
+  .dots{grid-template-columns:repeat(20,minmax(0,1fr));gap:5px}
+  .cbtn{flex-basis:44px;width:44px;height:44px}
+  .thumbs button{width:72px;height:42px}
 }
-::selection{background:rgba(244,200,30,.35);color:#fff}
-.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
-
-.top{padding:34px 0 0}
-.back{
-  display:inline-flex;align-items:center;gap:9px;color:var(--muted);
-  text-decoration:none;font-size:.86rem;border:1px solid var(--line);
-  border-radius:999px;padding:7px 16px;transition:.25s;
+@media (hover:none){.cursor{display:none}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .w,.fade,.rv{opacity:1;transform:none;filter:none}
+  .shot{transform:none}
+  .dots span,.spark .pk{transform:none}
+  .spark .ln{stroke-dashoffset:0}
 }
-.back:hover{color:var(--text);border-color:rgba(244,200,30,.55)}
 
-.hero{padding:56px 0 30px}
-.eyebrow{
-  font-family:var(--mono);font-size:.73rem;letter-spacing:.16em;
-  color:var(--ac-light);text-transform:uppercase;margin-bottom:20px;
-}
-h1{
-  font-family:var(--display);font-size:clamp(2.1rem,5.6vw,3.6rem);
-  font-weight:600;line-height:1.25;letter-spacing:-.01em;margin-bottom:22px;
-}
-h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lede{font-size:clamp(1.02rem,2.1vw,1.16rem);color:#C3CCE8;max-width:66ch}
-.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
-.tag{font-family:var(--mono);font-size:.75rem;color:var(--muted);
-  border:1px solid var(--line);border-radius:6px;padding:5px 12px}
-
-.stats{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:1px;background:var(--line);border:1px solid var(--line);
-  border-radius:14px;overflow:hidden;margin:46px 0 8px;
-}
-.stat{background:var(--panel);padding:26px 22px}
-.stat b{display:block;font-family:var(--mono);font-size:1.9rem;font-weight:500;
-  letter-spacing:-.02em;margin-bottom:5px;color:#6FA0FF}
-.stat.alt b{color:var(--ac-pale)}
-.stat.teal b{color:#7FE3C4}
-.stat.amber b{color:#FF8A8A}
-.stat span{font-size:.83rem;color:var(--muted);line-height:1.6;display:block}
-
-section{padding:62px 0;border-top:1px solid var(--line);margin-top:56px}
-h2{font-family:var(--display);font-size:clamp(1.4rem,3vw,1.85rem);
-  font-weight:600;letter-spacing:-.01em;margin-bottom:10px}
-h2::before{content:"";display:block;width:46px;height:3px;border-radius:2px;
-  background:var(--grad);margin-bottom:18px}
-h3{font-size:1.06rem;font-weight:600;margin:34px 0 10px;color:#EEF2FD}
-p{margin-bottom:16px;color:#C3CCE8;max-width:70ch}
-strong{font-weight:600;color:#fff}
-code{font-family:var(--mono);font-size:.86em;color:var(--ac-pale)}
-
-/* steps */
-.steps{list-style:none;counter-reset:s;margin-top:26px}
-.steps li{counter-increment:s;display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
-.steps li:last-child{border-bottom:none}
-.steps li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  font-family:var(--mono);font-size:.82rem;background:rgba(244,200,30,.14);
-  color:var(--ac-light);border:1px solid rgba(244,200,30,.32)}
-.steps h4{font-size:1rem;font-weight:600;color:#EEF2FD;margin-bottom:4px}
-.steps p{margin-bottom:0;font-size:.97rem}
-
-/* problems */
-.dec{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:12px;padding:20px 22px;margin-bottom:14px;
-  position:relative;overflow:hidden;
-}
-.dec::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;
-  width:3px;background:var(--grad)}
-.dec .k{display:block;font-family:var(--mono);font-size:.7rem;
-  letter-spacing:.14em;color:var(--ac-light);margin-bottom:7px}
-.dec h4{font-size:1.02rem;font-weight:600;color:#EEF2FD;margin-bottom:8px}
-.dec p{margin-bottom:0;font-size:.96rem}
-
-/* dashboard viewer */
-.viewer{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:14px}
-.tb{font-family:'Tajawal',sans-serif;font-size:.9rem;color:var(--muted);background:transparent;
-  border:1px solid var(--line);border-radius:9px;padding:8px 16px;cursor:pointer;transition:.18s}
-.tb:hover{color:var(--text);border-color:rgba(244,200,30,.5)}
-.tb[aria-selected="true"]{background:var(--grad);color:#0B1330;font-weight:600;border-color:transparent}
-figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0B1330}
-figure img,figure video{display:block;width:100%;height:auto}
-figcaption{padding:12px 16px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
-
-/* summary */
-.find{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-  padding:22px 24px 18px;margin-bottom:14px;position:relative;overflow:hidden}
-.find::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad)}
-.find .num{font-family:var(--mono);font-size:1.35rem;font-weight:500;color:var(--ac-light);display:block;margin-bottom:4px;direction:ltr;text-align:right}
-.find p{margin-bottom:0}
-.recs{margin:12px 0 0;padding-inline-start:20px;color:#C3CCE8}
-.recs li{margin-bottom:6px}
-.recs li::marker{color:var(--ac-light)}
-
-footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
-  color:var(--muted);font-size:.85rem}
-footer a{color:var(--ac-light);text-decoration:none}
-footer a:hover{text-decoration:underline}
-:focus-visible{outline:2px solid var(--ac);outline-offset:3px;border-radius:4px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:640px){
-  section{padding:46px 0;margin-top:38px}
-  .hero{padding:38px 0 18px}
-  .viewer{padding:14px}
-}
-.gstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:18px}
-.gstat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
-.gstat b{display:block;font-family:var(--mono);font-size:1.35rem;font-weight:500;color:var(--ac-light);margin-bottom:6px}
-.gstat span{display:block;font-size:.88rem;color:#C3CCE8;line-height:1.7}
-.gstat i{display:block;font-style:normal;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:8px}
-.small{font-size:.88rem;color:var(--muted)}
+.tile .v.sm{font-size:2.6rem}
+.bento{grid-auto-rows:minmax(210px,auto);grid-auto-flow:row dense}
+.tile{gap:10px}
+.scard{flex-wrap:wrap}
+.scard>div{flex:1 1 240px;min-width:0}
+.scard .big{white-space:nowrap;min-width:110px}
+.t-big{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#1A120F,#0F0C0B);border-color:rgba(255,94,58,.25)}
+.t-big .v{font-size:clamp(3.4rem,6.4vw,5.6rem);color:var(--gold);margin-top:10px}
+.t-wide{grid-column:span 2}
+.t-full{grid-column:1/-1}
+.t-full .hbars{max-width:640px}
+.t-mint{background:linear-gradient(180deg,#0D1A18,#0A0F0E);border-color:rgba(94,234,212,.25)}
+.t-mint .v{color:var(--mint)}
+.hbars{display:flex;flex-direction:column;gap:12px}
+.hb{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted)}
+.hb .l{flex:0 0 96px}
+.hb .tr{flex:1;height:12px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.hb .tr i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width 1.6s var(--ease)}
+.hb .tr i.m{background:linear-gradient(90deg,#2BB8A3,var(--mint))}
+.hb .vv{flex:0 0 74px;font-family:var(--mono);color:var(--text);direction:ltr;text-align:left}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:18px;margin-top:8px}
+.tbl table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:560px}
+.tbl th,.tbl td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line)}
+.tbl th{background:#15161F;font-family:var(--mono);font-size:.76rem;font-weight:500;color:var(--gold);letter-spacing:.04em}
+.tbl td{color:#DCD6CC;font-family:var(--mono)}
+.tbl td.ar{font-family:inherit;text-align:right}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl .hi{color:var(--coral2);font-weight:600}.tbl .neg{color:var(--mint);font-weight:600}.tbl .thin{color:var(--dim)}
+.note{font-size:.84rem;color:var(--dim);margin-top:12px}
+.sub-h{font-size:1.35rem;font-weight:800;margin:46px 0 16px}
+.disc{margin-top:18px;padding:18px 22px;border-radius:16px;border:1px dashed rgba(255,181,71,.4);background:rgba(255,181,71,.05);font-size:.92rem;color:#E6DCC8}
+.gstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.gstat{padding:22px;border-radius:20px;background:var(--card);border:1px solid var(--line)}
+.gstat b{display:block;font-family:var(--mono);font-size:1.5rem;color:var(--gold);margin-bottom:6px}
+.gstat span{display:block;font-size:.9rem;font-weight:300;color:var(--muted)}
+.gstat i{display:block;font-style:normal;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:8px}
+@media (max-width:900px){.t-big,.t-wide{grid-column:span 2}}
+@media (max-width:560px){.t-big,.t-wide{grid-column:auto;grid-row:auto}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="glow a" aria-hidden="true"></div>
+<div class="glow b" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <div class="top">
-    <a class="back" href="index.html">→ العودة إلى الملف التعريفي</a>
+<div class="wrap">
+  <div class="top fade">
+    <a class="pill" href="index.html">→ العودة إلى الملف التعريفي</a>
+    <span class="eyebrow">CASE STUDY · HR ANALYTICS</span>
   </div>
 
   <header class="hero">
-    <div class="eyebrow">HR Analytics · Power BI</div>
-    <h1>تحليل <span class="g">دوران الموظفين</span></h1>
-    <p class="lede">
-      لوحة تحليلية لقياس الدوران الوظيفي في شركة <strong>آل طاوي للتشييد والبناء</strong>، مبنية على بيانات أكثر من 3,700 موظف بين 2020 و2026.
-      تكشف اللوحة اتجاهات المغادرة عبر السنوات، والفئات الأكثر تأثرًا (العمر، مدة الخدمة، الجنسية، الجنس)، لدعم قرارات الاحتفاظ بالكفاءات.
-      جميع الأرقام المعروضة هنا مجمّعة، دون أي بيانات فردية للموظفين حفاظًا على الخصوصية.
-    </p>
-    <div class="tags">
-      <span class="tag">Power BI</span>
-      <span class="tag">Python</span>
-      <span class="tag">Pandas</span>
-      <span class="tag">DAX</span>
-    </div>
+    <span class="badge fade">HR ANALYTICS · POWER BI</span>
+    <h1><span class="w">تحليل</span> <span class="w">دوران</span><br><span class="w grad">الموظفين</span></h1>
+    <p class="lede fade">لوحة تحليلية لقياس الدوران الوظيفي في شركة <strong>آل طاوي للتشييد والبناء</strong>، مبنية على بيانات أكثر من 3,700 موظف بين 2020 و2026. تكشف اللوحة اتجاهات المغادرة عبر السنوات، والفئات الأكثر تأثرًا (العمر، مدة الخدمة، الجنسية، الجنس)، لدعم قرارات الاحتفاظ بالكفاءات. جميع الأرقام المعروضة هنا مجمّعة، دون أي بيانات فردية للموظفين حفاظًا على الخصوصية.</p>
   </header>
 
-  <div class="stats">
-    <div class="stat"><b>3,720</b><span>إجمالي الموظفين</span></div>
-    <div class="stat alt"><b>1,712</b><span>إجمالي المغادرين</span></div>
-    <div class="stat amber"><b>46%</b><span>نسبة الدوران التراكمية</span></div>
-    <div class="stat teal"><b>3.2</b><span>متوسط سنوات الخدمة</span></div>
-  </div>
-
-  <!-- ============ اللوحة ============ -->
-  <section>
-    <h2>اللوحة</h2>
-    <div class="viewer">
-      <div class="tabs" role="tablist" aria-label="عرض اللوحة">
-        <button class="tb" type="button" role="tab" data-v="0" aria-selected="true">نظرة عامة</button>
-        <button class="tb" type="button" role="tab" data-v="1" aria-selected="false">من يغادر؟</button>
+  <!-- ============ جولة في اللوحة ============ -->
+  <section style="padding-top:40px">
+    <h2 class="rv">جولة في <span style="color:var(--gold)">اللوحة</span></h2>
+    <div class="tour">
+      <div class="tour-text">
+        <div class="tstep" data-step="0">
+          <span class="n" dir="ltr">01 / 02</span>
+          <h3>نظرة عامة</h3>
+          <p>المؤشرات الرئيسية واتجاه الدوران عبر السنوات. (بيانات 2026 حتى مايو فقط)</p>
+          <button type="button" class="gbtn" data-open="0">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="1">
+          <span class="n" dir="ltr">02 / 02</span>
+          <h3>من يغادر؟</h3>
+          <p>المغادرون حسب الجنسية والفئة العمرية ومدة الخدمة والجنس.</p>
+          <button type="button" class="gbtn" data-open="1">تكبير الصورة ↖</button>
+        </div>
       </div>
+      <div class="tour-media">
+        <div class="frame" data-tilt="5">
+          <div class="stage">
+            <button type="button" class="gimg" data-g="0" data-open="0" data-title="نظرة عامة" aria-label="تكبير: نظرة عامة"><img src="turnover-p1.png" alt="المؤشرات الرئيسية واتجاه الدوران من 2020 إلى 2026" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="1" data-open="1" data-title="من يغادر؟" aria-label="تكبير: من يغادر؟"><img src="turnover-p2.png" alt="المغادرون حسب الجنسية والعمر ومدة الخدمة والجنس" loading="lazy"></button>
+          </div>
+          <div class="gfoot"><span id="gCount" dir="ltr">01 / 02</span><div class="bar"><i id="gProg"></i></div></div>
+        </div>
+        <p class="note">ملخص بصري لنتائج التحليل.</p>
+      </div>
+    </div>
+  </section>
 
-      <figure class="pv" data-v="0">
-        <img src="turnover-p1.png" alt="ملخص بصري: المؤشرات الرئيسية واتجاه الدوران من 2020 إلى 2026" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: المؤشرات الرئيسية واتجاه الدوران عبر السنوات. (*2026 حتى مايو فقط)</figcaption>
-      </figure>
-      <figure class="pv" data-v="1" hidden>
-        <img src="turnover-p2.png" alt="ملخص بصري: المغادرون حسب الجنسية والعمر ومدة الخدمة والجنس" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: المغادرون حسب الجنسية والفئة العمرية ومدة الخدمة والجنس.</figcaption>
-      </figure>
+  <!-- ============ الأرقام ============ -->
+  <section>
+    <h2 class="rv">الأرقام <span style="color:var(--gold)">بلمحة</span></h2>
+    <div class="bento">
+      <div class="rv d1 tile t-big" data-tilt="9">
+        <div class="k">نسبة الدوران السنوية في 2025</div>
+        <div class="v" data-count="24" data-dec="0" data-suf="%" data-pre="">0</div><div style="margin-top:22px"><div class="hbars"><div class="hb"><span class="l">2020</span><span class="tr"><i class="" data-w="19.2%"></i></span><span class="vv">4.6%</span></div><div class="hb"><span class="l">2022</span><span class="tr"><i class="" data-w="39.6%"></i></span><span class="vv">9.5%</span></div><div class="hb"><span class="l">2023</span><span class="tr"><i class="" data-w="59.2%"></i></span><span class="vv">14.2%</span></div><div class="hb"><span class="l">2024</span><span class="tr"><i class="" data-w="53.3%"></i></span><span class="vv">12.8%</span></div><div class="hb"><span class="l">2025</span><span class="tr"><i class="" data-w="100.0%"></i></span><span class="vv">24.0%</span></div></div></div>
+        <div class="s">من 4.6% عام 2020 — نحو خمسة أضعاف خلال ست سنوات</div>
+      </div>
+      <div class="rv d2 tile " data-tilt="12">
+        <div class="k">إجمالي الموظفين</div>
+        <div class="v" data-count="3720" data-dec="0" data-suf="" data-pre="" data-comma="1">0</div>
+        <div class="s">منهم 1,712 مغادر</div>
+      </div>
+      <div class="rv d3 tile t-mint" data-tilt="12">
+        <div class="k">متوسط سنوات الخدمة</div>
+        <div class="v" data-count="3.2" data-dec="1" data-suf="" data-pre="">0</div>
+        <div class="s">سنة</div>
+      </div>
+      <div class="rv d4 tile t-wide" data-tilt="6">
+        <div class="k">نسبة الدوران التراكمية</div>
+        <div class="v" data-count="46" data-dec="0" data-suf="%" data-pre="">0</div>
+        <div class="s">1,712 مغادر من 3,720 موظف</div>
+      </div>
+      <div class="rv d5 tile t-full" data-tilt="6">
+        <div class="k">غادروا خلال أول 3 سنوات</div>
+        <div class="v" data-count="53" data-dec="0" data-suf="%" data-pre="~">0</div><div style="margin-top:14px"><div class="hbars"><div class="hb"><span class="l">أقل من سنة</span><span class="tr"><i class="" data-w="60.9%"></i></span><span class="vv">346</span></div><div class="hb"><span class="l">1–3 سنوات</span><span class="tr"><i class="" data-w="100.0%"></i></span><span class="vv">568</span></div><div class="hb"><span class="l">3–5 سنوات</span><span class="tr"><i class="" data-w="52.1%"></i></span><span class="vv">296</span></div><div class="hb"><span class="l">5–10 سنوات</span><span class="tr"><i class="" data-w="60.2%"></i></span><span class="vv">342</span></div></div></div>
+        <div class="s"></div>
+      </div>
     </div>
   </section>
 
   <!-- ============ خطوات العمل ============ -->
   <section>
-    <h2>خطوات العمل</h2>
-    <ol class="steps">
-      <li><div><h4>تنظيف البيانات في Python</h4>
-        <p>البيانات الأولية كانت غير نظيفة، فنظفتها بـ Pandas داخل Jupyter قبل بناء اللوحة.</p></div></li>
-      <li><div><h4>حساب نسبة الدوران السنوية</h4>
-        <p>مغادرو السنة ÷ متوسط عدد الموظفين، لكل سنة من 2020 إلى 2026.</p></div></li>
-      <li><div><h4>تقسيم المغادرين حسب الفئات</h4>
-        <p>حسب السنة، والجنسية، والجنس، والفئة العمرية، ومدة الخدمة.</p></div></li>
-      <li><div><h4>بناء اللوحة في Power BI</h4>
-        <p>بقياسات DAX مخصّصة.</p></div></li>
-    </ol>
+    <h2 class="rv">خطوات <span style="color:var(--mint)">العمل</span></h2>
+    <div class="steps">
+      <div class="step rv d1"><span class="n">01</span><h4>تنظيف البيانات في Python</h4><p>البيانات الأولية كانت غير نظيفة، فنظفتها بـ Pandas داخل Jupyter قبل بناء اللوحة.</p></div>
+      <div class="step rv d2"><span class="n">02</span><h4>حساب نسبة الدوران السنوية</h4><p>مغادرو السنة ÷ متوسط عدد الموظفين، لكل سنة من 2020 إلى 2026.</p></div>
+      <div class="step rv d3"><span class="n">03</span><h4>تقسيم المغادرين حسب الفئات</h4><p>حسب السنة، والجنسية، والجنس، والفئة العمرية، ومدة الخدمة.</p></div>
+      <div class="step rv d4"><span class="n">04</span><h4>بناء اللوحة في Power BI</h4><p>بقياسات DAX مخصّصة.</p></div>
+    </div>
   </section>
 
   <!-- ============ المشاكل ============ -->
   <section>
-    <h2>مشاكل واجهتني وكيف حليتها</h2>
-
-    <div class="dec">
-      <span class="k">المشكلة الأولى</span>
-      <h4>نسبة الدوران تجاوزت 100%</h4>
-      <p>صُحّحت المعادلة لتُحسب سنويًا (مغادرو السنة ÷ متوسط عدد الموظفين).</p>
-    </div>
-    <div class="dec">
-      <span class="k">المشكلة الثانية</span>
-      <h4>ترميز الجنس بأرقام غير مفهومة (9 / 10)</h4>
-      <p>فُكّ الترميز إلى ذكر/أنثى بعد التحقق من النظام.</p>
-    </div>
-    <div class="dec">
-      <span class="k">المشكلة الثالثة</span>
-      <h4>موظفون بلا نوع جنس محدّد</h4>
-      <p>عولجوا بخوارزمية استنتاج قائمة على القواعد (Rule-Based Classification) تطابق الاسم الأول مع قوائم أسماء معرّفة.</p>
-    </div>
-    <div class="dec">
-      <span class="k">المشكلة الرابعة</span>
-      <h4>أعمار مستحيلة وتواريخ ميلاد مستقبلية</h4>
-      <p>أُعيد حساب العمر، وفُرّغت القيم الخاطئة بدل تشويه التحليل.</p>
-    </div>
-    <div class="dec">
-      <span class="k">المشكلة الخامسة</span>
-      <h4>تعدّد أعمدة التكلفة بقيم متعارضة</h4>
-      <p>اعتُمد العمود الصحيح وحُذف المكرّر.</p>
-    </div>
-    <div class="dec">
-      <span class="k">المشكلة السادسة</span>
-      <h4>تواريخ مختلطة وقيم مفقودة</h4>
-      <p>وُحّدت الحالة، واعتُمدت سنة المغادرة لتفادي مشكلة التقويم الهجري.</p>
+    <h2 class="rv">مشاكل واجهتني <span style="color:var(--gold)">وكيف حليتها</span></h2>
+    <div class="prob">
+      <div class="pcard rv d1" data-tilt="6"><span class="tag">PROBLEM 01</span><h4>نسبة الدوران تجاوزت 100%</h4><p>صُحّحت المعادلة لتُحسب سنويًا (مغادرو السنة ÷ متوسط عدد الموظفين).</p></div>
+      <div class="pcard rv d2" data-tilt="6"><span class="tag">PROBLEM 02</span><h4>ترميز الجنس بأرقام غير مفهومة (9 / 10)</h4><p>فُكّ الترميز إلى ذكر/أنثى بعد التحقق من النظام.</p></div>
+      <div class="pcard rv d3" data-tilt="6"><span class="tag">PROBLEM 03</span><h4>موظفون بلا نوع جنس محدّد</h4><p>عولجوا بخوارزمية استنتاج قائمة على القواعد (Rule-Based Classification) تطابق الاسم الأول مع قوائم أسماء معرّفة.</p></div>
+      <div class="pcard rv d1" data-tilt="6"><span class="tag">PROBLEM 04</span><h4>أعمار مستحيلة وتواريخ ميلاد مستقبلية</h4><p>أُعيد حساب العمر، وفُرّغت القيم الخاطئة بدل تشويه التحليل.</p></div>
+      <div class="pcard rv d2" data-tilt="6"><span class="tag">PROBLEM 05</span><h4>تعدّد أعمدة التكلفة بقيم متعارضة</h4><p>اعتُمد العمود الصحيح وحُذف المكرّر.</p></div>
+      <div class="pcard rv d3" data-tilt="6"><span class="tag">PROBLEM 06</span><h4>تواريخ مختلطة وقيم مفقودة</h4><p>وُحّدت الحالة، واعتُمدت سنة المغادرة لتفادي مشكلة التقويم الهجري.</p></div>
     </div>
   </section>
 
   <!-- ============ الملخص ============ -->
   <section>
-    <h2>الملخص</h2>
-
-    <div class="find">
-      <span class="num">4.6% ← 24%</span>
-      <p><strong>دوران متصاعد:</strong> ارتفعت النسبة السنوية من 4.6% عام 2020 إلى ذروتها 24% عام 2025 — أي نحو خمسة أضعاف خلال ست سنوات، قفزة تستدعي مراجعة سياسات الاستبقاء. (بيانات 2026 حتى مايو فقط، فلا تعكس السنة كاملة.)</p>
+    <h2 class="rv">الملخص</h2>
+    <div class="sum">
+      <div class="scard rv d1"><span class="big">4.6% → 24%</span><div><p><strong>دوران متصاعد:</strong> ارتفعت النسبة السنوية من 4.6% عام 2020 إلى ذروتها 24% عام 2025 — قفزة تستدعي مراجعة سياسات الاستبقاء. (بيانات 2026 حتى مايو فقط، فلا تعكس السنة كاملة.)</p></div></div>
+      <div class="scard rv d2"><span class="big">26–35</span><div><p><strong>الفئة الأكثر مغادرة:</strong> الفئة العمرية 26–35 هي الأعلى في عدد المغادرين، وهي غالبًا فئة الكفاءات في منتصف مسارها المهني.</p></div></div>
+      <div class="scard rv d1 wide"><span class="big">~53%</span><div><p><strong>مغادرة مبكرة:</strong> أكثر من نصف المغادرين تركوا خلال أول 3 سنوات، ما يشير إلى ضعف في مرحلة التأهيل والاندماج المبكر.</p></div></div>
     </div>
-    <div class="find">
-      <span class="num">26–35</span>
-      <p><strong>الفئة الأكثر مغادرة:</strong> الفئة العمرية 26–35 هي الأعلى في عدد المغادرين، وهي غالبًا فئة الكفاءات في منتصف مسارها المهني.</p>
-    </div>
-    <div class="find">
-      <span class="num">~53%</span>
-      <p><strong>مغادرة مبكرة:</strong> أكثر من نصف المغادرين تركوا خلال أول 3 سنوات، ما يشير إلى ضعف في مرحلة التأهيل والاندماج المبكر.</p>
-    </div>
-
-    <h3 style="margin-top:38px">التوصيات</h3>
-    <ol class="steps" style="margin-top:8px">
-      <li><div><h4>استبقاء مبكر</h4>
-        <p>برامج تأهيل ومتابعة مركّزة في أول 3 سنوات، حيث يتركّز الجزء الأكبر من المغادرة.</p></div></li>
-      <li><div><h4>فئة 26–35</h4>
-        <p>دراسة أسباب مغادرة هذه الفئة (مسار وظيفي، تعويض، بيئة عمل) لأنها الأعلى دورانًا.</p></div></li>
-      <li><div><h4>مراقبة الاتجاه</h4>
-        <p>متابعة النسبة السنوية دوريًا بعد قفزة 2025، ورصد أثر أي إجراءات تصحيحية.</p></div></li>
-    </ol>
-
-    <h3 style="margin-top:38px">لماذا يُكلّف الدوران الشركة؟</h3>
-    <p>كلّما طالت مدة خدمة الموظف، انخفضت تكلفته النسبية وارتفعت إنتاجيته. وبما أن أكثر من نصف المغادرين يتركون خلال أول ثلاث سنوات، فإن الشركة تتحمّل تكاليف التأهيل دون أن تجني ثمار استثمارها في الموظف — ما يجعل الاحتفاظ بالكفاءات القرار الأقل تكلفة والأعلى عائدًا.</p>
-    <div class="gstats">
+    <h3 class="sub-h rv">التوصيات</h3>
+    <ul class="recs rv"><li><b>استبقاء مبكر:</b> برامج تأهيل ومتابعة مركّزة في أول 3 سنوات، حيث يتركّز الجزء الأكبر من المغادرة.</li><li><b>فئة 26–35:</b> دراسة أسباب مغادرة هذه الفئة (مسار وظيفي، تعويض، بيئة عمل) لأنها الأعلى دورانًا.</li><li><b>مراقبة الاتجاه:</b> متابعة النسبة السنوية دوريًا بعد قفزة 2025، ورصد أثر أي إجراءات تصحيحية.</li></ul>
+    <h3 class="sub-h rv">لماذا يُكلّف الدوران الشركة؟</h3>
+    <p class="rv" style="color:var(--muted);font-weight:300;max-width:780px">كلّما طالت مدة خدمة الموظف، انخفضت تكلفته النسبية وارتفعت إنتاجيته. وبما أن أكثر من نصف المغادرين يتركون خلال أول ثلاث سنوات، فإن الشركة تتحمّل تكاليف التأهيل دون أن تجني ثمار استثمارها في الموظف — ما يجعل الاحتفاظ بالكفاءات القرار الأقل تكلفة والأعلى عائدًا.</p>
+    <div class="gstats rv" style="margin-top:18px">
       <div class="gstat"><b>50%–200%</b><span>من الراتب السنوي هي تكلفة استبدال موظف واحد، حسب مستوى الوظيفة.</span><i>SHRM · Gallup</i></div>
       <div class="gstat"><b>6–9 أشهر</b><span>من راتب الموظف تقديرٌ شائع لتكلفة استبداله الكاملة.</span><i>SHRM</i></div>
       <div class="gstat"><b>3–6 أشهر</b><span>متوسط الوقت الذي يحتاجه الموظف الجديد ليصل إلى الإنتاجية الكاملة.</span><i>SHRM</i></div>
       <div class="gstat"><b>~75%</b><span>من حالات المغادرة الطوعية يمكن تفاديها بإجراءات استبقاء مناسبة.</span><i>Work Institute</i></div>
     </div>
-    <p class="small" style="margin-top:14px">تُعرض هذه الأرقام كمرجع عام من أبحاث الموارد البشرية العالمية، ولا تمثّل احتسابًا فعليًا لتكلفة الدوران داخل الشركة.</p>
+    <p class="note">تُعرض هذه الأرقام كمرجع عام من أبحاث الموارد البشرية العالمية، ولا تمثّل احتسابًا فعليًا لتكلفة الدوران داخل الشركة.</p>
   </section>
+</div>
 
-  <!-- ============ الأدوات ============ -->
-  <section>
-    <h2>الأدوات</h2>
-    <div class="tags" style="margin-top:18px">
-      <span class="tag">Python</span>
-      <span class="tag">Pandas</span>
-      <span class="tag">Jupyter</span>
-      <span class="tag">Power BI</span>
-      <span class="tag">DAX</span>
-    </div>
-    <p class="small" style="margin-top:22px">بيانات مجمّعة لأغراض العرض · آل طاوي للتشييد والبناء.</p>
-  </section>
+<div class="marq" aria-hidden="true"><div><span>PYTHON</span><em>✦</em><span>PANDAS</span><em>✦</em><span>JUPYTER</span><em>✦</em><span>POWER BI</span><em>✦</em><span>DAX</span><em>✦</em><span>PYTHON</span><em>✦</em><span>PANDAS</span><em>✦</em><span>JUPYTER</span><em>✦</em><span>POWER BI</span><em>✦</em><span>DAX</span><em>✦</em></div></div>
 
-  <footer>
-    <p style="margin:0">
-      وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات ·
-      <a href="index.html">بقية المشاريع</a>
-    </p>
-  </footer>
+<div class="wrap">
+  <p class="src">الأدوات: Python · Pandas · Jupyter · Power BI · DAX — بيانات مجمّعة لأغراض العرض · آل طاوي للتشييد والبناء.</p>
+  <footer>وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات · <a href="index.html">بقية المشاريع</a></footer>
+</div>
 
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="عارض الصور" aria-hidden="true">
+  <div class="lb-top"><span id="lbTitle"></span><button type="button" class="cbtn x" id="lbClose" aria-label="إغلاق">×</button></div>
+  <div class="lb-mid">
+    <button type="button" class="cbtn" id="lbPrev" aria-label="السابقة">›</button>
+    <div class="lb-media" id="lbMedia"></div>
+    <button type="button" class="cbtn" id="lbNext" aria-label="التالية">‹</button>
+  </div>
+  <div class="thumbs" id="lbThumbs"></div>
 </div>
 
 <script>
 (function(){
-  document.querySelectorAll('.tb').forEach(function(t){
-    t.addEventListener('click',function(){
-      document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
-      t.setAttribute('aria-selected','true');
-      document.querySelectorAll('.pv').forEach(function(p){ p.hidden = p.dataset.v !== t.dataset.v; });
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hover = matchMedia('(hover:hover)').matches;
+  var cur = document.getElementById('cursor');
+  if (!reduce && hover) {
+    var tx=0,ty=0,cx=0,cy=0,raf=null;
+    addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;cur.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);});
+    function loop(){cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;cur.style.transform='translate('+cx+'px,'+cy+'px)';raf=(Math.abs(tx-cx)+Math.abs(ty-cy)>.5)?requestAnimationFrame(loop):null;}
+    document.addEventListener('mouseleave',function(){cur.classList.remove('on');});
+    document.querySelectorAll('[data-tilt]').forEach(function(el){
+      var max=+el.dataset.tilt||8;
+      el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();var px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+        el.style.transform='perspective(1100px) rotateX('+(-py*max).toFixed(2)+'deg) rotateY('+(px*max).toFixed(2)+'deg) scale(1.015)';});
+      el.addEventListener('mouseleave',function(){el.style.transform='';});
     });
-  });
+  }
+  function countUp(el){
+    if(el.dataset.done)return;el.dataset.done=1;
+    var to=+el.dataset.count,dec=+el.dataset.dec,suf=el.dataset.suf||'',pre=el.dataset.pre||'',t0=performance.now(),dur=reduce?0:1700;
+    var fmt=function(x){var s=x.toFixed(dec);if(el.dataset.comma){var p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');s=p.join('.');}return pre+s+suf;};
+    (function step(now){var t=dur?Math.min(1,(now-t0)/dur):1,e=1-Math.pow(1-t,3);el.textContent=fmt(to*e);if(t<1)requestAnimationFrame(step);})(t0);
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(!e.isIntersecting)return;var el=e.target;el.classList.add('in');io.unobserve(el);
+    el.querySelectorAll('[data-count]').forEach(countUp);
+    el.querySelectorAll('[data-w]').forEach(function(b){b.style.width=b.dataset.w;});
+  });},{threshold:.18});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  var steps=[].slice.call(document.querySelectorAll('.tstep')),imgs=[].slice.call(document.querySelectorAll('.gimg'));
+  var n=imgs.length,gCount=document.getElementById('gCount'),gProg=document.getElementById('gProg');
+  function pad(x){return (x<10?'0':'')+x;}
+  function setActive(k){steps.forEach(function(s,i){s.classList.toggle('on',i===k);});
+    imgs.forEach(function(m,i){m.classList.toggle('on',i===k);m.classList.toggle('past',i<k);});
+    gCount.textContent=pad(k+1)+' / '+pad(n);gProg.style.width=((k+1)/n*100)+'%';}
+  var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)setActive(+e.target.dataset.step);});},{rootMargin:'-45% 0px -45% 0px'});
+  steps.forEach(function(s){so.observe(s);s.addEventListener('mouseenter',function(){setActive(+s.dataset.step);});});
+  setActive(0);
+
+  var G=imgs.map(function(m){var im=m.querySelector('img');return {type:m.dataset.video?'video':'img',src:m.dataset.video||im.getAttribute('src'),thumb:im.getAttribute('src'),title:m.dataset.title};});
+  var lb=document.getElementById('lb'),media=document.getElementById('lbMedia'),title=document.getElementById('lbTitle'),th=document.getElementById('lbThumbs'),idx=0,last=null;
+  th.innerHTML=G.map(function(g,i){return '<button type="button" data-i="'+i+'" aria-label="'+g.title+'"><img src="'+g.thumb+'" alt=""></button>';}).join('');
+  function show(i){idx=(i+G.length)%G.length;var g=G[idx];
+    media.innerHTML=g.type==='video'?'<video src="'+g.src+'" poster="'+g.thumb+'" controls autoplay muted playsinline></video>':'<img src="'+g.src+'" alt="'+g.title+'">';
+    title.textContent=g.title;th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j===idx);});}
+  function open(i){last=document.activeElement;show(i);lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';document.getElementById('lbClose').focus();}
+  function close(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');document.body.style.overflow='';media.innerHTML='';if(last)last.focus();}
+  document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){open(+b.dataset.open);});});
+  document.getElementById('lbClose').addEventListener('click',close);
+  document.getElementById('lbNext').addEventListener('click',function(){show(idx+1);});
+  document.getElementById('lbPrev').addEventListener('click',function(){show(idx-1);});
+  th.addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(+b.dataset.i);});
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(idx+1);if(e.key==='ArrowRight')show(idx-1);});
 })();
 </script>
 </body>

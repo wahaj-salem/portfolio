@@ -7,502 +7,448 @@
 <meta name="description" content="مشروع تحليل عدالة الأجور على بيانات تركيبية لـ 420 موظفاً باستخدام Power BI: تفكيك الفجوة الخام إلى أثر التوزيع الوظيفي وفجوة غير مُفسَّرة.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy-900:#070B1E;
-  --navy-800:#0B1130;
-  --navy-700:#121A44;
-  --line:rgba(255,255,255,.09);
-  --text:#EEF1FF;
-  --muted:#969FCE;
-  --cyan:#4FD2FF;
-  --purple:#9D7BFF;
-  --pink:#F2A6E0;
-  --grad:linear-gradient(115deg,#4FD2FF 0%,#9D7BFF 48%,#F2A6E0 100%);
-  --display:'El Messiri',serif;
+  --bg:#08090F; --card:#12131C; --line:rgba(255,255,255,.09);
+  --text:#F3EFE8; --muted:#BDB6AB; --dim:#9A948A;
+  --coral:#FF5E3A; --coral2:#FF7A4D; --gold:#FFB547; --mint:#5EEAD4;
+  --ease:cubic-bezier(.16,1,.3,1);
   --mono:'Space Grotesk',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--navy-900);
-  color:var(--text);
-  font-family:'Tajawal',system-ui,sans-serif;
-  font-weight:300;
-  line-height:1.85;
-  -webkit-font-smoothing:antialiased;
-}
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(60rem 34rem at 88% -8%,rgba(56,225,255,.13),transparent 62%),
-    radial-gradient(52rem 32rem at 4% 18%,rgba(139,92,246,.15),transparent 60%),
-    radial-gradient(46rem 30rem at 62% 104%,rgba(255,95,162,.10),transparent 62%);
-}
-::selection{background:rgba(157,123,255,.35);color:#fff}
-.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+body{background:var(--bg);color:var(--text);font-family:'Alexandria',system-ui,sans-serif;font-weight:400;line-height:1.85;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:rgba(255,94,58,.35);color:#fff}
+a{color:var(--gold)}
+.wrap{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:0 24px}
 
-/* ---------- header ---------- */
-.top{padding:34px 0 0}
-.back{
-  display:inline-flex;align-items:center;gap:9px;
-  color:var(--muted);text-decoration:none;font-size:.86rem;
-  border:1px solid var(--line);border-radius:999px;padding:7px 16px;
-  transition:.25s;
-}
-.back:hover{color:var(--text);border-color:rgba(56,225,255,.45)}
+/* background glows + cursor */
+.glow{position:fixed;pointer-events:none;z-index:0;border-radius:50%;animation:glow 6s ease-in-out infinite}
+.glow.a{top:-260px;right:8%;width:900px;height:700px;background:radial-gradient(ellipse,rgba(255,94,58,.26),transparent 62%)}
+.glow.b{top:45vh;left:-220px;width:700px;height:700px;background:radial-gradient(circle,rgba(94,234,212,.13),transparent 62%);animation-delay:-3s}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+.cursor{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(255,122,77,.20),rgba(255,181,71,.07) 35%,transparent 65%);opacity:0;transition:opacity .5s;will-change:transform}
+.cursor.on{opacity:1}
 
-/* ---------- hero ---------- */
-.hero{padding:56px 0 30px}
-.eyebrow{
-  font-family:var(--mono);font-size:.73rem;letter-spacing:.16em;
-  color:var(--cyan);text-transform:uppercase;margin-bottom:20px;
-}
-h1{
-  font-family:var(--display);
-  font-size:clamp(2.1rem,5.6vw,3.6rem);font-weight:600;line-height:1.25;
-  letter-spacing:-.01em;margin-bottom:22px;
-}
-h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lede{font-size:clamp(1.02rem,2.1vw,1.16rem);color:#c3cce4;max-width:62ch}
+/* top */
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:28px 0 0}
+.pill{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-size:.88rem;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);transition:.3s var(--ease)}
+.pill:hover{border-color:rgba(255,181,71,.6);background:rgba(255,181,71,.08)}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.24em;color:var(--dim)}
 
-.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
-.tag{
-  font-family:var(--mono);font-size:.75rem;color:var(--muted);
-  border:1px solid var(--line);border-radius:6px;padding:5px 12px;
-}
+/* hero */
+.hero{text-align:center;padding:70px 0 40px;display:flex;flex-direction:column;align-items:center;gap:26px}
+.badge{font-family:var(--mono);font-size:.78rem;letter-spacing:.2em;padding:8px 16px;border-radius:999px;background:rgba(255,94,58,.12);color:var(--gold);border:1px solid rgba(255,94,58,.35)}
+h1{font-size:clamp(2.8rem,8.4vw,5.8rem);line-height:1.12;font-weight:800;letter-spacing:-.02em;perspective:600px}
+.w{display:inline-block;opacity:0;transform-origin:bottom;animation:word .95s var(--ease) forwards}
+.w:nth-child(1){animation-delay:.05s}.w:nth-child(2){animation-delay:.18s}.w:nth-child(4){animation-delay:.31s}
+@keyframes word{from{opacity:0;transform:translateY(60%) rotateX(-70deg)}to{opacity:1;transform:none}}
+.grad{background:linear-gradient(90deg,var(--coral),var(--gold) 55%,var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{max-width:720px;font-size:clamp(1.02rem,2vw,1.2rem);font-weight:300;color:var(--muted)}
+.fade{opacity:0;animation:rise 1s var(--ease) .45s forwards}
+@keyframes rise{from{opacity:0;transform:translateY(46px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
 
-/* ---------- headline stats ---------- */
-.stats{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-  gap:1px;background:var(--line);border:1px solid var(--line);
-  border-radius:14px;overflow:hidden;margin:46px 0 8px;
-}
-.stat{background:var(--navy-800);padding:26px 22px}
-.stat b{
-  display:block;font-family:var(--mono);font-size:1.95rem;font-weight:500;
-  letter-spacing:-.02em;margin-bottom:5px;
-}
-.stat.c1 b{color:var(--cyan)} .stat.c2 b{color:var(--purple)}
-.stat.c3 b{color:var(--pink)} .stat.c4 b{color:#e8ecf8}
-.stat span{font-size:.83rem;color:var(--muted);line-height:1.6;display:block}
+/* hero shot */
+.shot-wrap{perspective:1400px;margin-top:10px}
+.shot{transform:rotateX(28deg) scale(.86) translateY(40px);transform-origin:center top;transition:transform 1.2s var(--ease)}
+.shot.flat{transform:none}
+.tilt{border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.55),rgba(255,255,255,.06) 40%,rgba(94,234,212,.4));
+  box-shadow:0 60px 140px -40px rgba(255,94,58,.45);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tilt:hover{box-shadow:0 70px 150px -30px rgba(255,94,58,.6)}
+.zoom{display:block;position:relative;overflow:hidden;width:100%;padding:0;border:0;background:none;border-radius:16px;cursor:zoom-in}
+.zoom img{display:block;width:100%;border-radius:16px}
+.shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);transform:translateX(120%);animation:sweep 3.4s ease-in-out 2s infinite}
+@keyframes sweep{from{transform:translateX(120%)}to{transform:translateX(-120%)}}
 
-/* ---------- sections ---------- */
-section{padding:62px 0;border-top:1px solid var(--line);margin-top:56px}
-h2{
-  font-family:var(--display);
-  font-size:clamp(1.4rem,3vw,1.85rem);font-weight:600;
-  letter-spacing:-.01em;margin-bottom:10px;
-}
-h2::before{
-  content:"";display:block;width:46px;height:3px;border-radius:2px;
-  background:var(--grad);margin-bottom:18px;
-}
-h3{font-size:1.06rem;font-weight:600;margin:34px 0 10px;color:#eef2ff}
-p{margin-bottom:16px;color:#c3cce4;max-width:70ch}
-p.tight{margin-bottom:8px}
-strong{font-weight:600;color:#fff}
+/* sections */
+section{padding:110px 0 0}
+h2{font-size:clamp(1.9rem,4.4vw,2.9rem);font-weight:800;line-height:1.2;margin-bottom:26px}
+.rv{opacity:0;transform:translateY(46px) scale(.98);filter:blur(6px);transition:opacity 1s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}.rv.d5{transition-delay:.4s}
 
-/* ---------- steps ---------- */
-.step{
-  border-inline-start:2px solid var(--line);
-  padding:0 24px 30px;position:relative;
-}
-.step:last-child{padding-bottom:4px}
-.step::before{
-  content:"";position:absolute;inset-inline-start:-6px;top:9px;
-  width:10px;height:10px;border-radius:50%;
-  background:var(--cyan);box-shadow:0 0 0 4px rgba(56,225,255,.14);
-}
-.step:nth-child(2)::before{background:var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,.16)}
-.step:nth-child(3)::before{background:var(--pink);box-shadow:0 0 0 4px rgba(255,95,162,.14)}
-.step:nth-child(4)::before{background:var(--cyan);box-shadow:0 0 0 4px rgba(56,225,255,.14)}
-.step:nth-child(5)::before{background:var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,.16)}
-.step h3{margin-top:0}
-.why{
-  font-size:.9rem;color:var(--muted);border-inline-start:2px solid rgba(139,92,246,.4);
-  padding-inline-start:14px;margin-top:12px;max-width:66ch;
-}
-.why b{color:#cbd4ee;font-weight:500}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:210px;gap:16px}
+.tile{height:100%;border-radius:26px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  background:var(--card);border:1px solid var(--line);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tile:hover{box-shadow:0 40px 90px -30px rgba(255,94,58,.5)}
+.tile .k{font-size:.95rem;color:var(--muted)}
+.tile .v{font-family:var(--mono);font-weight:700;font-size:3.6rem;line-height:1}
+.tile .s{font-size:.82rem;color:var(--dim)}
+.t-sales{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#1A120F,#0F0C0B);border-color:rgba(255,94,58,.25)}
+.t-sales .v{font-size:clamp(3.6rem,7vw,6rem);color:var(--gold);margin-top:10px}
+.t-ring{grid-row:span 2;align-items:center;text-align:center;background:linear-gradient(180deg,#0D1A18,#0A0F0E);border-color:rgba(94,234,212,.25)}
+.ring{position:relative;width:170px;height:170px}
+.ring svg{width:170px;height:170px;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:2.8rem}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width 1.8s var(--ease)}
+.t-rep{grid-column:span 4;flex-direction:row;align-items:center;gap:36px;flex-wrap:wrap;background:linear-gradient(90deg,#1A0F12,#12131C 60%);border-color:rgba(255,94,58,.25)}
+.t-rep .v{font-size:4.4rem;color:var(--coral2)}
+.dots{flex:1 1 400px;display:grid;grid-template-columns:repeat(25,minmax(0,1fr));gap:7px}
+.dots span{aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.12);transform:scale(0);transition:transform .5s var(--ease)}
+.dots span.hot{background:var(--coral2);box-shadow:0 0 14px var(--coral)}
+.in .dots span{transform:scale(1)}
+.spark{width:100%;height:150px}
+.spark .ln{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 2.4s var(--ease) .3s}
+.in .spark .ln{stroke-dashoffset:0}
+.spark .pk{transform:scale(0);transform-box:fill-box;transform-origin:center;transition:transform .6s var(--ease) 2.4s}
+.in .spark .pk{transform:scale(1)}
 
-/* ---------- table ---------- */
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:26px 0 12px}
-table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:560px}
-th,td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line)}
-th{
-  background:var(--navy-700);font-family:var(--mono);font-size:.74rem;
-  font-weight:500;color:#b9c5e6;letter-spacing:.04em;
-}
-td{font-family:var(--mono);font-weight:400;color:#d5ddf2}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:nth-child(even) td{background:rgba(255,255,255,.017)}
-.gap-hi{color:var(--pink);font-weight:500}
-.gap-neg{color:var(--cyan);font-weight:500}
-.thin{color:var(--muted)}
-.note{font-size:.83rem;color:var(--muted);margin-top:10px}
+/* tour (sticky gallery) */
+.tour{display:flex;gap:44px;align-items:flex-start}
+.tour-text{flex:1 1 320px}
+.tstep{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:14px;opacity:.3;transform:translateX(-14px);transition:opacity .5s,transform .6s var(--ease)}
+.tstep.on{opacity:1;transform:none}
+.tstep .n{align-self:flex-start;font-family:var(--mono);font-size:.86rem;letter-spacing:.2em;color:var(--gold)}
+.tstep h3{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;line-height:1.3}
+.tstep p{font-size:1.06rem;font-weight:300;color:var(--muted)}
+.gbtn{align-self:flex-start;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-family:inherit;font-size:.9rem;cursor:pointer;transition:background .25s,transform .25s}
+.gbtn:hover{background:rgba(255,181,71,.18);transform:scale(1.05)}
+.tour-media{flex:1.4 1 480px;position:sticky;top:90px}
+.frame{transition:transform .25s ease-out;transform-style:preserve-3d;will-change:transform;position:relative;border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.45),rgba(255,255,255,.05) 45%,rgba(94,234,212,.35));box-shadow:0 50px 120px -40px rgba(255,94,58,.4)}
+.stage{position:relative;aspect-ratio:1300/715;border-radius:16px;overflow:hidden;background:#0F0F16}
+.gimg{position:absolute;inset:0;padding:0;border:0;background:none;cursor:zoom-in;opacity:0;transform:scale(.94);filter:blur(10px);pointer-events:none;
+  transition:opacity .8s var(--ease),transform .9s var(--ease),filter .8s}
+.gimg.past{transform:scale(1.08)}
+.gimg.on{opacity:1;transform:none;filter:none;pointer-events:auto}
+.gimg img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.play{position:absolute;inset:0;display:grid;place-items:center}
+.play span{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:rgba(255,94,58,.9);color:#fff;font-size:1.6rem;box-shadow:0 0 0 12px rgba(255,94,58,.2)}
+.gfoot{display:flex;justify-content:space-between;align-items:center;padding:14px 6px 2px;font-family:var(--mono);font-size:.88rem}
+.gfoot .bar{flex:0 0 55%;height:4px}
+.gfoot .bar i{transition:width .6s var(--ease)}
 
-/* ---------- findings ---------- */
-.find{
-  background:var(--navy-800);border:1px solid var(--line);
-  border-radius:14px;padding:26px 26px 22px;margin-bottom:16px;
-  position:relative;overflow:hidden;
-}
-.find::after{
-  content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad);
-}
-.find .num{
-  font-family:var(--mono);font-size:.73rem;color:var(--cyan);
-  letter-spacing:.14em;display:block;margin-bottom:8px;
-}
-.find h3{margin:0 0 10px}
-.find p:last-child{margin-bottom:0}
+/* steps / problems / summary */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.step{padding:26px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.02);display:flex;flex-direction:column;gap:10px;transition:background .35s,border-color .35s,transform .35s var(--ease)}
+.step:hover{background:rgba(255,181,71,.07);border-color:rgba(255,181,71,.5);transform:translateY(-6px)}
+.step .n{font-family:var(--mono);font-weight:700;font-size:2.6rem;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+.step h4{font-size:1.12rem;font-weight:600}
+.step p{font-size:.95rem;font-weight:300;color:var(--muted)}
+.prob{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.pcard{position:relative;padding:28px;border-radius:24px;background:var(--card);border:1px solid var(--line);overflow:hidden;transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d}
+.pcard:hover{box-shadow:0 40px 90px -30px rgba(94,234,212,.35)}
+.pcard .tag{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;color:var(--mint)}
+.pcard h4{font-size:1.15rem;font-weight:700;margin:10px 0}
+.pcard p{font-size:.96rem;font-weight:300;color:var(--muted)}
+.pcard code{font-family:var(--mono);font-size:.88em;color:var(--gold)}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.scard{padding:26px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;gap:20px;align-items:flex-start;transition:border-color .35s,transform .35s var(--ease)}
+.scard:hover{border-color:rgba(255,181,71,.45);transform:translateY(-4px)}
+.scard .big{flex:0 0 auto;font-family:var(--mono);font-weight:700;font-size:1.7rem;color:var(--gold);direction:ltr;min-width:96px;text-align:center;line-height:1.3}
+.scard p{font-size:.97rem;font-weight:300;color:var(--muted)}
+.scard strong{color:var(--text);font-weight:600}
+.scard.wide{grid-column:1/-1}
+.recs{list-style:none;display:grid;gap:10px;margin-top:14px}
+.recs li{padding:12px 16px;border-radius:14px;background:rgba(255,181,71,.06);border:1px solid rgba(255,181,71,.18);font-size:.95rem;color:var(--muted)}
+.recs b{color:var(--gold);font-weight:600}
 
-/* ---------- recommendations ---------- */
-.rec{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
-.rec:last-child{border-bottom:none}
-.rec .mark{
-  flex:0 0 auto;width:30px;height:30px;border-radius:9px;
-  display:grid;place-items:center;font-family:var(--mono);font-size:.82rem;
-  background:rgba(139,92,246,.14);color:#c4b5fd;border:1px solid rgba(139,92,246,.3);
-}
-.rec div p{margin-bottom:0}
-.rec h3{margin:0 0 5px;font-size:1rem}
+/* marquee */
+.marq{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-top:110px}
+.marq div{display:flex;gap:60px;width:max-content;font-family:var(--mono);font-size:2.1rem;font-weight:700;color:rgba(243,239,232,.18);white-space:nowrap;animation:marq 24s linear infinite}
+.marq em{font-style:normal;color:var(--coral2)}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(50%)}}
+.src{font-size:.85rem;color:var(--dim);margin-top:18px}
+footer{padding:50px 0 60px;color:var(--dim);font-size:.86rem}
+footer a{text-decoration:none}
 
-/* ---------- interactive viz ---------- */
-.viz{
-  background:var(--navy-800);border:1px solid var(--line);
-  border-radius:16px;padding:24px;margin-top:28px;
-}
-.viz-head h3{margin:0;font-size:1.15rem}
-.viz-sub{font-size:.82rem;color:var(--muted);margin:2px 0 0}
-.grades{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0 22px}
-.gbtn{
-  font-family:var(--mono);font-size:.86rem;color:var(--muted);
-  background:transparent;border:1px solid var(--line);border-radius:9px;
-  min-width:42px;padding:8px 10px;cursor:pointer;transition:.18s;
-}
-.gbtn:hover{color:var(--text);border-color:rgba(56,225,255,.4)}
-.gbtn[aria-selected="true"]{
-  color:#061225;font-weight:600;border-color:transparent;background:var(--grad);
-}
-.gbtn.empty{opacity:.45}
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(5,5,9,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;opacity:0;pointer-events:none;transition:opacity .35s}
+.lb.open{opacity:1;pointer-events:auto}
+.lb-top,.lb-mid{display:flex;align-items:center;gap:16px;width:min(1200px,100%)}
+.lb-top{justify-content:space-between;font-size:1.1rem;font-weight:600}
+.lb-media{flex:1;min-width:0;display:flex;justify-content:center}
+.lb-media img,.lb-media video{max-width:100%;max-height:72vh;border-radius:14px;box-shadow:0 40px 120px -20px rgba(255,94,58,.45);animation:lbzoom .55s var(--ease) both}
+@keyframes lbzoom{from{opacity:0;transform:scale(.86) translateY(30px)}to{opacity:1;transform:none}}
+.cbtn{flex:0 0 52px;width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-size:1.4rem;cursor:pointer;transition:background .25s,transform .25s}
+.cbtn:hover{background:rgba(255,181,71,.2);transform:scale(1.08)}
+.cbtn.x{color:var(--text);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.thumbs{display:flex;gap:10px}
+.thumbs button{width:96px;height:54px;padding:0;border-radius:10px;overflow:hidden;border:2px solid transparent;background:none;cursor:pointer;opacity:.55;transition:.25s}
+.thumbs button.on{border-color:var(--gold);opacity:1}
+.thumbs img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 
-.panel{display:grid;grid-template-columns:1.35fr 1fr;gap:26px;align-items:start}
-.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.bar-lbl{flex:0 0 54px;font-size:.85rem;color:var(--muted)}
-.bar-track{
-  flex:1;height:30px;border-radius:7px;
-  background:rgba(255,255,255,.04);overflow:hidden;
-}
-.bar{
-  height:100%;width:0;border-radius:7px;
-  transition:width .5s cubic-bezier(.4,0,.2,1);
-}
-.bar.f{background:linear-gradient(90deg,var(--pink),var(--purple))}
-.bar.m{background:linear-gradient(90deg,var(--purple),var(--cyan))}
-.bar-val{flex:0 0 76px;font-family:var(--mono);font-size:.86rem;text-align:start;color:#dfe6f8}
-.bar-note{font-family:var(--mono);font-size:.83rem;margin:6px 0 0;color:var(--muted)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
 
-.facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:11px;overflow:hidden}
-.fact{background:var(--navy-700);padding:13px 14px}
-.fact span{display:block;font-size:.74rem;color:var(--muted);margin-bottom:3px}
-.fact b{font-family:var(--mono);font-size:.98rem;font-weight:500;color:#e6ecfb}
-
-.viz-read{
-  margin:22px 0 0;font-size:.92rem;color:#c3cce4;
-  border-top:1px solid var(--line);padding-top:18px;max-width:none;
+@media (max-width:900px){
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:190px}
+  .t-sales,.t-rep{grid-column:span 2}
+  .tour{flex-direction:column}
+  .tour-media{position:relative;top:0;order:-1;width:100%}
+  .tstep{min-height:auto;padding:26px 0;opacity:1;transform:none}
+}
+@media (max-width:560px){
+  .bento{grid-template-columns:1fr;grid-auto-rows:auto}
+  .t-sales,.t-rep,.t-ring{grid-column:auto;grid-row:auto}
+  .tile{min-height:190px}
+  .t-sales .spark{height:110px}
+  .dots{grid-template-columns:repeat(20,minmax(0,1fr));gap:5px}
+  .cbtn{flex-basis:44px;width:44px;height:44px}
+  .thumbs button{width:72px;height:42px}
+}
+@media (hover:none){.cursor{display:none}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .w,.fade,.rv{opacity:1;transform:none;filter:none}
+  .shot{transform:none}
+  .dots span,.spark .pk{transform:none}
+  .spark .ln{stroke-dashoffset:0}
 }
 
-/* ---------- distribution ---------- */
-.dist{margin-top:22px;display:grid;gap:7px}
-.drow{display:flex;align-items:center;gap:11px}
-.drow .lbl{flex:0 0 62px;font-family:var(--mono);font-size:.78rem;color:var(--muted)}
-.dtrack{flex:1;display:flex;height:22px;border-radius:6px;overflow:hidden;background:rgba(255,255,255,.04)}
-.dseg{height:100%;transition:width .5s ease}
-.dseg.f{background:linear-gradient(90deg,var(--pink),rgba(255,95,162,.65))}
-.dseg.m{background:rgba(120,150,220,.28)}
-.drow .pct{flex:0 0 46px;font-family:var(--mono);font-size:.78rem;color:#d9c2d6;text-align:start}
-
-/* ---------- disclosure ---------- */
-.disc{
-  border:1px dashed rgba(255,95,162,.34);border-radius:12px;
-  padding:20px 22px;background:rgba(255,95,162,.045);
-}
-.disc p{margin-bottom:0;color:#dfd0e2;font-size:.94rem}
-
-.shotbtn{display:inline-flex;align-items:center;gap:9px;margin-top:30px;
-  font-family:'Tajawal',sans-serif;font-size:.92rem;color:var(--cyan);
-  background:var(--navy-800);border:1px solid rgba(56,225,255,.3);border-radius:10px;
-  padding:11px 20px;cursor:pointer;transition:.2s}
-.shotbtn:hover{background:var(--navy-700);border-color:rgba(56,225,255,.6)}
-.shotbtn .ic{font-family:var(--mono);font-size:.8rem;transition:transform .25s}
-.shotbtn[aria-expanded="true"] .ic{transform:rotate(180deg)}
-figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--navy-800);margin-top:16px}
-figure img{display:block;width:100%;height:auto}
-figcaption{padding:12px 16px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
-footer{
-  border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
-  color:var(--muted);font-size:.85rem;
-}
-footer a{color:var(--cyan);text-decoration:none}
-footer a:hover{text-decoration:underline}
-
-:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-@media (max-width:760px){
-  .panel{grid-template-columns:1fr;gap:20px}
-}
-@media (max-width:640px){
-  section{padding:46px 0;margin-top:38px}
-  .hero{padding:38px 0 18px}
-  .step{padding-inline:18px}
-  .viz{padding:18px}
-  .bar-lbl{flex-basis:44px;font-size:.8rem}
-  .bar-val{flex-basis:66px;font-size:.8rem}
-  .drow .lbl{flex-basis:52px}
-}
-.viewer{background:var(--navy-800);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:14px}
-.tb{font-family:'Tajawal',sans-serif;font-size:.9rem;color:var(--muted);background:transparent;
-  border:1px solid var(--line);border-radius:9px;padding:8px 16px;cursor:pointer;transition:.18s}
-.tb:hover{color:var(--text);border-color:rgba(56,225,255,.45)}
-.tb[aria-selected="true"]{background:var(--grad);color:#061225;font-weight:600;border-color:transparent}
-.viewer figure{margin-top:0;background:#070B1E}
-.steps{list-style:none;counter-reset:s;margin-top:26px}
-.steps li{counter-increment:s;display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
-.steps li:last-child{border-bottom:none}
-.steps li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  font-family:var(--mono);font-size:.82rem;background:rgba(139,92,246,.14);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)}
-.steps li>div{flex:1;min-width:0}
-.steps h4{font-size:1rem;font-weight:600;color:#eef2ff;margin-bottom:4px}
-.steps p{margin-bottom:0;font-size:.97rem}
-.steps b{color:#fff;font-weight:600}
-.dec{background:var(--navy-800);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden}
-.dec::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad)}
-.dec .k{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--cyan);margin-bottom:7px}
-.dec h4{font-size:1.02rem;font-weight:600;color:#eef2ff;margin-bottom:8px}
-.dec p{margin-bottom:0;font-size:.96rem}
-.recs-h{margin-top:40px}
-@media (max-width:640px){.viewer{padding:14px}}
+.tile .v.sm{font-size:2.6rem}
+.bento{grid-auto-rows:minmax(210px,auto);grid-auto-flow:row dense}
+.tile{gap:10px}
+.scard{flex-wrap:wrap}
+.scard>div{flex:1 1 240px;min-width:0}
+.scard .big{white-space:nowrap;min-width:110px}
+.t-big{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#1A120F,#0F0C0B);border-color:rgba(255,94,58,.25)}
+.t-big .v{font-size:clamp(3.4rem,6.4vw,5.6rem);color:var(--gold);margin-top:10px}
+.t-wide{grid-column:span 2}
+.t-full{grid-column:1/-1}
+.t-full .hbars{max-width:640px}
+.t-mint{background:linear-gradient(180deg,#0D1A18,#0A0F0E);border-color:rgba(94,234,212,.25)}
+.t-mint .v{color:var(--mint)}
+.hbars{display:flex;flex-direction:column;gap:12px}
+.hb{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted)}
+.hb .l{flex:0 0 96px}
+.hb .tr{flex:1;height:12px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.hb .tr i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width 1.6s var(--ease)}
+.hb .tr i.m{background:linear-gradient(90deg,#2BB8A3,var(--mint))}
+.hb .vv{flex:0 0 74px;font-family:var(--mono);color:var(--text);direction:ltr;text-align:left}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:18px;margin-top:8px}
+.tbl table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:560px}
+.tbl th,.tbl td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line)}
+.tbl th{background:#15161F;font-family:var(--mono);font-size:.76rem;font-weight:500;color:var(--gold);letter-spacing:.04em}
+.tbl td{color:#DCD6CC;font-family:var(--mono)}
+.tbl td.ar{font-family:inherit;text-align:right}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl .hi{color:var(--coral2);font-weight:600}.tbl .neg{color:var(--mint);font-weight:600}.tbl .thin{color:var(--dim)}
+.note{font-size:.84rem;color:var(--dim);margin-top:12px}
+.sub-h{font-size:1.35rem;font-weight:800;margin:46px 0 16px}
+.disc{margin-top:18px;padding:18px 22px;border-radius:16px;border:1px dashed rgba(255,181,71,.4);background:rgba(255,181,71,.05);font-size:.92rem;color:#E6DCC8}
+.gstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.gstat{padding:22px;border-radius:20px;background:var(--card);border:1px solid var(--line)}
+.gstat b{display:block;font-family:var(--mono);font-size:1.5rem;color:var(--gold);margin-bottom:6px}
+.gstat span{display:block;font-size:.9rem;font-weight:300;color:var(--muted)}
+.gstat i{display:block;font-style:normal;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:8px}
+@media (max-width:900px){.t-big,.t-wide{grid-column:span 2}}
+@media (max-width:560px){.t-big,.t-wide{grid-column:auto;grid-row:auto}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="glow a" aria-hidden="true"></div>
+<div class="glow b" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <div class="top">
-    <a class="back" href="index.html">→ العودة إلى الملف التعريفي</a>
+<div class="wrap">
+  <div class="top fade">
+    <a class="pill" href="index.html">→ العودة إلى الملف التعريفي</a>
+    <span class="eyebrow">CASE STUDY · HR ANALYTICS</span>
   </div>
 
   <header class="hero">
-    <div class="eyebrow">HR Analytics · Power BI</div>
-    <h1>تحليل <span class="g">عدالة الرواتب</span><br>في شركة مقاولات</h1>
-    <p class="lede">
-      بدأت هذا المشروع بسؤال واحد: لو طلع لدينا فرق في متوسط رواتب الرجال والنساء، هل هذا دليل على تمييز؟
-      الإجابة أعقد من نعم أو لا، وهذا التحليل يشرح كيف نفكّك الرقم بدل ما نأخذه كما هو.
-      والهدف أن أفرّق بين مشكلة في الأجر نفسه ومشكلة في توزيع الوظائف، لأن كل وحدة لها علاج مختلف تماماً.
-    </p>
-    <div class="tags">
-      <span class="tag">Power BI</span>
-      <span class="tag">Power Query</span>
-      <span class="tag">DAX</span>
-      <span class="tag">Excel</span>
-    </div>
+    <span class="badge fade">HR ANALYTICS · POWER BI</span>
+    <h1><span class="w">تحليل</span> <span class="w">عدالة</span><br><span class="w grad">الرواتب</span></h1>
+    <p class="lede fade">بدأت هذا المشروع بسؤال واحد: لو طلع لدينا فرق في متوسط رواتب الرجال والنساء، هل هذا دليل على تمييز؟ الإجابة أعقد من نعم أو لا، وهذا التحليل يشرح كيف نفكّك الرقم بدل ما نأخذه كما هو. والهدف أن أفرّق بين مشكلة في الأجر نفسه ومشكلة في توزيع الوظائف، لأن كل وحدة لها علاج مختلف تماماً.</p>
   </header>
 
-  <div class="stats">
-    <div class="stat c1"><b>25.24%</b><span>الفجوة الخام في وسيط الأجر</span></div>
-    <div class="stat c2"><b>3–19%</b><span>الفجوة المتبقية داخل نفس الدرجة</span></div>
-    <div class="stat c3"><b>0</b><span>امرأة في الدرجتين 9 و 10</span></div>
-    <div class="stat c4"><b>420</b><span>سجل موظف بعد التنظيف</span></div>
-  </div>
-
-  <!-- ============ اللوحة ============ -->
-  <section>
-    <h2>اللوحة</h2>
-    <div class="viewer">
-      <div class="tabs" role="tablist" aria-label="صفحات اللوحة">
-        <button class="tb" type="button" role="tab" data-v="0" aria-selected="true">النظرة العامة</button>
-        <button class="tb" type="button" role="tab" data-v="1" aria-selected="false">الأجر داخل كل درجة</button>
-        <button class="tb" type="button" role="tab" data-v="2" aria-selected="false">الدرجة الثالثة</button>
+  <!-- ============ جولة في اللوحة ============ -->
+  <section style="padding-top:40px">
+    <h2 class="rv">جولة في <span style="color:var(--gold)">اللوحة</span></h2>
+    <div class="tour">
+      <div class="tour-text">
+        <div class="tstep" data-step="0">
+          <span class="n" dir="ltr">01 / 03</span>
+          <h3>النظرة العامة</h3>
+          <p>الفجوة الخام 25.24%، وتوزيع الموظفين على الدرجات الوظيفية حسب الجنس.</p>
+          <button type="button" class="gbtn" data-open="0">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="1">
+          <span class="n" dir="ltr">02 / 03</span>
+          <h3>الأجر داخل كل درجة</h3>
+          <p>وسيط الأجر في كل درجة حسب الجنس، والفجوة داخل كل درجة.</p>
+          <button type="button" class="gbtn" data-open="1">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="2">
+          <span class="n" dir="ltr">03 / 03</span>
+          <h3>الدرجة الثالثة</h3>
+          <p>في الدرجة 3 النساء أقدم في الشركة، ومع ذلك أجرهن أقل بـ 5.69%.</p>
+          <button type="button" class="gbtn" data-open="2">تكبير الصورة ↖</button>
+        </div>
       </div>
-      <figure class="pv" data-v="0">
-        <img src="pay-equity-p1.png" alt="النظرة العامة في Power BI: عدد الموظفين ووسيط الأجر والفجوة الخام، وتوزيع الموظفين على الدرجات" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: الفجوة الخام 25.24%، وتوزيع الموظفين على الدرجات الوظيفية حسب الجنس.</figcaption>
-      </figure>
-      <figure class="pv" data-v="1" hidden>
-        <img src="pay-equity-p2.png" alt="وسيط الأجر حسب الدرجة والجنس مع جدول العوامل المفسرة" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: وسيط الأجر في كل درجة حسب الجنس، والفجوة داخل كل درجة.</figcaption>
-      </figure>
-      <figure class="pv" data-v="2" hidden>
-        <img src="pay-equity-p3.png" alt="الدرجة الثالثة بعد الفلترة: النساء أقدم والأجر أقل" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: في الدرجة 3 النساء أقدم في الشركة، ومع ذلك أجرهن أقل بـ 5.69%.</figcaption>
-      </figure>
+      <div class="tour-media">
+        <div class="frame" data-tilt="5">
+          <div class="stage">
+            <button type="button" class="gimg" data-g="0" data-open="0" data-title="النظرة العامة" aria-label="تكبير: النظرة العامة"><img src="pay-equity-p1.png" alt="النظرة العامة: عدد الموظفين ووسيط الأجر والفجوة الخام وتوزيع الموظفين على الدرجات" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="1" data-open="1" data-title="الأجر داخل كل درجة" aria-label="تكبير: الأجر داخل كل درجة"><img src="pay-equity-p2.png" alt="وسيط الأجر حسب الدرجة والجنس والفجوة داخل كل درجة" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="2" data-open="2" data-title="الدرجة الثالثة" aria-label="تكبير: الدرجة الثالثة"><img src="pay-equity-p3.png" alt="الدرجة الثالثة: النساء أقدم والأجر أقل" loading="lazy"></button>
+          </div>
+          <div class="gfoot"><span id="gCount" dir="ltr">01 / 03</span><div class="bar"><i id="gProg"></i></div></div>
+        </div>
+        <p class="note">ملخص بصري لنتائج التحليل.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ الأرقام ============ -->
+  <section>
+    <h2 class="rv">الأرقام <span style="color:var(--gold)">بلمحة</span></h2>
+    <div class="bento">
+      <div class="rv d1 tile t-big" data-tilt="9">
+        <div class="k">الفجوة الخام في وسيط الأجر</div>
+        <div class="v" data-count="25.24" data-dec="2" data-suf="%" data-pre="">0</div><div style="margin-top:22px"><div class="hbars"><div class="hb"><span class="l">النساء</span><span class="tr"><i class="" data-w="74.8%"></i></span><span class="vv">5,850</span></div><div class="hb"><span class="l">الرجال</span><span class="tr"><i class="" data-w="100.0%"></i></span><span class="vv">7,825</span></div></div><div class="s" style="margin-top:10px;color:var(--muted)">وسيط الأجر (ريال، على أساس الدوام الكامل)</div></div>
+        <div class="s">تنكمش إلى 3–19% عند المقارنة داخل نفس الدرجة</div>
+      </div>
+      <div class="rv d2 tile " data-tilt="12">
+        <div class="k">سجل موظف بعد التنظيف</div>
+        <div class="v" data-count="420" data-dec="0" data-suf="" data-pre="">0</div>
+        <div class="s">82 امرأة · 338 رجل</div>
+      </div>
+      <div class="rv d3 tile t-mint" data-tilt="12">
+        <div class="k">امرأة في الدرجتين 9 و 10</div>
+        <div class="v" data-count="0" data-dec="0" data-suf="" data-pre="">0</div>
+        <div class="s">انعدام كامل للتمثيل في القمة</div>
+      </div>
+      <div class="rv d4 tile t-wide" data-tilt="5">
+        <div class="k">نسبة النساء حسب الدرجة</div>
+        <div class="v" data-count="39" data-dec="0" data-suf="%" data-pre="">0</div><div style="margin-top:14px"><div class="hbars"><div class="hb"><span class="l">الدرجة 1</span><span class="tr"><i class="m" data-w="100.0%"></i></span><span class="vv">39%</span></div><div class="hb"><span class="l">الدرجة 4</span><span class="tr"><i class="m" data-w="38.5%"></i></span><span class="vv">15%</span></div><div class="hb"><span class="l">الدرجة 7</span><span class="tr"><i class="m" data-w="35.9%"></i></span><span class="vv">14%</span></div><div class="hb"><span class="l">الدرجة 10</span><span class="tr"><i class="m" data-w="1.0%"></i></span><span class="vv">0%</span></div></div></div>
+        <div class="s">في الدرجة الأولى، وتنخفض إلى صفر في القمة</div>
+      </div>
+      <div class="rv d5 tile t-full" data-tilt="6">
+        <div class="k">الفجوة في الدرجة الثالثة</div>
+        <div class="v" data-count="5.69" data-dec="2" data-suf="%" data-pre="">0</div>
+        <div class="s">النساء أقدم (4.1 سنة مقابل 3.3) وأجرهن أقل</div>
+      </div>
     </div>
   </section>
 
   <!-- ============ خطوات العمل ============ -->
   <section>
-    <h2>خطوات العمل</h2>
-    <ol class="steps">
-      <li><div><h4>تنظيف البيانات</h4>
-        <p>حذف السجلات المكررة بالرقم الوظيفي، وتوحيد قيم الجنس والأقسام.</p></div></li>
-      <li><div><h4>توحيد الأجور على أساس الدوام الكامل</h4>
-        <p>بنيت عمود <code style="font-family:var(--mono);font-size:.85em;color:#a5b4fc">Basic FTE</code> يقسم الراتب على نسبة دوام الموظف.</p></div></li>
-      <li><div><h4>قياس الفجوة الخام</h4>
-        <p>قارنت وسيط أجر النساء بوسيط أجر الرجال على مستوى الشركة كاملة.</p></div></li>
-      <li><div><h4>فحص المبررات المشروعة</h4>
-        <p>قبل ما أسمّي أي فرق "غير مبرر"، قست أربعة عوامل تفسّر عادةً اختلاف الأجور بين موظفَين في نفس الدرجة: مدة الخدمة، الخبرة السابقة، تقييم الأداء، والدور الإشرافي. بدون هذه الخطوة يكون التحليل اتهاماً لا تحليلاً.</p></div></li>
-      <li><div><h4>المقارنة داخل نفس الدرجة</h4>
-        <p>كررت المقارنة داخل كل درجة وظيفية على حدة، بحيث ما أقارن إلا أشخاصاً في نفس المستوى. هنا يظهر الفرق بين مشكلة في <b>أجر الوظيفة الواحدة</b> ومشكلة في <b>توزيع الوظائف</b>.</p></div></li>
-    </ol>
+    <h2 class="rv">خطوات <span style="color:var(--mint)">العمل</span></h2>
+    <div class="steps">
+      <div class="step rv d1"><span class="n">01</span><h4>تنظيف البيانات</h4><p>حذف السجلات المكررة بالرقم الوظيفي، وتوحيد قيم الجنس والأقسام.</p></div>
+      <div class="step rv d2"><span class="n">02</span><h4>توحيد الأجور على أساس الدوام الكامل</h4><p>بنيت عمود <code>Basic FTE</code> يقسم الراتب على نسبة دوام الموظف.</p></div>
+      <div class="step rv d3"><span class="n">03</span><h4>قياس الفجوة الخام</h4><p>قارنت وسيط أجر النساء بوسيط أجر الرجال على مستوى الشركة كاملة.</p></div>
+      <div class="step rv d4"><span class="n">04</span><h4>فحص المبررات المشروعة</h4><p>قبل ما أسمّي أي فرق "غير مبرر"، قست أربعة عوامل تفسّر عادةً اختلاف الأجور: مدة الخدمة، الخبرة السابقة، تقييم الأداء، والدور الإشرافي. بدون هذه الخطوة يكون التحليل اتهاماً لا تحليلاً.</p></div>
+      <div class="step rv d1"><span class="n">05</span><h4>المقارنة داخل نفس الدرجة</h4><p>كررت المقارنة داخل كل درجة وظيفية على حدة. هنا يظهر الفرق بين مشكلة في <strong>أجر الوظيفة الواحدة</strong> ومشكلة في <strong>توزيع الوظائف</strong>.</p></div>
+    </div>
   </section>
 
   <!-- ============ المشاكل ============ -->
   <section>
-    <h2>مشاكل واجهتني وكيف حليتها</h2>
-
-    <div class="dec">
-      <span class="k">المشكلة الأولى</span>
-      <h4>الفجوة طلعت 25.88% بدل 25.24%</h4>
-      <p>كان في قسم مكتوب بصيغتين بسبب مسافة زائدة في نهاية النص، وخمسة سجلات مختصرة في عمود الجنس. Power BI ما يعطيك رسالة خطأ لو تكرر مسمى بصيغتين — يتعامل معها كفئتين مستقلتين ويطلّع لك رقماً يبدو منطقياً وهو خاطئ. وحّدت القيم، فرجعت السجلات الساقطة وطلعت الفجوة الصحيحة.</p>
-    </div>
-
-    <div class="dec">
-      <span class="k">المشكلة الثانية</span>
-      <h4>الدوام الجزئي يشوّه الفجوة</h4>
-      <p>موظف الدوام الجزئي راتبه أقل لأنه يشتغل ساعات أقل، مو لأن في ظلم. بدون تعديل يدخل فرق الساعات في حساب الفجوة. فبنيت عمود <code style="font-family:var(--mono);font-size:.85em;color:#a5b4fc">Basic FTE</code> يوحّد الأجور على أساس الدوام الكامل.</p>
-    </div>
-
-    <div class="dec">
-      <span class="k">المشكلة الثالثة</span>
-      <h4>المتوسط يضخّم الفجوة</h4>
-      <p>المتوسط يتأثر بعدد قليل من الرواتب المرتفعة جداً. في هذه البيانات كل شاغلي الدرجتين العليا رجال، فالمتوسط كان بيضخّم الفجوة بسبب ستة أشخاص لا بسبب الوضع العام. فاعتمدت الوسيط بدل المتوسط.</p>
+    <h2 class="rv">مشاكل واجهتني <span style="color:var(--gold)">وكيف حليتها</span></h2>
+    <div class="prob">
+      <div class="pcard rv d1" data-tilt="6"><span class="tag">PROBLEM 01</span><h4>الفجوة طلعت 25.88% بدل 25.24%</h4><p>كان في قسم مكتوب بصيغتين بسبب مسافة زائدة في نهاية النص، وخمسة سجلات مختصرة في عمود الجنس. Power BI ما يعطيك رسالة خطأ لو تكرر مسمى بصيغتين — يتعامل معها كفئتين مستقلتين ويطلّع لك رقماً يبدو منطقياً وهو خاطئ. وحّدت القيم، فرجعت السجلات الساقطة وطلعت الفجوة الصحيحة.</p></div>
+      <div class="pcard rv d2" data-tilt="6"><span class="tag">PROBLEM 02</span><h4>الدوام الجزئي يشوّه الفجوة</h4><p>موظف الدوام الجزئي راتبه أقل لأنه يشتغل ساعات أقل، مو لأن في ظلم. بدون تعديل يدخل فرق الساعات في حساب الفجوة. فبنيت عمود <code>Basic FTE</code> يوحّد الأجور على أساس الدوام الكامل.</p></div>
+      <div class="pcard rv d3" data-tilt="6"><span class="tag">PROBLEM 03</span><h4>المتوسط يضخّم الفجوة</h4><p>المتوسط يتأثر بعدد قليل من الرواتب المرتفعة جداً. في هذه البيانات كل شاغلي الدرجتين العليا رجال، فالمتوسط كان بيضخّم الفجوة بسبب ستة أشخاص لا بسبب الوضع العام. فاعتمدت الوسيط بدل المتوسط.</p></div>
     </div>
   </section>
 
   <!-- ============ الملخص ============ -->
   <section>
-    <h2>الملخص</h2>
-
-    <div class="find">
-      <span class="num">النتيجة الأولى</span>
-      <h3>ثلثا الفجوة سببها التوزيع، لا الأجر نفسه</h3>
-      <p>
-        الفجوة الخام 25.24%، لكنها تنكمش إلى ما بين 3% و 19% لما نقارن داخل نفس الدرجة.
-        هذا يعني أن الجزء الأكبر منها ناتج عن مكان النساء في الهيكل الوظيفي، لا عن الأجر المقرّر للوظيفة الواحدة.
-      </p>
+    <h2 class="rv">الملخص</h2>
+    <div class="sum">
+      <div class="scard rv d1"><span class="big">25% → 3–19%</span><div><p><strong>ثلثا الفجوة سببها التوزيع، لا الأجر نفسه:</strong> الفجوة الخام 25.24%، لكنها تنكمش إلى ما بين 3% و 19% لما نقارن داخل نفس الدرجة. الجزء الأكبر منها ناتج عن مكان النساء في الهيكل الوظيفي، لا عن الأجر المقرّر للوظيفة الواحدة.</p></div></div>
+      <div class="scard rv d2"><span class="big">60% → 0</span><div><p><strong>انعدام كامل للتمثيل في القمة:</strong> نسبة النساء تنخفض بشكل مطّرد كلما ارتفعت الدرجة: 60% في الدرجات الدنيا، 10% في الدرجتين 7 و 8، وصفر في الدرجتين 9 و 10.</p></div></div>
+      <div class="scard rv d1 wide"><span class="big">5.69%</span><div><p><strong>فجوة متبقية لم تفسّرها العوامل المشروعة:</strong> أوضح مثال في الدرجة الثالثة: النساء هناك <strong>أقدم</strong> في الشركة (4.1 سنة مقابل 3.3)، وبخبرة سابقة متطابقة تقريباً، ولا أحد من الطرفين في دور إشرافي — ومع ذلك وسيط أجرهن أقل بنسبة 5.69%.</p></div></div>
     </div>
-
-    <div class="find">
-      <span class="num">النتيجة الثانية</span>
-      <h3>انعدام كامل للتمثيل في القمة</h3>
-      <p>
-        نسبة النساء تنخفض بشكل مطّرد كلما ارتفعت الدرجة: 60% في الدرجات الدنيا، 10% في الدرجتين 7 و 8،
-        وصفر في الدرجتين 9 و 10.
-      </p>
-    </div>
-
-    <div class="find">
-      <span class="num">النتيجة الثالثة</span>
-      <h3>فجوة متبقية لم تفسّرها العوامل المشروعة</h3>
-      <p>
-        العوامل الأربعة لم تفسّر إلا جزءاً محدوداً. أوضح مثال في الدرجة الثالثة: النساء هناك
-        <strong>أقدم</strong> في الشركة (4.1 سنة مقابل 3.3)، وبخبرة سابقة متطابقة تقريباً،
-        ولا أحد من الطرفين في دور إشرافي — ومع ذلك وسيط أجرهن أقل بنسبة 5.69%.
-      </p>
-    </div>
-
-    <h3 style="margin-top:38px">الفجوة داخل كل درجة</h3>
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>الدرجة</th><th>عدد النساء</th><th>عدد الرجال</th>
-            <th>وسيط أجر النساء</th><th>وسيط أجر الرجال</th><th>الفجوة</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>1</td><td>17</td><td>27</td><td>4,050</td><td>4,833</td><td class="gap-hi">16.21%</td></tr>
-          <tr><td>2</td><td>13</td><td>40</td><td>4,700</td><td>5,158</td><td>8.89%</td></tr>
-          <tr><td>3</td><td>19</td><td>57</td><td>5,800</td><td>6,150</td><td>5.69%</td></tr>
-          <tr><td>4</td><td>9</td><td>53</td><td>6,500</td><td>7,350</td><td class="gap-hi">11.56%</td></tr>
-          <tr><td>5</td><td>9</td><td>48</td><td>8,500</td><td>8,800</td><td>3.41%</td></tr>
-          <tr><td>6</td><td>7</td><td>41</td><td>9,950</td><td>10,950</td><td>9.13%</td></tr>
-          <tr><td>7</td><td>4</td><td>24</td><td>10,725</td><td>13,225</td><td class="gap-hi">18.90%</td></tr>
-          <tr><td>8</td><td>4</td><td>27</td><td>16,950</td><td>15,500</td><td class="gap-neg">−9.35%</td></tr>
-          <tr><td>9</td><td class="thin">0</td><td>15</td><td class="thin">—</td><td>19,950</td><td class="thin">—</td></tr>
-          <tr><td>10</td><td class="thin">0</td><td>6</td><td class="thin">—</td><td>22,342</td><td class="thin">—</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="note">
-      الأجور بالريال السعودي على أساس الدوام الكامل. الدرجات 7 و 8 فيها أربع موظفات فقط، فأرقامها أقل استقراراً
-      من غيرها ولا تصلح لبناء قرار عليها وحدها.
-    </p>
-
-    <h3 class="recs-h">التوصيات</h3>
-    <div class="rec">
-      <span class="mark">١</span>
-      <div>
-        <h3>مراجعة فردية للحالات داخل الدرجات ذات الفجوة الأعلى</h3>
-        <p>الدرجات 1 و 4 و 7 تستحق فحص ملفات أفرادها: تاريخ الالتحاق، الراتب الابتدائي، وسجل الزيادات. الرقم الإجمالي يحدد أين ننظر، والملف الفردي هو اللي يفسّر.</p>
-      </div>
-    </div>
-
-    <div class="rec">
-      <span class="mark">٢</span>
-      <div>
-        <h3>فحص مسار الترقية بدل جدول الرواتب</h3>
-        <p>غياب النساء عن الدرجتين العليا لا يُعالَج بزيادة رواتب. يُعالَج بمراجعة معايير الترشيح للأدوار الإشرافية ومن يُدعى إليها.</p>
-      </div>
-    </div>
-
-    <div class="rec">
-      <span class="mark">٣</span>
-      <div>
-        <h3>مراجعة الراتب عند التعيين</h3>
-        <p>الفجوة موجودة في الدرجات الدنيا حيث الخبرة السابقة قريبة من الصفر للطرفين، وهو ما يوجّه الشك نحو نقطة الدخول لا نحو الزيادات اللاحقة.</p>
-      </div>
-    </div>
+    <h3 class="sub-h rv">الفجوة داخل كل درجة</h3>
+    <div class="tbl rv"><table>
+      <thead><tr><th>الدرجة</th><th>عدد النساء</th><th>عدد الرجال</th><th>وسيط أجر النساء</th><th>وسيط أجر الرجال</th><th>الفجوة</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>17</td><td>27</td><td>4,050</td><td>4,833</td><td class="hi">16.21%</td></tr>
+        <tr><td>2</td><td>13</td><td>40</td><td>4,700</td><td>5,158</td><td>8.89%</td></tr>
+        <tr><td>3</td><td>19</td><td>57</td><td>5,800</td><td>6,150</td><td>5.69%</td></tr>
+        <tr><td>4</td><td>9</td><td>53</td><td>6,500</td><td>7,350</td><td class="hi">11.56%</td></tr>
+        <tr><td>5</td><td>9</td><td>48</td><td>8,500</td><td>8,800</td><td>3.41%</td></tr>
+        <tr><td>6</td><td>7</td><td>41</td><td>9,950</td><td>10,950</td><td>9.13%</td></tr>
+        <tr><td>7</td><td>4</td><td>24</td><td>10,725</td><td>13,225</td><td class="hi">18.90%</td></tr>
+        <tr><td>8</td><td>4</td><td>27</td><td>16,950</td><td>15,500</td><td class="neg">−9.35%</td></tr>
+        <tr><td>9</td><td class="thin">0</td><td>15</td><td class="thin">—</td><td>19,950</td><td class="thin">—</td></tr>
+        <tr><td>10</td><td class="thin">0</td><td>6</td><td class="thin">—</td><td>22,342</td><td class="thin">—</td></tr>
+      </tbody></table></div>
+    <p class="note rv">الأجور بالريال السعودي على أساس الدوام الكامل. الدرجات 7 و 8 فيها أربع موظفات فقط، فأرقامها أقل استقراراً من غيرها ولا تصلح لبناء قرار عليها وحدها.</p>
+    <h3 class="sub-h rv">التوصيات</h3>
+    <ul class="recs rv"><li><b>مراجعة فردية للحالات داخل الدرجات ذات الفجوة الأعلى:</b> الدرجات 1 و 4 و 7 تستحق فحص ملفات أفرادها: تاريخ الالتحاق، الراتب الابتدائي، وسجل الزيادات. الرقم الإجمالي يحدد أين ننظر، والملف الفردي هو اللي يفسّر.</li><li><b>فحص مسار الترقية بدل جدول الرواتب:</b> غياب النساء عن الدرجتين العليا لا يُعالَج بزيادة رواتب. يُعالَج بمراجعة معايير الترشيح للأدوار الإشرافية ومن يُدعى إليها.</li><li><b>مراجعة الراتب عند التعيين:</b> الفجوة موجودة في الدرجات الدنيا حيث الخبرة السابقة قريبة من الصفر للطرفين، وهو ما يوجّه الشك نحو نقطة الدخول لا نحو الزيادات اللاحقة.</li></ul>
+    <div class="disc rv"><strong>البيانات في هذا المشروع تركيبية بالكامل.</strong> وُلّدت لأغراض التعلّم ولا تخص أي جهة أو موظفين حقيقيين. المنهجية وحدها هي القابلة للنقل على بيانات فعلية.</div>
   </section>
+</div>
 
-  <!-- ============ الأدوات ============ -->
-  <section>
-    <h2>الأدوات</h2>
-    <div class="tags" style="margin-top:18px">
-      <span class="tag">Power BI</span>
-      <span class="tag">Power Query</span>
-      <span class="tag">DAX</span>
-      <span class="tag">Excel</span>
-    </div>
-    <div class="disc" style="margin-top:26px">
-      <p>
-        <strong>البيانات في هذا المشروع تركيبية بالكامل.</strong>
-        وُلّدت لأغراض التعلّم ولا تخص أي جهة أو موظفين حقيقيين. المنهجية وحدها هي القابلة للنقل على بيانات فعلية.
-      </p>
-    </div>
-  </section>
+<div class="marq" aria-hidden="true"><div><span>POWER BI</span><em>✦</em><span>POWER QUERY</span><em>✦</em><span>DAX</span><em>✦</em><span>EXCEL</span><em>✦</em><span>PAY EQUITY</span><em>✦</em><span>POWER BI</span><em>✦</em><span>POWER QUERY</span><em>✦</em><span>DAX</span><em>✦</em><span>EXCEL</span><em>✦</em><span>PAY EQUITY</span><em>✦</em></div></div>
 
-  <footer>
-    <p style="margin:0">
-      وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات ·
-      <a href="index.html">بقية المشاريع</a>
-    </p>
-  </footer>
+<div class="wrap">
+  <p class="src">الأدوات: Power BI · Power Query · DAX · Excel.</p>
+  <footer>وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات · <a href="index.html">بقية المشاريع</a></footer>
+</div>
 
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="عارض الصور" aria-hidden="true">
+  <div class="lb-top"><span id="lbTitle"></span><button type="button" class="cbtn x" id="lbClose" aria-label="إغلاق">×</button></div>
+  <div class="lb-mid">
+    <button type="button" class="cbtn" id="lbPrev" aria-label="السابقة">›</button>
+    <div class="lb-media" id="lbMedia"></div>
+    <button type="button" class="cbtn" id="lbNext" aria-label="التالية">‹</button>
+  </div>
+  <div class="thumbs" id="lbThumbs"></div>
 </div>
 
 <script>
 (function(){
-  document.querySelectorAll('.tb').forEach(function(t){
-    t.addEventListener('click',function(){
-      document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
-      t.setAttribute('aria-selected','true');
-      document.querySelectorAll('.pv').forEach(function(p){ p.hidden = p.dataset.v !== t.dataset.v; });
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hover = matchMedia('(hover:hover)').matches;
+  var cur = document.getElementById('cursor');
+  if (!reduce && hover) {
+    var tx=0,ty=0,cx=0,cy=0,raf=null;
+    addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;cur.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);});
+    function loop(){cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;cur.style.transform='translate('+cx+'px,'+cy+'px)';raf=(Math.abs(tx-cx)+Math.abs(ty-cy)>.5)?requestAnimationFrame(loop):null;}
+    document.addEventListener('mouseleave',function(){cur.classList.remove('on');});
+    document.querySelectorAll('[data-tilt]').forEach(function(el){
+      var max=+el.dataset.tilt||8;
+      el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();var px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+        el.style.transform='perspective(1100px) rotateX('+(-py*max).toFixed(2)+'deg) rotateY('+(px*max).toFixed(2)+'deg) scale(1.015)';});
+      el.addEventListener('mouseleave',function(){el.style.transform='';});
     });
-  });
+  }
+  function countUp(el){
+    if(el.dataset.done)return;el.dataset.done=1;
+    var to=+el.dataset.count,dec=+el.dataset.dec,suf=el.dataset.suf||'',pre=el.dataset.pre||'',t0=performance.now(),dur=reduce?0:1700;
+    var fmt=function(x){var s=x.toFixed(dec);if(el.dataset.comma){var p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');s=p.join('.');}return pre+s+suf;};
+    (function step(now){var t=dur?Math.min(1,(now-t0)/dur):1,e=1-Math.pow(1-t,3);el.textContent=fmt(to*e);if(t<1)requestAnimationFrame(step);})(t0);
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(!e.isIntersecting)return;var el=e.target;el.classList.add('in');io.unobserve(el);
+    el.querySelectorAll('[data-count]').forEach(countUp);
+    el.querySelectorAll('[data-w]').forEach(function(b){b.style.width=b.dataset.w;});
+  });},{threshold:.18});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  var steps=[].slice.call(document.querySelectorAll('.tstep')),imgs=[].slice.call(document.querySelectorAll('.gimg'));
+  var n=imgs.length,gCount=document.getElementById('gCount'),gProg=document.getElementById('gProg');
+  function pad(x){return (x<10?'0':'')+x;}
+  function setActive(k){steps.forEach(function(s,i){s.classList.toggle('on',i===k);});
+    imgs.forEach(function(m,i){m.classList.toggle('on',i===k);m.classList.toggle('past',i<k);});
+    gCount.textContent=pad(k+1)+' / '+pad(n);gProg.style.width=((k+1)/n*100)+'%';}
+  var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)setActive(+e.target.dataset.step);});},{rootMargin:'-45% 0px -45% 0px'});
+  steps.forEach(function(s){so.observe(s);s.addEventListener('mouseenter',function(){setActive(+s.dataset.step);});});
+  setActive(0);
+
+  var G=imgs.map(function(m){var im=m.querySelector('img');return {type:m.dataset.video?'video':'img',src:m.dataset.video||im.getAttribute('src'),thumb:im.getAttribute('src'),title:m.dataset.title};});
+  var lb=document.getElementById('lb'),media=document.getElementById('lbMedia'),title=document.getElementById('lbTitle'),th=document.getElementById('lbThumbs'),idx=0,last=null;
+  th.innerHTML=G.map(function(g,i){return '<button type="button" data-i="'+i+'" aria-label="'+g.title+'"><img src="'+g.thumb+'" alt=""></button>';}).join('');
+  function show(i){idx=(i+G.length)%G.length;var g=G[idx];
+    media.innerHTML=g.type==='video'?'<video src="'+g.src+'" poster="'+g.thumb+'" controls autoplay muted playsinline></video>':'<img src="'+g.src+'" alt="'+g.title+'">';
+    title.textContent=g.title;th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j===idx);});}
+  function open(i){last=document.activeElement;show(i);lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';document.getElementById('lbClose').focus();}
+  function close(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');document.body.style.overflow='';media.innerHTML='';if(last)last.focus();}
+  document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){open(+b.dataset.open);});});
+  document.getElementById('lbClose').addEventListener('click',close);
+  document.getElementById('lbNext').addEventListener('click',function(){show(idx+1);});
+  document.getElementById('lbPrev').addEventListener('click',function(){show(idx-1);});
+  th.addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(+b.dataset.i);});
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(idx+1);if(e.key==='ArrowRight')show(idx-1);});
 })();
 </script>
 </body>

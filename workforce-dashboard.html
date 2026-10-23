@@ -7,462 +7,443 @@
 <meta name="description" content="لوحة Power BI لقياس الغياب والعمل الإضافي والخصومات في شركة مقاولات، مبنية على 1,000 موظف و10,744 سجل حضور شهري.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#070F0C;
-  --panel:#0D1A16;
-  --panel-2:#122620;
-  --line:rgba(255,255,255,.08);
-  --text:#E8F4EF;
-  --muted:#8FAFA4;
-  --em:#10B981;
-  --em-light:#6EE7B7;
-  --em-pale:#A7F3D0;
-  --em-deep:#065F46;
-  --gold:#D9B44A;
-  --grad:linear-gradient(115deg,#6EE7B7 0%,#10B981 50%,#0E7C63 100%);
-  --display:'El Messiri',serif;
+  --bg:#08090F; --card:#12131C; --line:rgba(255,255,255,.09);
+  --text:#F3EFE8; --muted:#BDB6AB; --dim:#9A948A;
+  --coral:#FF5E3A; --coral2:#FF7A4D; --gold:#FFB547; --mint:#5EEAD4;
+  --ease:cubic-bezier(.16,1,.3,1);
   --mono:'Space Grotesk',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:'Tajawal',system-ui,sans-serif;font-weight:300;
-  line-height:1.85;-webkit-font-smoothing:antialiased;
+body{background:var(--bg);color:var(--text);font-family:'Alexandria',system-ui,sans-serif;font-weight:400;line-height:1.85;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:rgba(255,94,58,.35);color:#fff}
+a{color:var(--gold)}
+.wrap{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:0 24px}
+
+/* background glows + cursor */
+.glow{position:fixed;pointer-events:none;z-index:0;border-radius:50%;animation:glow 6s ease-in-out infinite}
+.glow.a{top:-260px;right:8%;width:900px;height:700px;background:radial-gradient(ellipse,rgba(255,94,58,.26),transparent 62%)}
+.glow.b{top:45vh;left:-220px;width:700px;height:700px;background:radial-gradient(circle,rgba(94,234,212,.13),transparent 62%);animation-delay:-3s}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+.cursor{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(255,122,77,.20),rgba(255,181,71,.07) 35%,transparent 65%);opacity:0;transition:opacity .5s;will-change:transform}
+.cursor.on{opacity:1}
+
+/* top */
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:28px 0 0}
+.pill{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-size:.88rem;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);transition:.3s var(--ease)}
+.pill:hover{border-color:rgba(255,181,71,.6);background:rgba(255,181,71,.08)}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.24em;color:var(--dim)}
+
+/* hero */
+.hero{text-align:center;padding:70px 0 40px;display:flex;flex-direction:column;align-items:center;gap:26px}
+.badge{font-family:var(--mono);font-size:.78rem;letter-spacing:.2em;padding:8px 16px;border-radius:999px;background:rgba(255,94,58,.12);color:var(--gold);border:1px solid rgba(255,94,58,.35)}
+h1{font-size:clamp(2.8rem,8.4vw,5.8rem);line-height:1.12;font-weight:800;letter-spacing:-.02em;perspective:600px}
+.w{display:inline-block;opacity:0;transform-origin:bottom;animation:word .95s var(--ease) forwards}
+.w:nth-child(1){animation-delay:.05s}.w:nth-child(2){animation-delay:.18s}.w:nth-child(4){animation-delay:.31s}
+@keyframes word{from{opacity:0;transform:translateY(60%) rotateX(-70deg)}to{opacity:1;transform:none}}
+.grad{background:linear-gradient(90deg,var(--coral),var(--gold) 55%,var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{max-width:720px;font-size:clamp(1.02rem,2vw,1.2rem);font-weight:300;color:var(--muted)}
+.fade{opacity:0;animation:rise 1s var(--ease) .45s forwards}
+@keyframes rise{from{opacity:0;transform:translateY(46px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+
+/* hero shot */
+.shot-wrap{perspective:1400px;margin-top:10px}
+.shot{transform:rotateX(28deg) scale(.86) translateY(40px);transform-origin:center top;transition:transform 1.2s var(--ease)}
+.shot.flat{transform:none}
+.tilt{border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.55),rgba(255,255,255,.06) 40%,rgba(94,234,212,.4));
+  box-shadow:0 60px 140px -40px rgba(255,94,58,.45);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tilt:hover{box-shadow:0 70px 150px -30px rgba(255,94,58,.6)}
+.zoom{display:block;position:relative;overflow:hidden;width:100%;padding:0;border:0;background:none;border-radius:16px;cursor:zoom-in}
+.zoom img{display:block;width:100%;border-radius:16px}
+.shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);transform:translateX(120%);animation:sweep 3.4s ease-in-out 2s infinite}
+@keyframes sweep{from{transform:translateX(120%)}to{transform:translateX(-120%)}}
+
+/* sections */
+section{padding:110px 0 0}
+h2{font-size:clamp(1.9rem,4.4vw,2.9rem);font-weight:800;line-height:1.2;margin-bottom:26px}
+.rv{opacity:0;transform:translateY(46px) scale(.98);filter:blur(6px);transition:opacity 1s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}.rv.d5{transition-delay:.4s}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:210px;gap:16px}
+.tile{height:100%;border-radius:26px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  background:var(--card);border:1px solid var(--line);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tile:hover{box-shadow:0 40px 90px -30px rgba(255,94,58,.5)}
+.tile .k{font-size:.95rem;color:var(--muted)}
+.tile .v{font-family:var(--mono);font-weight:700;font-size:3.6rem;line-height:1}
+.tile .s{font-size:.82rem;color:var(--dim)}
+.t-sales{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#1A120F,#0F0C0B);border-color:rgba(255,94,58,.25)}
+.t-sales .v{font-size:clamp(3.6rem,7vw,6rem);color:var(--gold);margin-top:10px}
+.t-ring{grid-row:span 2;align-items:center;text-align:center;background:linear-gradient(180deg,#0D1A18,#0A0F0E);border-color:rgba(94,234,212,.25)}
+.ring{position:relative;width:170px;height:170px}
+.ring svg{width:170px;height:170px;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:2.8rem}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width 1.8s var(--ease)}
+.t-rep{grid-column:span 4;flex-direction:row;align-items:center;gap:36px;flex-wrap:wrap;background:linear-gradient(90deg,#1A0F12,#12131C 60%);border-color:rgba(255,94,58,.25)}
+.t-rep .v{font-size:4.4rem;color:var(--coral2)}
+.dots{flex:1 1 400px;display:grid;grid-template-columns:repeat(25,minmax(0,1fr));gap:7px}
+.dots span{aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.12);transform:scale(0);transition:transform .5s var(--ease)}
+.dots span.hot{background:var(--coral2);box-shadow:0 0 14px var(--coral)}
+.in .dots span{transform:scale(1)}
+.spark{width:100%;height:150px}
+.spark .ln{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 2.4s var(--ease) .3s}
+.in .spark .ln{stroke-dashoffset:0}
+.spark .pk{transform:scale(0);transform-box:fill-box;transform-origin:center;transition:transform .6s var(--ease) 2.4s}
+.in .spark .pk{transform:scale(1)}
+
+/* tour (sticky gallery) */
+.tour{display:flex;gap:44px;align-items:flex-start}
+.tour-text{flex:1 1 320px}
+.tstep{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:14px;opacity:.3;transform:translateX(-14px);transition:opacity .5s,transform .6s var(--ease)}
+.tstep.on{opacity:1;transform:none}
+.tstep .n{align-self:flex-start;font-family:var(--mono);font-size:.86rem;letter-spacing:.2em;color:var(--gold)}
+.tstep h3{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;line-height:1.3}
+.tstep p{font-size:1.06rem;font-weight:300;color:var(--muted)}
+.gbtn{align-self:flex-start;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-family:inherit;font-size:.9rem;cursor:pointer;transition:background .25s,transform .25s}
+.gbtn:hover{background:rgba(255,181,71,.18);transform:scale(1.05)}
+.tour-media{flex:1.4 1 480px;position:sticky;top:90px}
+.frame{transition:transform .25s ease-out;transform-style:preserve-3d;will-change:transform;position:relative;border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.45),rgba(255,255,255,.05) 45%,rgba(94,234,212,.35));box-shadow:0 50px 120px -40px rgba(255,94,58,.4)}
+.stage{position:relative;aspect-ratio:1300/715;border-radius:16px;overflow:hidden;background:#0F0F16}
+.gimg{position:absolute;inset:0;padding:0;border:0;background:none;cursor:zoom-in;opacity:0;transform:scale(.94);filter:blur(10px);pointer-events:none;
+  transition:opacity .8s var(--ease),transform .9s var(--ease),filter .8s}
+.gimg.past{transform:scale(1.08)}
+.gimg.on{opacity:1;transform:none;filter:none;pointer-events:auto}
+.gimg img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.play{position:absolute;inset:0;display:grid;place-items:center}
+.play span{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:rgba(255,94,58,.9);color:#fff;font-size:1.6rem;box-shadow:0 0 0 12px rgba(255,94,58,.2)}
+.gfoot{display:flex;justify-content:space-between;align-items:center;padding:14px 6px 2px;font-family:var(--mono);font-size:.88rem}
+.gfoot .bar{flex:0 0 55%;height:4px}
+.gfoot .bar i{transition:width .6s var(--ease)}
+
+/* steps / problems / summary */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.step{padding:26px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.02);display:flex;flex-direction:column;gap:10px;transition:background .35s,border-color .35s,transform .35s var(--ease)}
+.step:hover{background:rgba(255,181,71,.07);border-color:rgba(255,181,71,.5);transform:translateY(-6px)}
+.step .n{font-family:var(--mono);font-weight:700;font-size:2.6rem;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+.step h4{font-size:1.12rem;font-weight:600}
+.step p{font-size:.95rem;font-weight:300;color:var(--muted)}
+.prob{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.pcard{position:relative;padding:28px;border-radius:24px;background:var(--card);border:1px solid var(--line);overflow:hidden;transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d}
+.pcard:hover{box-shadow:0 40px 90px -30px rgba(94,234,212,.35)}
+.pcard .tag{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;color:var(--mint)}
+.pcard h4{font-size:1.15rem;font-weight:700;margin:10px 0}
+.pcard p{font-size:.96rem;font-weight:300;color:var(--muted)}
+.pcard code{font-family:var(--mono);font-size:.88em;color:var(--gold)}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.scard{padding:26px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;gap:20px;align-items:flex-start;transition:border-color .35s,transform .35s var(--ease)}
+.scard:hover{border-color:rgba(255,181,71,.45);transform:translateY(-4px)}
+.scard .big{flex:0 0 auto;font-family:var(--mono);font-weight:700;font-size:1.7rem;color:var(--gold);direction:ltr;min-width:96px;text-align:center;line-height:1.3}
+.scard p{font-size:.97rem;font-weight:300;color:var(--muted)}
+.scard strong{color:var(--text);font-weight:600}
+.scard.wide{grid-column:1/-1}
+.recs{list-style:none;display:grid;gap:10px;margin-top:14px}
+.recs li{padding:12px 16px;border-radius:14px;background:rgba(255,181,71,.06);border:1px solid rgba(255,181,71,.18);font-size:.95rem;color:var(--muted)}
+.recs b{color:var(--gold);font-weight:600}
+
+/* marquee */
+.marq{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-top:110px}
+.marq div{display:flex;gap:60px;width:max-content;font-family:var(--mono);font-size:2.1rem;font-weight:700;color:rgba(243,239,232,.18);white-space:nowrap;animation:marq 24s linear infinite}
+.marq em{font-style:normal;color:var(--coral2)}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(50%)}}
+.src{font-size:.85rem;color:var(--dim);margin-top:18px}
+footer{padding:50px 0 60px;color:var(--dim);font-size:.86rem}
+footer a{text-decoration:none}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(5,5,9,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;opacity:0;pointer-events:none;transition:opacity .35s}
+.lb.open{opacity:1;pointer-events:auto}
+.lb-top,.lb-mid{display:flex;align-items:center;gap:16px;width:min(1200px,100%)}
+.lb-top{justify-content:space-between;font-size:1.1rem;font-weight:600}
+.lb-media{flex:1;min-width:0;display:flex;justify-content:center}
+.lb-media img,.lb-media video{max-width:100%;max-height:72vh;border-radius:14px;box-shadow:0 40px 120px -20px rgba(255,94,58,.45);animation:lbzoom .55s var(--ease) both}
+@keyframes lbzoom{from{opacity:0;transform:scale(.86) translateY(30px)}to{opacity:1;transform:none}}
+.cbtn{flex:0 0 52px;width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-size:1.4rem;cursor:pointer;transition:background .25s,transform .25s}
+.cbtn:hover{background:rgba(255,181,71,.2);transform:scale(1.08)}
+.cbtn.x{color:var(--text);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.thumbs{display:flex;gap:10px}
+.thumbs button{width:96px;height:54px;padding:0;border-radius:10px;overflow:hidden;border:2px solid transparent;background:none;cursor:pointer;opacity:.55;transition:.25s}
+.thumbs button.on{border-color:var(--gold);opacity:1}
+.thumbs img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+@media (max-width:900px){
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:190px}
+  .t-sales,.t-rep{grid-column:span 2}
+  .tour{flex-direction:column}
+  .tour-media{position:relative;top:0;order:-1;width:100%}
+  .tstep{min-height:auto;padding:26px 0;opacity:1;transform:none}
 }
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(58rem 34rem at 86% -10%,rgba(16,185,129,.15),transparent 62%),
-    radial-gradient(50rem 30rem at 2% 20%,rgba(6,95,70,.30),transparent 60%),
-    radial-gradient(44rem 28rem at 60% 105%,rgba(110,231,183,.08),transparent 62%);
+@media (max-width:560px){
+  .bento{grid-template-columns:1fr;grid-auto-rows:auto}
+  .t-sales,.t-rep,.t-ring{grid-column:auto;grid-row:auto}
+  .tile{min-height:190px}
+  .t-sales .spark{height:110px}
+  .dots{grid-template-columns:repeat(20,minmax(0,1fr));gap:5px}
+  .cbtn{flex-basis:44px;width:44px;height:44px}
+  .thumbs button{width:72px;height:42px}
 }
-::selection{background:rgba(16,185,129,.32);color:#fff}
-.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
-
-.top{padding:34px 0 0}
-.back{
-  display:inline-flex;align-items:center;gap:9px;color:var(--muted);
-  text-decoration:none;font-size:.86rem;border:1px solid var(--line);
-  border-radius:999px;padding:7px 16px;transition:.25s;
+@media (hover:none){.cursor{display:none}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .w,.fade,.rv{opacity:1;transform:none;filter:none}
+  .shot{transform:none}
+  .dots span,.spark .pk{transform:none}
+  .spark .ln{stroke-dashoffset:0}
 }
-.back:hover{color:var(--text);border-color:rgba(16,185,129,.5)}
 
-.hero{padding:56px 0 30px}
-.eyebrow{
-  font-family:var(--mono);font-size:.73rem;letter-spacing:.16em;
-  color:var(--em-light);text-transform:uppercase;margin-bottom:20px;
-}
-h1{
-  font-family:var(--display);font-size:clamp(2.1rem,5.6vw,3.6rem);
-  font-weight:600;line-height:1.25;letter-spacing:-.01em;margin-bottom:22px;
-}
-h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lede{font-size:clamp(1.02rem,2.1vw,1.16rem);color:#BFD8CF;max-width:64ch}
-.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
-.tag{font-family:var(--mono);font-size:.75rem;color:var(--muted);
-  border:1px solid var(--line);border-radius:6px;padding:5px 12px}
-
-.stats{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:1px;background:var(--line);border:1px solid var(--line);
-  border-radius:14px;overflow:hidden;margin:46px 0 8px;
-}
-.stat{background:var(--panel);padding:26px 22px}
-.stat b{display:block;font-family:var(--mono);font-size:1.9rem;font-weight:500;
-  letter-spacing:-.02em;margin-bottom:5px;color:var(--em-light)}
-.stat.alt b{color:var(--em-pale)}
-.stat.gold b{color:var(--gold)}
-.stat span{font-size:.83rem;color:var(--muted);line-height:1.6;display:block}
-
-section{padding:62px 0;border-top:1px solid var(--line);margin-top:56px}
-h2{font-family:var(--display);font-size:clamp(1.4rem,3vw,1.85rem);
-  font-weight:600;letter-spacing:-.01em;margin-bottom:10px}
-h2::before{content:"";display:block;width:46px;height:3px;border-radius:2px;
-  background:var(--grad);margin-bottom:18px}
-h3{font-size:1.06rem;font-weight:600;margin:34px 0 10px;color:#EDFBF5}
-p{margin-bottom:16px;color:#BFD8CF;max-width:70ch}
-strong{font-weight:600;color:#fff}
-code{font-family:var(--mono);font-size:.86em;color:var(--em-pale)}
-
-.disc{border:1px dashed rgba(217,180,74,.34);border-radius:12px;
-  padding:20px 22px;background:rgba(217,180,74,.05)}
-.disc p{margin-bottom:0;color:#E3DAC4;font-size:.94rem}
-
-/* cleaning table */
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:26px 0 12px}
-table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:540px}
-th,td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line)}
-th{background:var(--panel-2);font-family:var(--mono);font-size:.74rem;
-  font-weight:500;color:var(--em-pale);letter-spacing:.04em}
-td{color:#D3E6DE}
-td.n{font-family:var(--mono);text-align:center;color:var(--em-light)}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:nth-child(even) td{background:rgba(255,255,255,.016)}
-.note{font-size:.83rem;color:var(--muted);margin-top:10px}
-
-/* findings */
-.find{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-  padding:26px 26px 22px;margin-bottom:16px;position:relative;overflow:hidden}
-.find::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad)}
-.find .num{font-family:var(--mono);font-size:.73rem;color:var(--em-light);
-  letter-spacing:.14em;display:block;margin-bottom:8px}
-.find h3{margin:0 0 10px}
-.find p:last-child{margin-bottom:0}
-
-/* compare bars */
-.cmp{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;margin:26px 0}
-.cmp h3{margin:0 0 18px;font-size:1rem}
-.crow{display:flex;align-items:center;gap:12px;margin-bottom:13px}
-.crow .l{flex:0 0 118px;font-size:.85rem;color:var(--muted)}
-.ctrack{flex:1;height:28px;border-radius:7px;background:rgba(255,255,255,.04);overflow:hidden}
-.cbar{height:100%;border-radius:7px}
-.cbar.a{background:linear-gradient(90deg,#0E7C63,#10B981)}
-.cbar.b{background:linear-gradient(90deg,#10B981,#6EE7B7)}
-.crow .v{flex:0 0 96px;font-family:var(--mono);font-size:.86rem;color:#DDEFE8}
-.cmp .foot{font-size:.86rem;color:var(--muted);margin:12px 0 0;border-top:1px solid var(--line);padding-top:14px}
-
-/* recs */
-.rec{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
-.rec:last-child{border-bottom:none}
-.rec .mark{flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  font-family:var(--mono);font-size:.82rem;background:rgba(16,185,129,.14);
-  color:var(--em-light);border:1px solid rgba(16,185,129,.3)}
-.rec h3{margin:0 0 5px;font-size:1rem}
-.rec div p{margin-bottom:0}
-.rec .rn{margin-top:9px;font-size:.83rem;color:var(--muted);
-  border-inline-start:2px solid rgba(16,185,129,.35);padding-inline-start:11px}
-
-/* decisions */
-.dec{
-  background:var(--panel);border:1px solid var(--line);border-left:0;
-  border-radius:12px;padding:20px 22px;margin-bottom:14px;
-  position:relative;overflow:hidden;
-}
-.dec::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;
-  width:3px;background:var(--grad)}
-.dec .k{display:block;font-family:var(--mono);font-size:.7rem;
-  letter-spacing:.14em;color:var(--em-light);margin-bottom:7px}
-.dec h4{font-size:1.02rem;font-weight:600;color:#EDFBF5;margin-bottom:8px}
-.dec p{margin-bottom:0;font-size:.96rem}
-
-/* lawha replica */
-.lawha{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:14px}
-.tb{font-family:'Tajawal',sans-serif;font-size:.9rem;color:var(--muted);background:transparent;
-  border:1px solid var(--line);border-radius:9px;padding:8px 16px;cursor:pointer;transition:.18s}
-.tb:hover{color:var(--text);border-color:rgba(16,185,129,.45)}
-.tb[aria-selected="true"]{background:var(--grad);color:#05231B;font-weight:600;border-color:transparent}
-.pg-q{font-family:var(--display);font-size:1.08rem;color:#EDFBF5;margin-bottom:20px;max-width:none}
-.pg-n{font-size:.85rem;color:var(--muted);margin:14px 0 0;max-width:none}
-.grp{margin-bottom:20px}
-.grp-t{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
-  color:var(--em-light);margin-bottom:10px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
-.kpi{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 12px}
-.kpi b{display:block;font-family:var(--mono);font-size:1.32rem;font-weight:500;color:var(--em-light);margin-bottom:3px}
-.kpi span{font-size:.72rem;color:var(--muted);line-height:1.5}
-.ch-t{font-size:.98rem;font-weight:600;color:#EDFBF5;margin-bottom:10px}
-.lg{display:flex;gap:16px;font-size:.8rem;color:var(--muted);margin-bottom:14px}
-.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:6px}
-.sw.a{background:#0E7C63}.sw.b{background:#6EE7B7}
-.mchart{display:flex;align-items:flex-end;gap:6px;height:190px;padding-top:6px;
-  border-bottom:1px solid var(--line);overflow-x:auto}
-.mcol{flex:1 0 42px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
-.mpair{display:flex;align-items:flex-end;gap:3px;height:150px;width:100%;justify-content:center}
-.mbar{width:13px;border-radius:3px 3px 0 0;transition:.2s}
-.mval{font-family:var(--mono);font-size:.58rem;color:var(--em-pale);white-space:nowrap;line-height:1}
-.mpair{position:relative}
-.mbar.a{background:#0E7C63}.mbar.b{background:#6EE7B7}
-.mcol:hover .mbar,.mcol.on .mbar{filter:brightness(1.3)}
-.mlbl{font-family:var(--mono);font-size:.62rem;color:var(--muted);white-space:nowrap}
-.crow{display:flex;align-items:center;gap:12px;margin-bottom:11px}
-.crow .l{flex:0 0 100px;font-size:.85rem;color:var(--muted)}
-.ctrack{flex:1;height:26px;border-radius:7px;background:rgba(255,255,255,.04);overflow:hidden}
-.cbar{height:100%;border-radius:7px}
-.cbar.a{background:linear-gradient(90deg,#0E7C63,#10B981)}
-.cbar.b{background:linear-gradient(90deg,#10B981,#6EE7B7)}
-.crow .v{flex:0 0 60px;font-family:var(--mono);font-size:.86rem;color:#DDEFE8}
-.tg{display:flex;gap:6px;margin-bottom:16px}
-.tgb{font-family:var(--mono);font-size:.76rem;color:var(--muted);background:transparent;
-  border:1px solid var(--line);border-radius:7px;padding:6px 13px;cursor:pointer;transition:.18s}
-.tgb[aria-selected="true"]{background:rgba(16,185,129,.16);color:var(--em-pale);border-color:rgba(16,185,129,.4)}
-.drow{display:flex;align-items:center;gap:12px;margin-bottom:11px}
-.drow .l{flex:0 0 100px;font-size:.85rem;color:var(--muted)}
-.dtrack{flex:1;height:26px;border-radius:7px;background:rgba(255,255,255,.04);overflow:hidden}
-.dbar{height:100%;border-radius:7px;transition:width .45s cubic-bezier(.4,0,.2,1)}
-.drow .v{flex:0 0 74px;font-family:var(--mono);font-size:.86rem;color:#DDEFE8}
-@media (max-width:640px){.crow .l,.drow .l{flex-basis:78px;font-size:.79rem}}
-
-.shotbtn{display:inline-flex;align-items:center;gap:9px;margin-top:34px;
-  font-family:'Tajawal',sans-serif;font-size:.92rem;color:var(--em-pale);
-  background:var(--panel);border:1px solid rgba(16,185,129,.32);border-radius:10px;
-  padding:11px 20px;cursor:pointer;transition:.2s}
-.shotbtn:hover{background:var(--panel-2);border-color:rgba(16,185,129,.6)}
-.shotbtn .ic{font-family:var(--mono);font-size:.8rem;transition:transform .25s}
-.shotbtn[aria-expanded="true"] .ic{transform:rotate(180deg)}
-figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);margin-top:16px}
-figure img{display:block;width:100%;height:auto}
-figcaption{padding:12px 16px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
-footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
-  color:var(--muted);font-size:.85rem}
-footer a{color:var(--em-light);text-decoration:none}
-footer a:hover{text-decoration:underline}
-:focus-visible{outline:2px solid var(--em);outline-offset:3px;border-radius:4px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:640px){
-  section{padding:46px 0;margin-top:38px}
-  .hero{padding:38px 0 18px}
-  .crow .l{flex-basis:92px;font-size:.8rem}
-  .crow .v{flex-basis:80px;font-size:.8rem}
-}
-/* steps */
-.steps{list-style:none;counter-reset:s;margin-top:26px}
-.steps li{counter-increment:s;display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
-.steps li:last-child{border-bottom:none}
-.steps li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  font-family:var(--mono);font-size:.82rem;background:rgba(16,185,129,.14);
-  color:var(--em-light);border:1px solid rgba(16,185,129,.3)}
-.steps li>div{flex:1;min-width:0}
-.steps h4{font-size:1rem;font-weight:600;color:#EDFBF5;margin-bottom:4px}
-.steps p{margin-bottom:0;font-size:.97rem}
-.steps .tbl-wrap{margin:16px 0 4px}
-.recs-h{margin-top:40px}
-.viewer{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
-.viewer .tabs{margin-bottom:18px}
-.viewer figure{margin-top:0;background:#070F0C}
-@media (max-width:640px){.viewer{padding:14px}}
+.tile .v.sm{font-size:2.6rem}
+.bento{grid-auto-rows:minmax(210px,auto);grid-auto-flow:row dense}
+.tile{gap:10px}
+.scard{flex-wrap:wrap}
+.scard>div{flex:1 1 240px;min-width:0}
+.scard .big{white-space:nowrap;min-width:110px}
+.t-big{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#1A120F,#0F0C0B);border-color:rgba(255,94,58,.25)}
+.t-big .v{font-size:clamp(3.4rem,6.4vw,5.6rem);color:var(--gold);margin-top:10px}
+.t-wide{grid-column:span 2}
+.t-full{grid-column:1/-1}
+.t-full .hbars{max-width:640px}
+.t-mint{background:linear-gradient(180deg,#0D1A18,#0A0F0E);border-color:rgba(94,234,212,.25)}
+.t-mint .v{color:var(--mint)}
+.hbars{display:flex;flex-direction:column;gap:12px}
+.hb{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted)}
+.hb .l{flex:0 0 96px}
+.hb .tr{flex:1;height:12px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.hb .tr i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width 1.6s var(--ease)}
+.hb .tr i.m{background:linear-gradient(90deg,#2BB8A3,var(--mint))}
+.hb .vv{flex:0 0 74px;font-family:var(--mono);color:var(--text);direction:ltr;text-align:left}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:18px;margin-top:8px}
+.tbl table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:560px}
+.tbl th,.tbl td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line)}
+.tbl th{background:#15161F;font-family:var(--mono);font-size:.76rem;font-weight:500;color:var(--gold);letter-spacing:.04em}
+.tbl td{color:#DCD6CC;font-family:var(--mono)}
+.tbl td.ar{font-family:inherit;text-align:right}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl .hi{color:var(--coral2);font-weight:600}.tbl .neg{color:var(--mint);font-weight:600}.tbl .thin{color:var(--dim)}
+.note{font-size:.84rem;color:var(--dim);margin-top:12px}
+.sub-h{font-size:1.35rem;font-weight:800;margin:46px 0 16px}
+.disc{margin-top:18px;padding:18px 22px;border-radius:16px;border:1px dashed rgba(255,181,71,.4);background:rgba(255,181,71,.05);font-size:.92rem;color:#E6DCC8}
+.gstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.gstat{padding:22px;border-radius:20px;background:var(--card);border:1px solid var(--line)}
+.gstat b{display:block;font-family:var(--mono);font-size:1.5rem;color:var(--gold);margin-bottom:6px}
+.gstat span{display:block;font-size:.9rem;font-weight:300;color:var(--muted)}
+.gstat i{display:block;font-style:normal;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:8px}
+@media (max-width:900px){.t-big,.t-wide{grid-column:span 2}}
+@media (max-width:560px){.t-big,.t-wide{grid-column:auto;grid-row:auto}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="glow a" aria-hidden="true"></div>
+<div class="glow b" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <div class="top">
-    <a class="back" href="index.html">→ العودة إلى الملف التعريفي</a>
+<div class="wrap">
+  <div class="top fade">
+    <a class="pill" href="index.html">→ العودة إلى الملف التعريفي</a>
+    <span class="eyebrow">CASE STUDY · HR ANALYTICS</span>
   </div>
 
   <header class="hero">
-    <div class="eyebrow">HR Analytics · Power BI</div>
-    <h1>لوحة معلومات <span class="g">القوى العاملة</span></h1>
-    <p class="lede">
-      لوحة تشغيلية لشركة مقاولات — أشير إليها بـ «شركة X» — تقيس الغياب والعمل الإضافي والخصومات
-      على مدى اثني عشر شهرًا. الهدف منها أن تجيب على سؤال الإدارة قبل أن يُطرح: أين تذهب الساعات، وأين يذهب المال؟
-    </p>
-    <div class="tags">
-      <span class="tag">Power BI</span>
-      <span class="tag">Power Query</span>
-      <span class="tag">DAX</span>
-      <span class="tag">Star Schema</span>
-      <span class="tag">Custom Theme</span>
-    </div>
+    <span class="badge fade">HR ANALYTICS · POWER BI</span>
+    <h1><span class="w">لوحة</span> <span class="w">معلومات</span><br><span class="w grad">القوى العاملة</span></h1>
+    <p class="lede fade">لوحة تشغيلية لشركة مقاولات — أشير إليها بـ «شركة X» — تقيس الغياب والعمل الإضافي والخصومات على مدى اثني عشر شهرًا. الهدف منها أن تجيب على سؤال الإدارة قبل أن يُطرح: أين تذهب الساعات، وأين يذهب المال؟</p>
   </header>
 
-  <div class="stats">
-    <div class="stat"><b>1,000</b><span>موظف في جدول القوى العاملة</span></div>
-    <div class="stat alt"><b>10,744</b><span>سجل حضور شهري</span></div>
-    <div class="stat gold"><b>8.91M</b><span>تكلفة العمل الإضافي (ريال)</span></div>
-    <div class="stat"><b>17.26</b><span>فرق تكلفة الساعة الواحدة (ريال)</span></div>
-  </div>
-
-  <!-- ============ اللوحة ============ -->
-  <section>
-    <h2>اللوحة</h2>
-    <div class="viewer">
-      <div class="tabs" role="tablist" aria-label="صفحات اللوحة">
-        <button class="tb" type="button" role="tab" data-v="0" aria-selected="true">نظرة عامة</button>
-        <button class="tb" type="button" role="tab" data-v="1" aria-selected="false">العمل الإضافي</button>
-        <button class="tb" type="button" role="tab" data-v="2" aria-selected="false">الخصومات</button>
+  <!-- ============ جولة في اللوحة ============ -->
+  <section style="padding-top:40px">
+    <h2 class="rv">جولة في <span style="color:var(--gold)">اللوحة</span></h2>
+    <div class="tour">
+      <div class="tour-text">
+        <div class="tstep" data-step="0">
+          <span class="n" dir="ltr">01 / 03</span>
+          <h3>نظرة عامة</h3>
+          <p>حجم الشركة وانضباطها: القوى العاملة، الحضور والغياب، والعمل الإضافي في شاشة وحدة.</p>
+          <button type="button" class="gbtn" data-open="0">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="1">
+          <span class="n" dir="ltr">02 / 03</span>
+          <h3>العمل الإضافي</h3>
+          <p>ساعات العمل الإضافي شهريًا، ونصيب نهاية الأسبوع من الساعات مقابل التكلفة، وفرق تكلفة الساعة 17.26 ريال.</p>
+          <button type="button" class="gbtn" data-open="1">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="2">
+          <span class="n" dir="ltr">03 / 03</span>
+          <h3>الخصومات</h3>
+          <p>الخصومات 2.52 مليون ريال موزعة على الغياب والتأخير والبنود الأخرى.</p>
+          <button type="button" class="gbtn" data-open="2">تكبير الصورة ↖</button>
+        </div>
       </div>
-      <figure class="pv" data-v="0">
-        <img src="workforce-p1.png" alt="صفحة النظرة العامة في Power BI: القوى العاملة والحضور والغياب" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: القوى العاملة، الحضور والغياب، والعمل الإضافي.</figcaption>
-      </figure>
-      <figure class="pv" data-v="1" hidden>
-        <img src="workforce-p2.png" alt="صفحة العمل الإضافي في Power BI: نصيب نهاية الأسبوع وتكلفة الساعة" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: ساعات العمل الإضافي شهريًا، ونصيب نهاية الأسبوع من الساعات مقابل التكلفة، وفرق تكلفة الساعة 17.26 ريال.</figcaption>
-      </figure>
-      <figure class="pv" data-v="2" hidden>
-        <img src="workforce-p3.png" alt="صفحة الخصومات في Power BI: إجمالي الخصومات وتوزيعها حسب النوع" loading="lazy">
-        <figcaption>ملخص بصري لنتائج التحليل: الخصومات 2.52 مليون ريال موزعة على الغياب والتأخير والبنود الأخرى.</figcaption>
-      </figure>
+      <div class="tour-media">
+        <div class="frame" data-tilt="5">
+          <div class="stage">
+            <button type="button" class="gimg" data-g="0" data-open="0" data-title="نظرة عامة" aria-label="تكبير: نظرة عامة"><img src="workforce-p1.png" alt="نظرة عامة: القوى العاملة والحضور والغياب والعمل الإضافي" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="1" data-open="1" data-title="العمل الإضافي" aria-label="تكبير: العمل الإضافي"><img src="workforce-p2.png" alt="العمل الإضافي: الساعات الشهرية ونصيب نهاية الأسبوع وتكلفة الساعة" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="2" data-open="2" data-title="الخصومات" aria-label="تكبير: الخصومات"><img src="workforce-p3.png" alt="الخصومات: الإجمالي وتوزيعها حسب النوع" loading="lazy"></button>
+          </div>
+          <div class="gfoot"><span id="gCount" dir="ltr">01 / 03</span><div class="bar"><i id="gProg"></i></div></div>
+        </div>
+        <p class="note">ملخص بصري لنتائج التحليل.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ الأرقام ============ -->
+  <section>
+    <h2 class="rv">الأرقام <span style="color:var(--gold)">بلمحة</span></h2>
+    <div class="bento">
+      <div class="rv d1 tile t-big" data-tilt="9">
+        <div class="k">تكلفة العمل الإضافي (ريال)</div>
+        <div class="v" data-count="8.91" data-dec="2" data-suf="M" data-pre="">0</div><div style="margin-top:22px"><div class="hbars"><div class="hb"><span class="l">أيام العمل</span><span class="tr"><i class="" data-w="70.3%"></i></span><span class="vv">40.94</span></div><div class="hb"><span class="l">نهاية الأسبوع</span><span class="tr"><i class="" data-w="100.0%"></i></span><span class="vv">58.20</span></div></div><div class="s" style="margin-top:10px;color:var(--muted)">تكلفة الساعة الواحدة (ريال) — الفارق 17.26</div></div>
+        <div class="s">ثلث الساعات في نهاية الأسبوع يستهلك 41.27% من التكلفة</div>
+      </div>
+      <div class="rv d2 tile " data-tilt="12">
+        <div class="k">موظف في جدول القوى العاملة</div>
+        <div class="v" data-count="1000" data-dec="0" data-suf="" data-pre="" data-comma="1">0</div>
+        <div class="s">منهم 890 على رأس العمل</div>
+      </div>
+      <div class="rv d3 tile t-mint" data-tilt="12">
+        <div class="k">معدل الغياب</div>
+        <div class="v" data-count="3.15" data-dec="2" data-suf="%" data-pre="">0</div>
+        <div class="s">متوسط 7.18 يوم للموظف سنويًا</div>
+      </div>
+      <div class="rv d4 tile t-wide" data-tilt="6">
+        <div class="k">سجل حضور شهري</div>
+        <div class="v" data-count="10744" data-dec="0" data-suf="" data-pre="" data-comma="1">0</div>
+        <div class="s">من يوليو 2025 إلى يونيو 2026</div>
+      </div>
+      <div class="rv d5 tile t-full" data-tilt="6">
+        <div class="k">إجمالي الخصومات (ريال)</div>
+        <div class="v" data-count="2.52" data-dec="2" data-suf="M" data-pre="">0</div><div style="margin-top:14px"><div class="hbars"><div class="hb"><span class="l">الغياب</span><span class="tr"><i class="" data-w="100.0%"></i></span><span class="vv">66%</span></div><div class="hb"><span class="l">بنود أخرى</span><span class="tr"><i class="" data-w="40.7%"></i></span><span class="vv">27%</span></div><div class="hb"><span class="l">التأخير</span><span class="tr"><i class="" data-w="10.6%"></i></span><span class="vv">7%</span></div></div></div>
+        <div class="s"></div>
+      </div>
     </div>
   </section>
 
   <!-- ============ خطوات العمل ============ -->
   <section>
-    <h2>خطوات العمل</h2>
-    <ol class="steps">
-      <li><div><h4>البيانات</h4>
-        <p>جدولان مرتبطان عبر الرقم الوظيفي: جدول للموظفين وبياناتهم، وجدول للحضور لكل موظف من كل شهر، من يوليو 2025 إلى يونيو 2026.</p></div></li>
-      <li><div><h4>التنظيف في Power Query</h4>
-        <p>عالجت المشاكل التالية، وتبقى الخطوات محفوظة لأي تحديث لاحق:</p>
-        <div class="tbl-wrap">
-          <table>
-            <thead>
-              <tr><th>المشكلة</th><th>العدد</th><th>المعالجة</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>صفوف موظفين مكررة</td><td class="n">3</td><td>حذف بناءً على الرقم الوظيفي</td></tr>
-              <tr><td>قيمة جنس مختصرة <code>M</code></td><td class="n">7</td><td>استبدال بمطابقة الخلية كاملة</td></tr>
-              <tr><td>اسم قسم بمسافة زائدة وأحرف صغيرة</td><td class="n">12</td><td><code>Trim</code> ثم توحيد الأحرف</td></tr>
-              <tr><td>أيام غياب بقيمة سالبة</td><td class="n">10</td><td>استبدال بصفر مع توثيق الافتراض</td></tr>
-              <tr><td>ساعات إضافية ومرات تأخر ناقصة</td><td class="n">30</td><td>تُركت فارغة عمدًا</td></tr>
-              <tr><td>مواقع عمل ناقصة</td><td class="n">9</td><td>تُركت فارغة عمدًا</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div></li>
-      <li><div><h4>جدول التاريخ</h4>
-        <p>أُضيف جدول تاريخ منفصل تم بناؤه بـ <code>CALENDAR</code>، ليصبح النموذج على شكل نجمة (Star Schema).</p></div></li>
-      <li><div><h4>مقاييس DAX</h4>
-        <p>مقاييس الغياب والعمل الإضافي والخصومات التي تعيد الحساب مع كل فلتر.</p></div></li>
-      <li><div><h4>تصميم اللوحة</h4>
-        <p>ثلاث صفحات بثيم أخضر داكن صُمّم خصيصًا للتقرير: نظرة عامة، العمل الإضافي، والخصومات.</p></div></li>
-    </ol>
+    <h2 class="rv">خطوات <span style="color:var(--mint)">العمل</span></h2>
+    <div class="steps">
+      <div class="step rv d1"><span class="n">01</span><h4>البيانات</h4><p>جدولان مرتبطان عبر الرقم الوظيفي: جدول للموظفين وبياناتهم، وجدول للحضور لكل موظف من كل شهر، من يوليو 2025 إلى يونيو 2026.</p></div>
+      <div class="step rv d2"><span class="n">02</span><h4>التنظيف في Power Query</h4><p>عالجت التكرار والقيم المختصرة والمسافات الزائدة والقيم السالبة، وتبقى الخطوات محفوظة لأي تحديث لاحق.</p></div>
+      <div class="step rv d3"><span class="n">03</span><h4>جدول التاريخ</h4><p>أُضيف جدول تاريخ منفصل تم بناؤه بـ <code>CALENDAR</code>، ليصبح النموذج على شكل نجمة (Star Schema).</p></div>
+      <div class="step rv d4"><span class="n">04</span><h4>مقاييس DAX</h4><p>مقاييس الغياب والعمل الإضافي والخصومات التي تعيد الحساب مع كل فلتر.</p></div>
+      <div class="step rv d1"><span class="n">05</span><h4>تصميم اللوحة</h4><p>ثلاث صفحات بثيم أخضر داكن صُمّم خصيصًا للتقرير: نظرة عامة، العمل الإضافي، والخصومات.</p></div>
+    </div>
+    <h3 class="sub-h rv">مشاكل التنظيف</h3>
+    <div class="tbl rv"><table>
+      <thead><tr><th>المشكلة</th><th>العدد</th><th>المعالجة</th></tr></thead>
+      <tbody>
+        <tr><td class="ar">صفوف موظفين مكررة</td><td>3</td><td class="ar">حذف بناءً على الرقم الوظيفي</td></tr>
+        <tr><td class="ar">قيمة جنس مختصرة M</td><td>7</td><td class="ar">استبدال بمطابقة الخلية كاملة</td></tr>
+        <tr><td class="ar">اسم قسم بمسافة زائدة وأحرف صغيرة</td><td>12</td><td class="ar">Trim ثم توحيد الأحرف</td></tr>
+        <tr><td class="ar">أيام غياب بقيمة سالبة</td><td>10</td><td class="ar">استبدال بصفر مع توثيق الافتراض</td></tr>
+        <tr><td class="ar">ساعات إضافية ومرات تأخر ناقصة</td><td>30</td><td class="ar">تُركت فارغة عمدًا</td></tr>
+        <tr><td class="ar">مواقع عمل ناقصة</td><td>9</td><td class="ar">تُركت فارغة عمدًا</td></tr>
+      </tbody></table></div>
   </section>
 
   <!-- ============ المشاكل ============ -->
   <section>
-    <h2>مشاكل واجهتني وكيف حليتها</h2>
-
-    <div class="dec">
-      <span class="k">المشكلة الأولى</span>
-      <h4>الفراغ لا يُملأ بصفر</h4>
-      <p>
-        الفراغ يعني «لا نعرف»، والصفر يعني «لا توجد ساعات إضافية».
-        تحويل الأول إلى الثاني يخفض متوسط العمل الإضافي بشكل وهمي.
-        وDAX يتجاهل الفراغات في الحسابات، فلا حاجة لملئها.
-      </p>
-    </div>
-
-    <div class="dec">
-      <span class="k">المشكلة الثانية</span>
-      <h4>القيمة السالبة استُبدلت بصفر</h4>
-      <p>
-        لأن الصف يحمل ساعات وتأخيرات صحيحة، وحذفه يضعف من صحة البيانات.
-      </p>
-    </div>
-    <div class="dec">
-      <span class="k">المشكلة الثالثة</span>
-      <h4>الأشهر بدون بيانات تختفي من الرسم</h4>
-      <p>
-        بدون جدول تاريخ يختفي أي شهر لا يحمل بيانات من الرسم بدل أن يظهر بصفر —
-        والاختفاء أخطر من الصفر، لأن قارئ التقرير لا ينتبه لغياب شهر كامل. فبنيت جدول تاريخ منفصل بـ <code>CALENDAR</code>.
-      </p>
+    <h2 class="rv">مشاكل واجهتني <span style="color:var(--gold)">وكيف حليتها</span></h2>
+    <div class="prob">
+      <div class="pcard rv d1" data-tilt="6"><span class="tag">PROBLEM 01</span><h4>الفراغ لا يُملأ بصفر</h4><p>الفراغ يعني «لا نعرف»، والصفر يعني «لا توجد ساعات إضافية». تحويل الأول إلى الثاني يخفض متوسط العمل الإضافي بشكل وهمي. وDAX يتجاهل الفراغات في الحسابات، فلا حاجة لملئها.</p></div>
+      <div class="pcard rv d2" data-tilt="6"><span class="tag">PROBLEM 02</span><h4>القيمة السالبة استُبدلت بصفر</h4><p>لأن الصف يحمل ساعات وتأخيرات صحيحة، وحذفه يضعف من صحة البيانات.</p></div>
+      <div class="pcard rv d3" data-tilt="6"><span class="tag">PROBLEM 03</span><h4>الأشهر بدون بيانات تختفي من الرسم</h4><p>بدون جدول تاريخ يختفي أي شهر لا يحمل بيانات من الرسم بدل أن يظهر بصفر — والاختفاء أخطر من الصفر، لأن قارئ التقرير لا ينتبه لغياب شهر كامل. فبنيت جدول تاريخ منفصل بـ <code>CALENDAR</code>.</p></div>
     </div>
   </section>
 
   <!-- ============ الملخص ============ -->
   <section>
-    <h2>الملخص</h2>
-
-    <div class="find">
-      <span class="num">النتيجة الأولى</span>
-      <h3>ثلث الساعات يلتهم أربعين بالمئة من الميزانية</h3>
-      <p>
-        العمل الإضافي في نهاية الأسبوع يمثّل <strong>33.04%</strong> من الساعات، لكنه يستهلك
-        <strong>41.27%</strong> من التكلفة — لأن أجره مضاعف بينما أيام العمل بواحد ونصف.
-        بالريال: 3.68 مليون من أصل 8.91 مليون.
-      </p>
+    <h2 class="rv">الملخص</h2>
+    <div class="sum">
+      <div class="scard rv d1"><span class="big">41%</span><div><p><strong>ثلث الساعات يلتهم أربعين بالمئة من الميزانية:</strong> العمل الإضافي في نهاية الأسبوع يمثّل <strong>33.04%</strong> من الساعات، لكنه يستهلك <strong>41.27%</strong> من التكلفة — لأن أجره مضاعف بينما أيام العمل بواحد ونصف. بالريال: 3.68 مليون من أصل 8.91 مليون.</p></div></div>
+      <div class="scard rv d2"><span class="big">17.26</span><div><p><strong>فرق تكلفة الساعة:</strong> 40.94 ريال في أيام العمل مقابل 58.20 ريال في نهاية الأسبوع. نقل ربع ساعات نهاية الأسبوع إلى أيام العمل — نحو 15,800 ساعة — يوفّر قرابة <strong>273 ألف ريال سنويًا</strong> بنفس عدد الساعات ونفس الإنتاجية.</p></div></div>
+      <div class="scard rv d1"><span class="big">66%</span><div><p><strong>الجهد الإداري في مكان، والمال في مكان آخر:</strong> الخصومات بلغت 2.52 مليون ريال، منها <strong>66% من الغياب</strong> و27% من بنود متفرقة و<strong>7% فقط من التأخير</strong>. التأخير هو ما يستهلك وقت المشرفين في المتابعة اليومية، بينما المال الحقيقي في الغياب الكامل.</p></div></div>
+      <div class="scard rv d2"><span class="big">3.5 : 1</span><div><p><strong>ما تدفعه الشركة أضعاف ما تسترده:</strong> تكلفة العمل الإضافي 8.91 مليون ريال مقابل 2.52 مليون خصومات. معدل الغياب 3.15% ومتوسطه 7.18 يوم للموظف سنويًا، وهي أرقام منضبطة. الضغط على الميزانية لا يأتي من غياب الموظفين، بل من ساعات حضورهم الإضافية.</p></div></div>
     </div>
-
-    <div class="cmp">
-      <h3>تكلفة ساعة العمل الإضافي</h3>
-      <div class="crow">
-        <span class="l">أيام العمل</span>
-        <div class="ctrack"><div class="cbar a" style="width:70%"></div></div>
-        <span class="v">40.94 ريال</span>
-      </div>
-      <div class="crow">
-        <span class="l">نهاية الأسبوع</span>
-        <div class="ctrack"><div class="cbar b" style="width:100%"></div></div>
-        <span class="v">58.20 ريال</span>
-      </div>
-      <p class="foot">
-        الفارق 17.26 ريال لكل ساعة. نقل ربع ساعات نهاية الأسبوع إلى أيام العمل — نحو 15,800 ساعة —
-        يوفّر قرابة <strong>273 ألف ريال سنويًا</strong> بنفس عدد الساعات ونفس الإنتاجية.
-      </p>
-    </div>
-
-    <div class="find">
-      <span class="num">النتيجة الثانية</span>
-      <h3>الجهد الإداري في مكان، والمال في مكان آخر</h3>
-      <p>
-        الخصومات بلغت 2.52 مليون ريال، منها <strong>66% من الغياب</strong> و27% من بنود متفرقة
-        و<strong>7% فقط من التأخير</strong>. التأخير هو ما يستهلك وقت المشرفين في المتابعة اليومية،
-        بينما المال الحقيقي في الغياب الكامل.
-      </p>
-    </div>
-
-    <div class="find">
-      <span class="num">النتيجة الثالثة</span>
-      <h3>ما تدفعه الشركة أضعاف ما تسترده</h3>
-      <p>
-        تكلفة العمل الإضافي 8.91 مليون ريال مقابل 2.52 مليون خصومات — نسبة <strong>3.5 إلى 1</strong>.
-        معدل الغياب 3.15% ومتوسطه 7.18 يوم للموظف سنويًا، وهي أرقام منضبطة.
-        الضغط على الميزانية لا يأتي من غياب الموظفين، بل من ساعات حضورهم الإضافية.
-      </p>
-    </div>
-
-    <h3 class="recs-h">التوصيات</h3>
-    <div class="rec">
-      <span class="mark">١</span>
-      <div>
-        <h3>إعادة جدولة العمل الإضافي قبل التفكير في تقليصه</h3>
-        <p>نقل جزء من ساعات نهاية الأسبوع إلى أيام العمل يخفّض التكلفة دون المساس بالإنتاج. الرقم قابل للحساب مسبقًا: 17.26 ريال عن كل ساعة تُنقل.</p>
-      </div>
-    </div>
-
-    <div class="rec">
-      <span class="mark">٢</span>
-      <div>
-        <h3>مراجعة ذروة الصيف قبل حدوثها</h3>
-        <p>ساعات العمل الإضافي ترتفع في أشهر الصيف: نحو 20 ألف ساعة في أغسطس ويونيو، مقابل 11 ألفًا في مارس. تغطية الذروة بالساعات الإضافية تكلّف 41 إلى 58 ريالًا للساعة، بينما التخطيط لها مسبقًا يجعلها بالأجر العادي.</p>
-      </div>
-    </div>
-
-    <div class="rec">
-      <span class="mark">٣</span>
-      <div>
-        <h3>معالجة الغياب من مصدره</h3>
-        <p>معدل 3.15% على مستوى الشركة رقم منضبط، لكنه متوسط قد يخفي تركّزًا في موقع أو قسم بعينه. تبدأ المعالجة بفحص توزيع أيام الغياب على الموظفين والمواقع، لأن الإجراء يختلف بين غياب موزّع على الجميع وغياب متكرر من عدد محدود.</p>
-        <p class="rn">الغياب في هذه البيانات لا يشمل الإجازات السنوية أو المرضية أو الغيابات بإذن.</p>
-      </div>
-    </div>
+    <h3 class="sub-h rv">التوصيات</h3>
+    <ul class="recs rv"><li><b>إعادة جدولة العمل الإضافي قبل التفكير في تقليصه:</b> نقل جزء من ساعات نهاية الأسبوع إلى أيام العمل يخفّض التكلفة دون المساس بالإنتاج. الرقم قابل للحساب مسبقًا: 17.26 ريال عن كل ساعة تُنقل.</li><li><b>مراجعة ذروة الصيف قبل حدوثها:</b> ساعات العمل الإضافي ترتفع في أشهر الصيف: نحو 20 ألف ساعة في أغسطس ويونيو، مقابل 11 ألفًا في مارس. تغطية الذروة بالساعات الإضافية تكلّف 41 إلى 58 ريالًا للساعة، بينما التخطيط لها مسبقًا يجعلها بالأجر العادي.</li><li><b>معالجة الغياب من مصدره:</b> معدل 3.15% على مستوى الشركة رقم منضبط، لكنه متوسط قد يخفي تركّزًا في موقع أو قسم بعينه. تبدأ المعالجة بفحص توزيع أيام الغياب على الموظفين والمواقع. (الغياب في هذه البيانات لا يشمل الإجازات السنوية أو المرضية أو الغيابات بإذن.)</li></ul>
   </section>
+</div>
 
-  <!-- ============ الأدوات ============ -->
-  <section>
-    <h2>الأدوات</h2>
-    <div class="tags" style="margin-top:18px">
-      <span class="tag">Power BI</span>
-      <span class="tag">Power Query</span>
-      <span class="tag">DAX</span>
-      <span class="tag">Star Schema</span>
-      <span class="tag">Custom Theme</span>
-    </div>
-  </section>
+<div class="marq" aria-hidden="true"><div><span>POWER BI</span><em>✦</em><span>POWER QUERY</span><em>✦</em><span>DAX</span><em>✦</em><span>STAR SCHEMA</span><em>✦</em><span>CUSTOM THEME</span><em>✦</em><span>POWER BI</span><em>✦</em><span>POWER QUERY</span><em>✦</em><span>DAX</span><em>✦</em><span>STAR SCHEMA</span><em>✦</em><span>CUSTOM THEME</span><em>✦</em></div></div>
 
-  <footer>
-    <p style="margin:0">
-      وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات ·
-      <a href="index.html">بقية المشاريع</a>
-    </p>
-  </footer>
+<div class="wrap">
+  <p class="src">الأدوات: Power BI · Power Query · DAX · Star Schema · Custom Theme.</p>
+  <footer>وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات · <a href="index.html">بقية المشاريع</a></footer>
+</div>
 
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="عارض الصور" aria-hidden="true">
+  <div class="lb-top"><span id="lbTitle"></span><button type="button" class="cbtn x" id="lbClose" aria-label="إغلاق">×</button></div>
+  <div class="lb-mid">
+    <button type="button" class="cbtn" id="lbPrev" aria-label="السابقة">›</button>
+    <div class="lb-media" id="lbMedia"></div>
+    <button type="button" class="cbtn" id="lbNext" aria-label="التالية">‹</button>
+  </div>
+  <div class="thumbs" id="lbThumbs"></div>
 </div>
 
 <script>
 (function(){
-  document.querySelectorAll('.tb').forEach(function(t){
-    t.addEventListener('click',function(){
-      document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
-      t.setAttribute('aria-selected','true');
-      document.querySelectorAll('.pv').forEach(function(p){ p.hidden = p.dataset.v !== t.dataset.v; });
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hover = matchMedia('(hover:hover)').matches;
+  var cur = document.getElementById('cursor');
+  if (!reduce && hover) {
+    var tx=0,ty=0,cx=0,cy=0,raf=null;
+    addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;cur.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);});
+    function loop(){cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;cur.style.transform='translate('+cx+'px,'+cy+'px)';raf=(Math.abs(tx-cx)+Math.abs(ty-cy)>.5)?requestAnimationFrame(loop):null;}
+    document.addEventListener('mouseleave',function(){cur.classList.remove('on');});
+    document.querySelectorAll('[data-tilt]').forEach(function(el){
+      var max=+el.dataset.tilt||8;
+      el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();var px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+        el.style.transform='perspective(1100px) rotateX('+(-py*max).toFixed(2)+'deg) rotateY('+(px*max).toFixed(2)+'deg) scale(1.015)';});
+      el.addEventListener('mouseleave',function(){el.style.transform='';});
     });
-  });
+  }
+  function countUp(el){
+    if(el.dataset.done)return;el.dataset.done=1;
+    var to=+el.dataset.count,dec=+el.dataset.dec,suf=el.dataset.suf||'',pre=el.dataset.pre||'',t0=performance.now(),dur=reduce?0:1700;
+    var fmt=function(x){var s=x.toFixed(dec);if(el.dataset.comma){var p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');s=p.join('.');}return pre+s+suf;};
+    (function step(now){var t=dur?Math.min(1,(now-t0)/dur):1,e=1-Math.pow(1-t,3);el.textContent=fmt(to*e);if(t<1)requestAnimationFrame(step);})(t0);
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(!e.isIntersecting)return;var el=e.target;el.classList.add('in');io.unobserve(el);
+    el.querySelectorAll('[data-count]').forEach(countUp);
+    el.querySelectorAll('[data-w]').forEach(function(b){b.style.width=b.dataset.w;});
+  });},{threshold:.18});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  var steps=[].slice.call(document.querySelectorAll('.tstep')),imgs=[].slice.call(document.querySelectorAll('.gimg'));
+  var n=imgs.length,gCount=document.getElementById('gCount'),gProg=document.getElementById('gProg');
+  function pad(x){return (x<10?'0':'')+x;}
+  function setActive(k){steps.forEach(function(s,i){s.classList.toggle('on',i===k);});
+    imgs.forEach(function(m,i){m.classList.toggle('on',i===k);m.classList.toggle('past',i<k);});
+    gCount.textContent=pad(k+1)+' / '+pad(n);gProg.style.width=((k+1)/n*100)+'%';}
+  var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)setActive(+e.target.dataset.step);});},{rootMargin:'-45% 0px -45% 0px'});
+  steps.forEach(function(s){so.observe(s);s.addEventListener('mouseenter',function(){setActive(+s.dataset.step);});});
+  setActive(0);
+
+  var G=imgs.map(function(m){var im=m.querySelector('img');return {type:m.dataset.video?'video':'img',src:m.dataset.video||im.getAttribute('src'),thumb:im.getAttribute('src'),title:m.dataset.title};});
+  var lb=document.getElementById('lb'),media=document.getElementById('lbMedia'),title=document.getElementById('lbTitle'),th=document.getElementById('lbThumbs'),idx=0,last=null;
+  th.innerHTML=G.map(function(g,i){return '<button type="button" data-i="'+i+'" aria-label="'+g.title+'"><img src="'+g.thumb+'" alt=""></button>';}).join('');
+  function show(i){idx=(i+G.length)%G.length;var g=G[idx];
+    media.innerHTML=g.type==='video'?'<video src="'+g.src+'" poster="'+g.thumb+'" controls autoplay muted playsinline></video>':'<img src="'+g.src+'" alt="'+g.title+'">';
+    title.textContent=g.title;th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j===idx);});}
+  function open(i){last=document.activeElement;show(i);lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';document.getElementById('lbClose').focus();}
+  function close(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');document.body.style.overflow='';media.innerHTML='';if(last)last.focus();}
+  document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){open(+b.dataset.open);});});
+  document.getElementById('lbClose').addEventListener('click',close);
+  document.getElementById('lbNext').addEventListener('click',function(){show(idx+1);});
+  document.getElementById('lbPrev').addEventListener('click',function(){show(idx-1);});
+  th.addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(+b.dataset.i);});
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(idx+1);if(e.key==='ArrowRight')show(idx-1);});
 })();
 </script>
 </body>
