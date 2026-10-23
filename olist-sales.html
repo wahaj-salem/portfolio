@@ -108,7 +108,7 @@ h2{font-size:clamp(1.9rem,4.4vw,2.9rem);font-weight:800;line-height:1.2;margin-b
 .gbtn{align-self:flex-start;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-family:inherit;font-size:.9rem;cursor:pointer;transition:background .25s,transform .25s}
 .gbtn:hover{background:rgba(255,181,71,.18);transform:scale(1.05)}
 .tour-media{flex:1.4 1 480px;position:sticky;top:90px}
-.frame{position:relative;border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.45),rgba(255,255,255,.05) 45%,rgba(94,234,212,.35));box-shadow:0 50px 120px -40px rgba(255,94,58,.4)}
+.frame{transition:transform .25s ease-out;transform-style:preserve-3d;will-change:transform;position:relative;border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.45),rgba(255,255,255,.05) 45%,rgba(94,234,212,.35));box-shadow:0 50px 120px -40px rgba(255,94,58,.4)}
 .stage{position:relative;aspect-ratio:1300/715;border-radius:16px;overflow:hidden;background:#0F0F16}
 .gimg{position:absolute;inset:0;padding:0;border:0;background:none;cursor:zoom-in;opacity:0;transform:scale(.94);filter:blur(10px);pointer-events:none;
   transition:opacity .8s var(--ease),transform .9s var(--ease),filter .8s}
@@ -220,16 +220,42 @@ footer a{text-decoration:none}
     </p>
   </header>
 
-  <div class="shot-wrap fade">
-    <div class="shot" id="heroShot">
-      <div class="tilt" data-tilt="7">
-        <button type="button" class="zoom" data-open="0" aria-label="تكبير صورة اللوحة">
-          <img src="olist-dashboard.png" alt="لوحة مبيعات Olist كاملة: كروت المؤشرات، خط المبيعات الشهري، الخريطة، أعلى الفئات، طرق الدفع، وأداء التوصيل">
-          <span class="shine" aria-hidden="true"></span>
-        </button>
+  <!-- ============ جولة في اللوحة ============ -->
+  <section>
+    <h2 class="rv">جولة في <span style="color:var(--gold)">اللوحة</span></h2>
+    <div class="tour">
+      <div class="tour-text">
+        <div class="tstep on" data-step="0">
+          <span class="n" dir="ltr">01 / 03</span>
+          <h3>اللوحة كاملة</h3>
+          <p>اللوحة بدون فلاتر، لكل البيانات من 2016 إلى 2018: المبيعات، والطلبات، والعملاء، والتوصيل في شاشة وحدة.</p>
+          <button type="button" class="gbtn" data-open="0">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="1">
+          <span class="n" dir="ltr">02 / 03</span>
+          <h3>بعد الفلترة</h3>
+          <p>بعد اختيار سنة 2017 وولاية GO: كل الأرقام والرسومات تتحدث لهالاختيار.</p>
+          <button type="button" class="gbtn" data-open="1">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="2">
+          <span class="n" dir="ltr">03 / 03</span>
+          <h3>فيديو التفاعل</h3>
+          <p>فلاتر السنة والولاية وهي تغير اللوحة كاملة.</p>
+          <button type="button" class="gbtn" data-open="2">تشغيل الفيديو ▶</button>
+        </div>
+      </div>
+      <div class="tour-media">
+        <div class="frame tilt-frame" data-tilt="5">
+          <div class="stage">
+            <button type="button" class="gimg on" data-g="0" data-open="0" aria-label="تكبير: اللوحة كاملة"><img src="olist-dashboard.png" alt="اللوحة كاملة" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="1" data-open="1" aria-label="تكبير: بعد الفلترة"><img src="olist-filtered.png" alt="اللوحة بعد اختيار سنة 2017 وولاية GO" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="2" data-open="2" aria-label="تشغيل فيديو التفاعل"><img src="olist-demo-poster.jpg" alt="فيديو التفاعل" loading="lazy"><span class="play"><span>▶</span></span></button>
+          </div>
+          <div class="gfoot"><span id="gCount" dir="ltr">01 / 03</span><div class="bar"><i id="gProg" style="width:33.3%"></i></div></div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- ============ الأرقام ============ -->
   <section>
@@ -281,43 +307,6 @@ footer a{text-decoration:none}
           <div class="s" style="font-size:.92rem;color:var(--muted);line-height:1.8">من كل 100 عميل، 3 بس رجعوا. وهذي أكبر نقطة ضعف للمتجر.</div>
         </div>
         <div class="dots" id="dots" role="img" aria-label="3 من كل 100 عميل رجعوا وطلبوا"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ جولة في اللوحة ============ -->
-  <section>
-    <h2 class="rv">جولة في <span style="color:var(--gold)">اللوحة</span></h2>
-    <div class="tour">
-      <div class="tour-text">
-        <div class="tstep on" data-step="0">
-          <span class="n" dir="ltr">01 / 03</span>
-          <h3>اللوحة كاملة</h3>
-          <p>اللوحة بدون فلاتر، لكل البيانات من 2016 إلى 2018: المبيعات، والطلبات، والعملاء، والتوصيل في شاشة وحدة.</p>
-          <button type="button" class="gbtn" data-open="0">تكبير الصورة ↖</button>
-        </div>
-        <div class="tstep" data-step="1">
-          <span class="n" dir="ltr">02 / 03</span>
-          <h3>بعد الفلترة</h3>
-          <p>بعد اختيار سنة 2017 وولاية GO: كل الأرقام والرسومات تتحدث لهالاختيار.</p>
-          <button type="button" class="gbtn" data-open="1">تكبير الصورة ↖</button>
-        </div>
-        <div class="tstep" data-step="2">
-          <span class="n" dir="ltr">03 / 03</span>
-          <h3>فيديو التفاعل</h3>
-          <p>فلاتر السنة والولاية وهي تغير اللوحة كاملة.</p>
-          <button type="button" class="gbtn" data-open="2">تشغيل الفيديو ▶</button>
-        </div>
-      </div>
-      <div class="tour-media">
-        <div class="frame">
-          <div class="stage">
-            <button type="button" class="gimg on" data-g="0" data-open="0" aria-label="تكبير: اللوحة كاملة"><img src="olist-dashboard.png" alt="اللوحة كاملة" loading="lazy"></button>
-            <button type="button" class="gimg" data-g="1" data-open="1" aria-label="تكبير: بعد الفلترة"><img src="olist-filtered.png" alt="اللوحة بعد اختيار سنة 2017 وولاية GO" loading="lazy"></button>
-            <button type="button" class="gimg" data-g="2" data-open="2" aria-label="تشغيل فيديو التفاعل"><img src="olist-demo-poster.jpg" alt="فيديو التفاعل" loading="lazy"><span class="play"><span>▶</span></span></button>
-          </div>
-          <div class="gfoot"><span id="gCount" dir="ltr">01 / 03</span><div class="bar"><i id="gProg" style="width:33.3%"></i></div></div>
-        </div>
       </div>
     </div>
   </section>
@@ -437,9 +426,6 @@ footer a{text-decoration:none}
     });
   }
 
-  /* hero shot flattens */
-  var hs = document.getElementById('heroShot');
-  setTimeout(function(){ hs.classList.add('flat'); }, reduce ? 0 : 650);
 
   /* sparkline */
   var vals=[112,234,359,341,489,422,482,555,607,648,988,726,925,826,983,996,987,866,896,854];
