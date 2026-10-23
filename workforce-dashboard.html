@@ -218,6 +218,18 @@ footer a:hover{text-decoration:underline}
   .crow .l{flex-basis:92px;font-size:.8rem}
   .crow .v{flex-basis:80px;font-size:.8rem}
 }
+/* steps */
+.steps{list-style:none;counter-reset:s;margin-top:26px}
+.steps li{counter-increment:s;display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:.82rem;background:rgba(16,185,129,.14);
+  color:var(--em-light);border:1px solid rgba(16,185,129,.3)}
+.steps li>div{flex:1;min-width:0}
+.steps h4{font-size:1rem;font-weight:600;color:#EDFBF5;margin-bottom:4px}
+.steps p{margin-bottom:0;font-size:.97rem}
+.steps .tbl-wrap{margin:16px 0 4px}
+.recs-h{margin-top:40px}
 </style>
 </head>
 <body>
@@ -250,62 +262,6 @@ footer a:hover{text-decoration:underline}
     <div class="stat"><b>17.26</b><span>فرق تكلفة الساعة الواحدة (ريال)</span></div>
   </div>
 
-  <!-- ============ البيانات ============ -->
-  <section>
-    <h2>البيانات</h2>
-    <p>
-      جدولان مرتبطان عبر الرقم الوظيفي: جدول للموظفين وبياناتهم، وجدول للحضور لكل موظف من كل شهر،
-      من يوليو 2025 إلى يونيو 2026. أُضيف إليهما جدول تاريخ منفصل تم بناؤه خلال التحليل بـ <code>CALENDAR</code>،
-      ليصبح النموذج على شكل نجمة (Star Schema).
-    </p>
-    <p>
-      جدول التاريخ مهم. بدونه يختفي أي شهر لا يحمل بيانات من الرسم بدل أن يظهر بصفر —
-      والاختفاء أخطر من الصفر، لأن قارئ التقرير لا ينتبه لغياب شهر كامل.
-    </p>
-
-  </section>
-
-  <!-- ============ التنظيف ============ -->
-  <section>
-    <h2>التنظيف</h2>
-
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr><th>المشكلة</th><th>العدد</th><th>المعالجة</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>صفوف موظفين مكررة</td><td class="n">3</td><td>حذف بناءً على الرقم الوظيفي</td></tr>
-          <tr><td>قيمة جنس مختصرة <code>M</code></td><td class="n">7</td><td>استبدال بمطابقة الخلية كاملة</td></tr>
-          <tr><td>اسم قسم بمسافة زائدة وأحرف صغيرة</td><td class="n">12</td><td><code>Trim</code> ثم توحيد الأحرف</td></tr>
-          <tr><td>أيام غياب بقيمة سالبة</td><td class="n">10</td><td>استبدال بصفر مع توثيق الافتراض</td></tr>
-          <tr><td>ساعات إضافية ومرات تأخر ناقصة</td><td class="n">30</td><td>تُركت فارغة عمدًا</td></tr>
-          <tr><td>مواقع عمل ناقصة</td><td class="n">9</td><td>تُركت فارغة عمدًا</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>قراران يستحقان الشرح</h3>
-
-    <div class="dec">
-      <span class="k">القرار الأول</span>
-      <h4>الفراغ لا يُملأ بصفر</h4>
-      <p>
-        الفراغ يعني «لا نعرف»، والصفر يعني «لا توجد ساعات إضافية».
-        تحويل الأول إلى الثاني يخفض متوسط العمل الإضافي بشكل وهمي.
-        وDAX يتجاهل الفراغات في الحسابات، فلا حاجة لملئها.
-      </p>
-    </div>
-
-    <div class="dec">
-      <span class="k">القرار الثاني</span>
-      <h4>القيمة السالبة استُبدلت بصفر</h4>
-      <p>
-        لأن الصف يحمل ساعات وتأخيرات صحيحة، وحذفه يضعف من صحة البيانات.
-      </p>
-    </div>
-  </section>
-
   <!-- ============ اللوحة ============ -->
   <section>
     <h2>اللوحة</h2>
@@ -314,6 +270,7 @@ footer a:hover{text-decoration:underline}
         <button class="tb" type="button" data-p="0" aria-selected="true">نظرة عامة</button>
         <button class="tb" type="button" data-p="1" aria-selected="false">العمل الإضافي</button>
         <button class="tb" type="button" data-p="2" aria-selected="false">الخصومات</button>
+        <button class="tb" type="button" data-p="3" aria-selected="false">لقطات Power BI</button>
       </div>
 
       <!-- ---- page 0 ---- -->
@@ -389,20 +346,84 @@ footer a:hover{text-decoration:underline}
         </div>
         <div id="dchart"></div>
       </div>
-    </div>
 
-    <button class="shotbtn" type="button" id="shotbtn" aria-expanded="false">
-      <span class="ic">▾</span><span id="shotlbl">عرض اللقطات الأصلية من Power BI</span>
-    </button>
-    <figure id="shotfig" hidden>
-      <img src="workforce-dashboard-powerbi.png" alt="لقطات من صفحات التقرير الثلاث في Power BI: نظرة عامة، العمل الإضافي، والخصومات">
-      <figcaption>الصفحات الثلاث كما تظهر في Power BI Desktop بالثيم الأخضر الداكن.</figcaption>
-    </figure>
+      <!-- ---- page 3 ---- -->
+      <div class="pg" data-p="3" hidden>
+        <figure style="margin-top:0">
+          <img src="workforce-dashboard-powerbi.png" alt="لقطات من صفحات التقرير الثلاث في Power BI: نظرة عامة، العمل الإضافي، والخصومات" loading="lazy">
+          <figcaption>الصفحات الثلاث كما تظهر في Power BI Desktop بالثيم الأخضر الداكن.</figcaption>
+        </figure>
+      </div>
+    </div>
   </section>
 
-  <!-- ============ النتائج ============ -->
+  <!-- ============ خطوات العمل ============ -->
   <section>
-    <h2>النتائج</h2>
+    <h2>خطوات العمل</h2>
+    <ol class="steps">
+      <li><div><h4>البيانات</h4>
+        <p>جدولان مرتبطان عبر الرقم الوظيفي: جدول للموظفين وبياناتهم، وجدول للحضور لكل موظف من كل شهر، من يوليو 2025 إلى يونيو 2026.</p></div></li>
+      <li><div><h4>التنظيف في Power Query</h4>
+        <p>عالجت المشاكل التالية، وتبقى الخطوات محفوظة لأي تحديث لاحق:</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>المشكلة</th><th>العدد</th><th>المعالجة</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>صفوف موظفين مكررة</td><td class="n">3</td><td>حذف بناءً على الرقم الوظيفي</td></tr>
+              <tr><td>قيمة جنس مختصرة <code>M</code></td><td class="n">7</td><td>استبدال بمطابقة الخلية كاملة</td></tr>
+              <tr><td>اسم قسم بمسافة زائدة وأحرف صغيرة</td><td class="n">12</td><td><code>Trim</code> ثم توحيد الأحرف</td></tr>
+              <tr><td>أيام غياب بقيمة سالبة</td><td class="n">10</td><td>استبدال بصفر مع توثيق الافتراض</td></tr>
+              <tr><td>ساعات إضافية ومرات تأخر ناقصة</td><td class="n">30</td><td>تُركت فارغة عمدًا</td></tr>
+              <tr><td>مواقع عمل ناقصة</td><td class="n">9</td><td>تُركت فارغة عمدًا</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div></li>
+      <li><div><h4>جدول التاريخ</h4>
+        <p>أُضيف جدول تاريخ منفصل تم بناؤه بـ <code>CALENDAR</code>، ليصبح النموذج على شكل نجمة (Star Schema).</p></div></li>
+      <li><div><h4>مقاييس DAX</h4>
+        <p>مقاييس الغياب والعمل الإضافي والخصومات التي تعيد الحساب مع كل فلتر.</p></div></li>
+      <li><div><h4>تصميم اللوحة</h4>
+        <p>ثلاث صفحات بثيم أخضر داكن صُمّم خصيصًا للتقرير: نظرة عامة، العمل الإضافي، والخصومات.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ============ المشاكل ============ -->
+  <section>
+    <h2>مشاكل واجهتني وكيف حليتها</h2>
+
+    <div class="dec">
+      <span class="k">المشكلة الأولى</span>
+      <h4>الفراغ لا يُملأ بصفر</h4>
+      <p>
+        الفراغ يعني «لا نعرف»، والصفر يعني «لا توجد ساعات إضافية».
+        تحويل الأول إلى الثاني يخفض متوسط العمل الإضافي بشكل وهمي.
+        وDAX يتجاهل الفراغات في الحسابات، فلا حاجة لملئها.
+      </p>
+    </div>
+
+    <div class="dec">
+      <span class="k">المشكلة الثانية</span>
+      <h4>القيمة السالبة استُبدلت بصفر</h4>
+      <p>
+        لأن الصف يحمل ساعات وتأخيرات صحيحة، وحذفه يضعف من صحة البيانات.
+      </p>
+    </div>
+    <div class="dec">
+      <span class="k">المشكلة الثالثة</span>
+      <h4>الأشهر بدون بيانات تختفي من الرسم</h4>
+      <p>
+        بدون جدول تاريخ يختفي أي شهر لا يحمل بيانات من الرسم بدل أن يظهر بصفر —
+        والاختفاء أخطر من الصفر، لأن قارئ التقرير لا ينتبه لغياب شهر كامل. فبنيت جدول تاريخ منفصل بـ <code>CALENDAR</code>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ الملخص ============ -->
+  <section>
+    <h2>الملخص</h2>
 
     <div class="find">
       <span class="num">النتيجة الأولى</span>
@@ -451,12 +472,8 @@ footer a:hover{text-decoration:underline}
         الضغط على الميزانية لا يأتي من غياب الموظفين، بل من ساعات حضورهم الإضافية.
       </p>
     </div>
-  </section>
 
-  <!-- ============ التوصيات ============ -->
-  <section>
-    <h2>التوصيات</h2>
-
+    <h3 class="recs-h">التوصيات</h3>
     <div class="rec">
       <span class="mark">١</span>
       <div>
@@ -483,18 +500,16 @@ footer a:hover{text-decoration:underline}
     </div>
   </section>
 
-  <!-- ============ خلاصة ============ -->
+  <!-- ============ الأدوات ============ -->
   <section>
-    <h2>ما خرجت به</h2>
-    <p>
-      ساعات العمل الإضافي ترتفع في أشهر بعينها، وهي أشهر الصيف: بلغت ذروتها في أغسطس ويونيو
-      قرابة 20 ألف ساعة، مقابل 11 ألفًا فقط في مارس. المعالجة تبدأ من توزيع الأعمال على أشهر السنة
-      بدل تغطية الذروة بالساعات الإضافية بعد وقوعها.
-    </p>
-    <p>
-      والدرس الثاني أن اللوحة الجيدة تنتهي برقم يمكن التصرف بناءً عليه.
-      «العمل الإضافي مرتفع» ملاحظة، و«كل ساعة تُنقل توفّر 17.26 ريال» قرار.
-    </p>
+    <h2>الأدوات</h2>
+    <div class="tags" style="margin-top:18px">
+      <span class="tag">Power BI</span>
+      <span class="tag">Power Query</span>
+      <span class="tag">DAX</span>
+      <span class="tag">Star Schema</span>
+      <span class="tag">Custom Theme</span>
+    </div>
   </section>
 
   <footer>
