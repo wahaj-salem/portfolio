@@ -263,6 +263,29 @@ footer a:hover{text-decoration:underline}
   .bar-val{flex-basis:66px;font-size:.8rem}
   .drow .lbl{flex-basis:52px}
 }
+.viewer{background:var(--navy-800);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.tb{font-family:'Tajawal',sans-serif;font-size:.9rem;color:var(--muted);background:transparent;
+  border:1px solid var(--line);border-radius:9px;padding:8px 16px;cursor:pointer;transition:.18s}
+.tb:hover{color:var(--text);border-color:rgba(56,225,255,.45)}
+.tb[aria-selected="true"]{background:var(--grad);color:#061225;font-weight:600;border-color:transparent}
+.viewer figure{margin-top:0;background:#F3F4F9}
+.steps{list-style:none;counter-reset:s;margin-top:26px}
+.steps li{counter-increment:s;display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:.82rem;background:rgba(139,92,246,.14);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)}
+.steps li>div{flex:1;min-width:0}
+.steps h4{font-size:1rem;font-weight:600;color:#eef2ff;margin-bottom:4px}
+.steps p{margin-bottom:0;font-size:.97rem}
+.steps b{color:#fff;font-weight:600}
+.dec{background:var(--navy-800);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden}
+.dec::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad)}
+.dec .k{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--cyan);margin-bottom:7px}
+.dec h4{font-size:1.02rem;font-weight:600;color:#eef2ff;margin-bottom:8px}
+.dec p{margin-bottom:0;font-size:.96rem}
+.recs-h{margin-top:40px}
+@media (max-width:640px){.viewer{padding:14px}}
 </style>
 </head>
 <body>
@@ -278,6 +301,7 @@ footer a:hover{text-decoration:underline}
     <p class="lede">
       بدأت هذا المشروع بسؤال واحد: لو طلع لدينا فرق في متوسط رواتب الرجال والنساء، هل هذا دليل على تمييز؟
       الإجابة أعقد من نعم أو لا، وهذا التحليل يشرح كيف نفكّك الرقم بدل ما نأخذه كما هو.
+      والهدف أن أفرّق بين مشكلة في الأجر نفسه ومشكلة في توزيع الوظائف، لأن كل وحدة لها علاج مختلف تماماً.
     </p>
     <div class="tags">
       <span class="tag">Power BI</span>
@@ -294,96 +318,103 @@ footer a:hover{text-decoration:underline}
     <div class="stat c4"><b>420</b><span>سجل موظف بعد التنظيف</span></div>
   </div>
 
-  <!-- ================= السياق ================= -->
+  <!-- ============ اللوحة ============ -->
   <section>
-    <h2>لماذا هذا المشروع</h2>
-    <p>
-      تحليل عدالة الأجور من أكثر الملفات اللي يُساء استخدام الأرقام فيها. تطلع مؤسسة بخبر أن الفجوة عندها 20%،
-      ويقرأها البعض كإثبات تمييز، بينما تكون في الحقيقة انعكاساً لتوزيع الموظفين على الدرجات الوظيفية.
-      والعكس صحيح: مؤسسة تعلن أن الفجوة عندها 2% وتتجاهل أن نساءها كلهن في أسفل السلّم.
-    </p>
-    <p>
-      اللي يهمني كأخصائية موارد بشرية أن أفرّق بين الحالتين، لأن كل واحدة منهما لها علاج مختلف تماماً.
-      بنيت المشروع على بيانات تركيبية صُمّمت لتشبه هيكل شركة مقاولات سعودية، وفيها فجوة مخبأة عمداً،
-      عشان أختبر إذا كانت المنهجية قادرة على كشفها.
-    </p>
+    <h2>اللوحة</h2>
+    <div class="viewer">
+      <div class="tabs" role="tablist" aria-label="صفحات اللوحة">
+        <button class="tb" type="button" role="tab" data-v="0" aria-selected="true">النظرة العامة</button>
+        <button class="tb" type="button" role="tab" data-v="1" aria-selected="false">الأجر داخل كل درجة</button>
+        <button class="tb" type="button" role="tab" data-v="2" aria-selected="false">الدرجة الثالثة</button>
+      </div>
+      <figure class="pv" data-v="0">
+        <img src="pay-equity-p1.png" alt="النظرة العامة في Power BI: عدد الموظفين ووسيط الأجر والفجوة الخام، وتوزيع الموظفين على الدرجات" loading="lazy">
+        <figcaption>الفجوة الخام 25.24%، وتوزيع الموظفين على الدرجات الوظيفية حسب الجنس.</figcaption>
+      </figure>
+      <figure class="pv" data-v="1" hidden>
+        <img src="pay-equity-p2.png" alt="وسيط الأجر حسب الدرجة والجنس مع جدول العوامل المفسرة" loading="lazy">
+        <figcaption>وسيط الأجر في كل درجة، ومعه مدة الخدمة والخبرة والأداء والدور الإشرافي.</figcaption>
+      </figure>
+      <figure class="pv" data-v="2" hidden>
+        <img src="pay-equity-p3.png" alt="الدرجة الثالثة بعد الفلترة: النساء أقدم والأجر أقل" loading="lazy">
+        <figcaption>بعد اختيار الدرجة 3: النساء أقدم في الشركة، ومع ذلك أجرهن أقل بـ 5.69%.</figcaption>
+      </figure>
+    </div>
+  </section>
 
-    <div class="disc" style="margin-top:26px">
+  <!-- ============ خطوات العمل ============ -->
+  <section>
+    <h2>خطوات العمل</h2>
+    <ol class="steps">
+      <li><div><h4>تنظيف البيانات</h4>
+        <p>حذف السجلات المكررة بالرقم الوظيفي، وتوحيد قيم الجنس والأقسام.</p></div></li>
+      <li><div><h4>توحيد الأجور على أساس الدوام الكامل</h4>
+        <p>بنيت عمود <code style="font-family:var(--mono);font-size:.85em;color:#a5b4fc">Basic FTE</code> يقسم الراتب على نسبة دوام الموظف.</p></div></li>
+      <li><div><h4>قياس الفجوة الخام</h4>
+        <p>قارنت وسيط أجر النساء بوسيط أجر الرجال على مستوى الشركة كاملة.</p></div></li>
+      <li><div><h4>فحص المبررات المشروعة</h4>
+        <p>قبل ما أسمّي أي فرق "غير مبرر"، قست أربعة عوامل تفسّر عادةً اختلاف الأجور بين موظفَين في نفس الدرجة: مدة الخدمة، الخبرة السابقة، تقييم الأداء، والدور الإشرافي. بدون هذه الخطوة يكون التحليل اتهاماً لا تحليلاً.</p></div></li>
+      <li><div><h4>المقارنة داخل نفس الدرجة</h4>
+        <p>كررت المقارنة داخل كل درجة وظيفية على حدة، بحيث ما أقارن إلا أشخاصاً في نفس المستوى. هنا يظهر الفرق بين مشكلة في <b>أجر الوظيفة الواحدة</b> ومشكلة في <b>توزيع الوظائف</b>.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ============ المشاكل ============ -->
+  <section>
+    <h2>مشاكل واجهتني وكيف حليتها</h2>
+
+    <div class="dec">
+      <span class="k">المشكلة الأولى</span>
+      <h4>الفجوة طلعت 25.88% بدل 25.24%</h4>
+      <p>كان في قسم مكتوب بصيغتين بسبب مسافة زائدة في نهاية النص، وخمسة سجلات مختصرة في عمود الجنس. Power BI ما يعطيك رسالة خطأ لو تكرر مسمى بصيغتين — يتعامل معها كفئتين مستقلتين ويطلّع لك رقماً يبدو منطقياً وهو خاطئ. وحّدت القيم، فرجعت السجلات الساقطة وطلعت الفجوة الصحيحة.</p>
+    </div>
+
+    <div class="dec">
+      <span class="k">المشكلة الثانية</span>
+      <h4>الدوام الجزئي يشوّه الفجوة</h4>
+      <p>موظف الدوام الجزئي راتبه أقل لأنه يشتغل ساعات أقل، مو لأن في ظلم. بدون تعديل يدخل فرق الساعات في حساب الفجوة. فبنيت عمود <code style="font-family:var(--mono);font-size:.85em;color:#a5b4fc">Basic FTE</code> يوحّد الأجور على أساس الدوام الكامل.</p>
+    </div>
+
+    <div class="dec">
+      <span class="k">المشكلة الثالثة</span>
+      <h4>المتوسط يضخّم الفجوة</h4>
+      <p>المتوسط يتأثر بعدد قليل من الرواتب المرتفعة جداً. في هذه البيانات كل شاغلي الدرجتين العليا رجال، فالمتوسط كان بيضخّم الفجوة بسبب ستة أشخاص لا بسبب الوضع العام. فاعتمدت الوسيط بدل المتوسط.</p>
+    </div>
+  </section>
+
+  <!-- ============ الملخص ============ -->
+  <section>
+    <h2>الملخص</h2>
+
+    <div class="find">
+      <span class="num">النتيجة الأولى</span>
+      <h3>ثلثا الفجوة سببها التوزيع، لا الأجر نفسه</h3>
       <p>
-        <strong>البيانات في هذا المشروع تركيبية بالكامل.</strong>
-        وُلّدت لأغراض التعلّم ولا تخص أي جهة أو موظفين حقيقيين. المنهجية وحدها هي القابلة للنقل على بيانات فعلية.
-      </p>
-    </div>
-  </section>
-
-  <!-- ================= المنهجية ================= -->
-  <section>
-    <h2>كيف اشتغلت عليه</h2>
-    <p>خمس مراحل، كل وحدة تجاوب على سؤال قبل ما ننتقل للي بعده.</p>
-
-    <div class="step">
-      <h3>تنظيف البيانات</h3>
-      <p class="tight">
-        حذف السجلات المكررة بالرقم الوظيفي، وتوحيد قيم الجنس والأقسام. كان في قسم مكتوب بصيغتين بسبب مسافة زائدة
-        في نهاية النص، وخمسة سجلات مختصرة في عمود الجنس.
-      </p>
-      <p class="why">
-        <b>التفسير:</b> Power BI ما يعطيك رسالة خطأ لو تكرر مسمى بصيغتين — يتعامل معها كفئتين مستقلتين
-        ويطلّع لك رقماً يبدو منطقياً وهو خاطئ. أول محاولة لحساب الفجوة عندي طلعت 25.88% بسبب خمسة سجلات ساقطة.
+        الفجوة الخام 25.24%، لكنها تنكمش إلى ما بين 3% و 19% لما نقارن داخل نفس الدرجة.
+        هذا يعني أن الجزء الأكبر منها ناتج عن مكان النساء في الهيكل الوظيفي، لا عن الأجر المقرّر للوظيفة الواحدة.
       </p>
     </div>
 
-    <div class="step">
-      <h3>توحيد الأجور على أساس الدوام الكامل</h3>
-      <p class="tight">
-        بنيت عمود <code style="font-family:var(--mono);font-size:.85em;color:#a5b4fc">Basic FTE</code>
-        يقسم الراتب على نسبة دوام الموظف.
-      </p>
-      <p class="why">
-        <b>التفسير:</b> موظف الدوام الجزئي راتبه أقل لأنه يشتغل ساعات أقل، مو لأن في ظلم. بدون هذا التعديل
-        يدخل فرق الساعات في حساب الفجوة ويشوّهها.
+    <div class="find">
+      <span class="num">النتيجة الثانية</span>
+      <h3>انعدام كامل للتمثيل في القمة</h3>
+      <p>
+        نسبة النساء تنخفض بشكل مطّرد كلما ارتفعت الدرجة: 60% في الدرجات الدنيا، 10% في الدرجتين 7 و 8،
+        وصفر في الدرجتين 9 و 10.
       </p>
     </div>
 
-    <div class="step">
-      <h3>قياس الفجوة الخام</h3>
-      <p class="tight">
-        قارنت وسيط أجر النساء بوسيط أجر الرجال على مستوى الشركة كاملة.
-      </p>
-      <p class="why">
-        <b>التفسير:</b> المتوسط يتأثر بعدد قليل من الرواتب المرتفعة جداً. في هذه البيانات كل شاغلي
-        الدرجتين العليا رجال، فالمتوسط كان بيضخّم الفجوة بسبب ستة أشخاص لا بسبب الوضع العام.
-      </p>
-    </div>
-
-    <div class="step">
-      <h3>فحص المبررات المشروعة</h3>
-      <p class="tight">
-        قبل ما أسمّي أي فرق "غير مبرر"، قست أربعة عوامل تفسّر عادةً اختلاف الأجور بين موظفَين في نفس الدرجة:
-        مدة الخدمة، الخبرة السابقة، تقييم الأداء، والدور الإشرافي.
-      </p>
-      <p class="why">
-        <b>التفسير:</b> بدون هذه الخطوة يكون التحليل اتهاماً لا تحليلاً. ولو ظهر أن العوامل تفسّر الفجوة،
-        فالنتيجة نتيجة صحيحة تستحق أن تُقال.
+    <div class="find">
+      <span class="num">النتيجة الثالثة</span>
+      <h3>فجوة متبقية لم تفسّرها العوامل المشروعة</h3>
+      <p>
+        العوامل الأربعة لم تفسّر إلا جزءاً محدوداً. أوضح مثال في الدرجة الثالثة: النساء هناك
+        <strong>أقدم</strong> في الشركة (4.1 سنة مقابل 3.3)، وبخبرة سابقة متطابقة تقريباً،
+        ولا أحد من الطرفين في دور إشرافي — ومع ذلك وسيط أجرهن أقل بنسبة 5.69%.
       </p>
     </div>
 
-    <div class="step">
-      <h3>المقارنة داخل نفس الدرجة</h3>
-      <p class="tight">
-        كررت المقارنة داخل كل درجة وظيفية على حدة، بحيث ما أقارن إلا أشخاصاً في نفس المستوى.
-      </p>
-      <p class="why">
-        <b>التفسير:</b> هنا يظهر الفرق بين مشكلة في <b>أجر الوظيفة الواحدة</b> ومشكلة في <b>توزيع الوظائف</b>.
-        وهذا الفرق هو ما يحدد التوصية.
-      </p>
-    </div>
-  </section>
-
-  <!-- ================= النتائج ================= -->
-  <section>
-    <h2>النتائج</h2>
-
+    <h3 style="margin-top:38px">الفجوة داخل كل درجة</h3>
     <div class="tbl-wrap">
       <table>
         <thead>
@@ -411,96 +442,7 @@ footer a:hover{text-decoration:underline}
       من غيرها ولا تصلح لبناء قرار عليها وحدها.
     </p>
 
-    <button class="shotbtn" type="button" id="shotbtn" aria-expanded="false">
-      <span class="ic">▾</span><span id="shotlbl">عرض اللقطات الأصلية من Power BI</span>
-    </button>
-    <figure id="shotfig" hidden>
-      <img src="pay-equity-powerbi.png" alt="لقطات من التقرير في Power BI: النظرة العامة، الأجر داخل كل درجة، والدرجة الثالثة">
-      <figcaption>ثلاث لقطات من التقرير في Power BI Desktop.</figcaption>
-    </figure>
-
-    <div style="margin-top:34px">
-      <div class="find">
-        <span class="num">النتيجة الأولى</span>
-        <h3>ثلثا الفجوة سببها التوزيع، لا الأجر نفسه</h3>
-        <p>
-          الفجوة الخام 25.24%، لكنها تنكمش إلى ما بين 3% و 19% لما نقارن داخل نفس الدرجة.
-          هذا يعني أن الجزء الأكبر منها ناتج عن مكان النساء في الهيكل الوظيفي، لا عن الأجر المقرّر للوظيفة الواحدة.
-        </p>
-      </div>
-
-      <div class="find">
-        <span class="num">النتيجة الثانية</span>
-        <h3>انعدام كامل للتمثيل في القمة</h3>
-        <p>
-          نسبة النساء تنخفض بشكل مطّرد كلما ارتفعت الدرجة: 60% في الدرجات الدنيا، 10% في الدرجتين 7 و 8،
-          وصفر في الدرجتين 9 و 10.
-        </p>
-      </div>
-
-      <div class="find">
-        <span class="num">النتيجة الثالثة</span>
-        <h3>فجوة متبقية لم تفسّرها العوامل المشروعة</h3>
-        <p>
-          العوامل الأربعة لم تفسّر إلا جزءاً محدوداً. أوضح مثال في الدرجة الثالثة: النساء هناك
-          <strong>أقدم</strong> في الشركة (4.1 سنة مقابل 3.3)، وبخبرة سابقة متطابقة تقريباً،
-          ولا أحد من الطرفين في دور إشرافي — ومع ذلك وسيط أجرهن أقل بنسبة 5.69%.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= اللوحة ================= -->
-  <section>
-    <h2>استكشف الأرقام</h2>
-    <p>
-      اللوحة الأصلية مبنية في Power BI على مقاييس DAX تعيد الحساب مع كل فلتر. أعدت بناء مخرجاتها هنا
-      لتتصفّحها مباشرة: اختر درجة وظيفية وشوف تركيبتها والعوامل المفسّرة فيها.
-    </p>
-
-    <div class="viz">
-      <div class="viz-head">
-        <h3 id="gradeTitle">الدرجة 3</h3>
-        <p class="viz-sub">اضغط على أي درجة لتغيير العرض</p>
-      </div>
-
-      <div class="grades" role="tablist" aria-label="اختيار الدرجة الوظيفية"></div>
-
-      <div class="panel">
-        <div class="bars">
-          <div class="bar-row">
-            <span class="bar-lbl">النساء</span>
-            <div class="bar-track"><div class="bar f" id="barF"></div></div>
-            <span class="bar-val" id="valF">—</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-lbl">الرجال</span>
-            <div class="bar-track"><div class="bar m" id="barM"></div></div>
-            <span class="bar-val" id="valM">—</span>
-          </div>
-          <p class="bar-note" id="gapNote"></p>
-        </div>
-
-        <div class="facts">
-          <div class="fact"><span>العدد</span><b id="fCount">—</b></div>
-          <div class="fact"><span>مدة الخدمة (سنة)</span><b id="fTenure">—</b></div>
-          <div class="fact"><span>الخبرة السابقة (سنة)</span><b id="fExp">—</b></div>
-          <div class="fact"><span>تقييم الأداء</span><b id="fPerf">—</b></div>
-        </div>
-      </div>
-      <p class="viz-read" id="readOut"></p>
-    </div>
-
-    <h3 style="margin-top:44px">توزيع النساء والرجال على السلّم الوظيفي</h3>
-    <p>كل شريط يمثل درجة وظيفية، وعرض الجزء الملوّن هو نسبة كل جنس فيها.</p>
-    <div class="dist" id="dist"></div>
-    <p class="note">تنخفض نسبة النساء من 39% في الدرجة الأولى إلى صفر في الدرجتين التاسعة والعاشرة.</p>
-  </section>
-
-  <!-- ================= التوصيات ================= -->
-  <section>
-    <h2>التوصيات</h2>
-
+    <h3 class="recs-h">التوصيات</h3>
     <div class="rec">
       <span class="mark">١</span>
       <div>
@@ -526,18 +468,21 @@ footer a:hover{text-decoration:underline}
     </div>
   </section>
 
-  <!-- ================= ماذا تعلمت ================= -->
+  <!-- ============ الأدوات ============ -->
   <section>
-    <h2>ما خرجت به</h2>
-    <p>
-      أكثر شيء لفتني أن الخطأ الوحيد اللي كاد يفسد النتيجة كان خطأ إملائياً في خمس خلايا.
-      البرنامج ما اعترض، وأعطاني رقماً معقولاً تماماً — 25.88% بدل 25.24%. لو ما دققت في مصدر الفرق،
-      كان التقرير راح يطلع بأرقام خاطئة وهو يبدو سليماً.
-    </p>
-    <p>
-      والدرس الثاني أن الرقم الواحد نادراً ما يكون الإجابة. "الفجوة 25%" جملة صحيحة إحصائياً ومضللة إدارياً،
-      لأنها تدفع لعلاج خاطئ. تفكيكها هو اللي يحوّل التحليل من خبر إلى قرار.
-    </p>
+    <h2>الأدوات</h2>
+    <div class="tags" style="margin-top:18px">
+      <span class="tag">Power BI</span>
+      <span class="tag">Power Query</span>
+      <span class="tag">DAX</span>
+      <span class="tag">Excel</span>
+    </div>
+    <div class="disc" style="margin-top:26px">
+      <p>
+        <strong>البيانات في هذا المشروع تركيبية بالكامل.</strong>
+        وُلّدت لأغراض التعلّم ولا تخص أي جهة أو موظفين حقيقيين. المنهجية وحدها هي القابلة للنقل على بيانات فعلية.
+      </p>
+    </div>
   </section>
 
   <footer>
@@ -550,110 +495,14 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <script>
-(function () {
-  var D = [
-    {g:1,  f:17, m:27, pf:4050,  pm:4833,  gap:16.21, tf:2.50,  tm:4.00, ef:0.30, em:2.35, rf:3.12, rm:3.44},
-    {g:2,  f:13, m:40, pf:4700,  pm:5158,  gap:8.89,  tf:2.30,  tm:2.25, ef:0.55, em:1.10, rf:3.23, rm:3.29},
-    {g:3,  f:19, m:57, pf:5800,  pm:6150,  gap:5.69,  tf:4.10,  tm:3.30, ef:3.50, em:3.60, rf:3.26, rm:3.42},
-    {g:4,  f:9,  m:53, pf:6500,  pm:7350,  gap:11.56, tf:5.10,  tm:4.50, ef:3.20, em:3.90, rf:3.39, rm:3.33},
-    {g:5,  f:9,  m:48, pf:8500,  pm:8800,  gap:3.41,  tf:5.60,  tm:6.05, ef:5.90, em:3.80, rf:3.39, rm:3.25},
-    {g:6,  f:7,  m:41, pf:9950,  pm:10950, gap:9.13,  tf:4.80,  tm:5.70, ef:3.30, em:5.70, rf:3.21, rm:3.38},
-    {g:7,  f:4,  m:24, pf:10725, pm:13225, gap:18.90, tf:5.75,  tm:6.70, ef:7.45, em:6.20, rf:3.50, rm:3.09},
-    {g:8,  f:4,  m:27, pf:16950, pm:15500, gap:-9.35, tf:13.65, tm:6.70, ef:6.35, em:7.70, rf:3.80, rm:3.37},
-    {g:9,  f:0,  m:15, pf:null,  pm:19950, gap:null,  tf:null,  tm:7.90, ef:null, em:9.20, rf:null, rm:3.59},
-    {g:10, f:0,  m:6,  pf:null,  pm:22342, gap:null,  tf:null,  tm:8.85, ef:null, em:8.85, rf:null, rm:3.05}
-  ];
-
-  var MAXPAY = 23000;
-  var nf = new Intl.NumberFormat('en-US');
-  var $ = function (id) { return document.getElementById(id); };
-  var pair = function (a, b) {
-    if (a === null) return '— / ' + b.toFixed(2);
-    return a.toFixed(2) + ' / ' + b.toFixed(2);
-  };
-
-  function render(d) {
-    $('gradeTitle').textContent = 'الدرجة ' + d.g;
-
-    $('barF').style.width = d.pf ? (d.pf / MAXPAY * 100) + '%' : '0%';
-    $('barM').style.width = (d.pm / MAXPAY * 100) + '%';
-    $('valF').textContent = d.pf ? nf.format(d.pf) : '—';
-    $('valM').textContent = nf.format(d.pm);
-
-    $('fCount').textContent  = (d.f || '0') + ' / ' + d.m;
-    $('fTenure').textContent = pair(d.tf, d.tm);
-    $('fExp').textContent    = pair(d.ef, d.em);
-    $('fPerf').textContent   = pair(d.rf, d.rm);
-
-    var note = $('gapNote'), read = $('readOut');
-
-    if (d.gap === null) {
-      note.textContent = 'لا توجد موظفات في هذه الدرجة — المقارنة غير ممكنة.';
-      note.style.color = 'var(--pink)';
-      read.textContent = 'الدرجة ' + d.g + ' يشغلها ' + d.m +
-        ' موظفاً، جميعهم رجال. غياب أي تمثيل نسائي هنا هو ما يفسّر الجزء الأكبر من الفجوة الخام على مستوى الشركة.';
-      return;
-    }
-
-    var pos = d.gap > 0;
-    note.textContent = 'الفجوة: ' + (pos ? '' : '−') + Math.abs(d.gap).toFixed(2) + '% ' +
-      (pos ? 'لصالح الرجال' : 'لصالح النساء');
-    note.style.color = pos ? 'var(--pink)' : 'var(--cyan)';
-
-    var s = 'في هذه الدرجة ' + d.f + ' موظفات و' + d.m + ' موظفاً. ';
-    if (!pos) {
-      s += 'وسيط أجر النساء هنا يفوق أجر الرجال، ويرافقه فارق واضح في مدة الخدمة لصالحهن.';
-    } else if (d.tf >= d.tm && d.rf >= d.rm) {
-      s += 'النساء أطول خدمةً وأعلى تقييماً، ومع ذلك أجرهن أقل — لا يوجد عامل مشروع يفسّر الفارق.';
-    } else if (d.tf >= d.tm) {
-      s += 'النساء أطول خدمةً من الرجال، ومع ذلك أجرهن أقل.';
-    } else {
-      s += 'الفارق في العوامل المفسّرة محدود ولا يكفي لتبرير فجوة بهذا الحجم.';
-    }
-    if (d.f < 10) s += ' العينة صغيرة، فالرقم هنا إشارة لا قرار.';
-    read.textContent = s;
-  }
-
-  var bar = document.querySelector('.grades');
-  D.forEach(function (d, i) {
-    var b = document.createElement('button');
-    b.className = 'gbtn' + (d.f === 0 ? ' empty' : '');
-    b.type = 'button';
-    b.setAttribute('role', 'tab');
-    b.setAttribute('aria-selected', d.g === 3 ? 'true' : 'false');
-    b.textContent = d.g;
-    b.addEventListener('click', function () {
-      bar.querySelectorAll('.gbtn').forEach(function (x) { x.setAttribute('aria-selected', 'false'); });
-      b.setAttribute('aria-selected', 'true');
-      render(d);
+(function(){
+  document.querySelectorAll('.tb').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
+      t.setAttribute('aria-selected','true');
+      document.querySelectorAll('.pv').forEach(function(p){ p.hidden = p.dataset.v !== t.dataset.v; });
     });
-    bar.appendChild(b);
   });
-
-  var dist = $('dist');
-  D.forEach(function (d) {
-    var total = d.f + d.m, p = Math.round(d.f / total * 100);
-    var row = document.createElement('div');
-    row.className = 'drow';
-    row.innerHTML =
-      '<span class="lbl">درجة ' + d.g + '</span>' +
-      '<div class="dtrack"><div class="dseg f" style="width:' + p + '%"></div>' +
-      '<div class="dseg m" style="width:' + (100 - p) + '%"></div></div>' +
-      '<span class="pct">' + p + '%</span>';
-    dist.appendChild(row);
-  });
-
-  render(D[2]);
-
-  var sb=document.getElementById('shotbtn'), sf=document.getElementById('shotfig'), sl=document.getElementById('shotlbl');
-  if(sb){
-    sb.addEventListener('click',function(){
-      var open = sb.getAttribute('aria-expanded')==='true';
-      sb.setAttribute('aria-expanded', String(!open));
-      sf.hidden = open;
-      sl.textContent = open ? 'عرض اللقطات الأصلية من Power BI' : 'إخفاء اللقطات';
-    });
-  }
 })();
 </script>
 </body>

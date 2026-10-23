@@ -230,6 +230,10 @@ footer a:hover{text-decoration:underline}
 .steps p{margin-bottom:0;font-size:.97rem}
 .steps .tbl-wrap{margin:16px 0 4px}
 .recs-h{margin-top:40px}
+.viewer{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
+.viewer .tabs{margin-bottom:18px}
+.viewer figure{margin-top:0;background:#0A120F}
+@media (max-width:640px){.viewer{padding:14px}}
 </style>
 </head>
 <body>
@@ -265,95 +269,24 @@ footer a:hover{text-decoration:underline}
   <!-- ============ اللوحة ============ -->
   <section>
     <h2>اللوحة</h2>
-    <div class="lawha">
+    <div class="viewer">
       <div class="tabs" role="tablist" aria-label="صفحات اللوحة">
-        <button class="tb" type="button" data-p="0" aria-selected="true">نظرة عامة</button>
-        <button class="tb" type="button" data-p="1" aria-selected="false">العمل الإضافي</button>
-        <button class="tb" type="button" data-p="2" aria-selected="false">الخصومات</button>
-        <button class="tb" type="button" data-p="3" aria-selected="false">لقطات Power BI</button>
+        <button class="tb" type="button" role="tab" data-v="0" aria-selected="true">نظرة عامة</button>
+        <button class="tb" type="button" role="tab" data-v="1" aria-selected="false">العمل الإضافي</button>
+        <button class="tb" type="button" role="tab" data-v="2" aria-selected="false">الخصومات</button>
       </div>
-
-      <!-- ---- page 0 ---- -->
-      <div class="pg" data-p="0">
-        <p class="pg-q">ما حجم الشركة وكيف تنضبط؟</p>
-        <div class="grp">
-          <span class="grp-t">القوى العاملة</span>
-          <div class="kpis">
-            <div class="kpi"><b>1,000</b><span>Headcount</span></div>
-            <div class="kpi"><b>890</b><span>Active Headcount</span></div>
-            <div class="kpi"><b>110</b><span>Leavers</span></div>
-            <div class="kpi"><b>42.58%</b><span>Saudization %</span></div>
-          </div>
-        </div>
-        <div class="grp">
-          <span class="grp-t">الحضور والغياب</span>
-          <div class="kpis">
-            <div class="kpi"><b>7.18K</b><span>Total Absent Days</span></div>
-            <div class="kpi"><b>227.69K</b><span>Total Scheduled Days</span></div>
-            <div class="kpi"><b>3.15%</b><span>Absence Rate %</span></div>
-            <div class="kpi"><b>7.18</b><span>Avg Absent Days / Emp</span></div>
-            <div class="kpi"><b>12.16K</b><span>Total Late Arrivals</span></div>
-          </div>
-        </div>
-        <div class="grp">
-          <span class="grp-t">العمل الإضافي</span>
-          <div class="kpis">
-            <div class="kpi"><b>191.21K</b><span>Total OT Hours</span></div>
-            <div class="kpi"><b>8.91M</b><span>Total OT Cost</span></div>
-            <div class="kpi"><b>191.21</b><span>Avg OT Hours / Emp</span></div>
-            <div class="kpi"><b>33.04%</b><span>Weekend OT Share %</span></div>
-            <div class="kpi"><b>41.27%</b><span>Weekend OT Cost Share %</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ---- page 1 ---- -->
-      <div class="pg" data-p="1" hidden>
-        <p class="pg-q">أين تذهب التكلفة؟</p>
-        <h4 class="ch-t" id="mtitle">ساعات العمل الإضافي شهريًا</h4>
-        <div class="tg">
-          <button class="tgb" type="button" data-v="hrs" aria-selected="true">الساعات</button>
-          <button class="tgb" type="button" data-v="shr" aria-selected="false">نصيب نهاية الأسبوع</button>
-        </div>
-        <div class="lg" id="mlg"></div>
-        <div class="mchart" id="mchart"></div>
-        <p class="pg-n" id="mnote"></p>
-
-        <h4 class="ch-t" style="margin-top:30px">تكلفة ساعة العمل الإضافي (ريال)</h4>
-        <div class="crow">
-          <span class="l">أيام العمل</span>
-          <div class="ctrack"><div class="cbar a" style="width:70%"></div></div>
-          <span class="v">40.94</span>
-        </div>
-        <div class="crow">
-          <span class="l">نهاية الأسبوع</span>
-          <div class="ctrack"><div class="cbar b" style="width:100%"></div></div>
-          <span class="v">58.20</span>
-        </div>
-        <p class="pg-n">الفجوة بين العمودين الشهريين ثابتة على مدار السنة، وهي جوهر النتيجة.</p>
-      </div>
-
-      <!-- ---- page 2 ---- -->
-      <div class="pg" data-p="2" hidden>
-        <p class="pg-q">على ماذا تُخصم الرواتب؟</p>
-        <div class="kpis" style="margin-bottom:22px">
-          <div class="kpi"><b>2.52M</b><span>Total Deductions</span></div>
-        </div>
-        <h4 class="ch-t">توزيع الخصومات حسب النوع</h4>
-        <div class="tg">
-          <button class="tgb" type="button" data-m="sar" aria-selected="true">بالريال</button>
-          <button class="tgb" type="button" data-m="pct" aria-selected="false">بالنسبة</button>
-        </div>
-        <div id="dchart"></div>
-      </div>
-
-      <!-- ---- page 3 ---- -->
-      <div class="pg" data-p="3" hidden>
-        <figure style="margin-top:0">
-          <img src="workforce-dashboard-powerbi.png" alt="لقطات من صفحات التقرير الثلاث في Power BI: نظرة عامة، العمل الإضافي، والخصومات" loading="lazy">
-          <figcaption>الصفحات الثلاث كما تظهر في Power BI Desktop بالثيم الأخضر الداكن.</figcaption>
-        </figure>
-      </div>
+      <figure class="pv" data-v="0">
+        <img src="workforce-p1.png" alt="صفحة النظرة العامة في Power BI: القوى العاملة والحضور والغياب" loading="lazy">
+        <figcaption>حجم الشركة وانضباطها: القوى العاملة، الحضور والغياب.</figcaption>
+      </figure>
+      <figure class="pv" data-v="1" hidden>
+        <img src="workforce-p2.png" alt="صفحة العمل الإضافي في Power BI: نصيب نهاية الأسبوع وتكلفة الساعة" loading="lazy">
+        <figcaption>نصيب نهاية الأسبوع من الساعات مقابل التكلفة، وفرق تكلفة الساعة 17.26 ريال.</figcaption>
+      </figure>
+      <figure class="pv" data-v="2" hidden>
+        <img src="workforce-p3.png" alt="صفحة الخصومات في Power BI: إجمالي الخصومات وتوزيعها حسب النوع" loading="lazy">
+        <figcaption>الخصومات 2.52 مليون ريال موزعة على الغياب والتأخير والبنود الأخرى.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -523,112 +456,13 @@ footer a:hover{text-decoration:underline}
 
 <script>
 (function(){
-  var M=[
-    ["Jul 2025",42.48,33.9,17553],["Aug 2025",40.92,32.9,19903],["Sep 2025",40.82,32.4,16667],
-    ["Oct 2025",41.21,32.9,14991],["Nov 2025",40.23,31.9,14178],["Dec 2025",41.96,33.5,12576],
-    ["Jan 2026",40.58,32.4,14149],["Feb 2026",42.40,33.8,14111],["Mar 2026",40.83,32.8,11155],
-    ["Apr 2026",40.38,32.6,16298],["May 2026",41.57,33.5,19599],["Jun 2026",41.67,33.6,20030]
-  ];
-  var mc=document.getElementById('mchart'), note=document.getElementById('mnote');
-  var mt=document.getElementById('mtitle'), mlg=document.getElementById('mlg');
-  var view='hrs', HMAX=21000, SMAX=46;
-  var nf0=new Intl.NumberFormat('en-US');
-
-  function drawM(){
-    mc.innerHTML='';
-    if(view==='hrs'){
-      mt.textContent='ساعات العمل الإضافي شهريًا';
-      mlg.innerHTML='<span><i class="sw a"></i>إجمالي الساعات</span>';
-      note.textContent='الذروة في مايو–أغسطس، والأدنى في ديسمبر–مارس.';
-    }else{
-      mt.textContent='نصيب نهاية الأسبوع: من الساعات مقابل التكلفة';
-      mlg.innerHTML='<span><i class="sw a"></i>من التكلفة</span><span><i class="sw b"></i>من الساعات</span>';
-      note.textContent='مرّر على أي شهر لقراءة قيمه.';
-    }
-
-    M.forEach(function(m){
-      var c=document.createElement('div'); c.className='mcol';
-      var inner;
-      if(view==='hrs'){
-        inner='<span class="mval">'+(m[3]/1000).toFixed(1)+'K</span>'+
-              '<div class="mpair"><div class="mbar a" style="width:26px;height:'+(m[3]/HMAX*100)+'%"></div></div>';
-      }else{
-        inner='<span class="mval">'+m[1].toFixed(1)+' / '+m[2].toFixed(1)+'</span>'+
-              '<div class="mpair">'+
-              '<div class="mbar a" style="height:'+(m[1]/SMAX*100)+'%"></div>'+
-              '<div class="mbar b" style="height:'+(m[2]/SMAX*100)+'%"></div></div>';
-      }
-      c.innerHTML=inner+'<span class="mlbl">'+m[0].split(' ')[0]+'</span>';
-      function show(){
-        mc.querySelectorAll('.mcol').forEach(function(x){x.classList.remove('on');});
-        c.classList.add('on');
-        note.textContent = view==='hrs'
-          ? m[0]+' — '+nf0.format(m[3])+' ساعة عمل إضافي'
-          : m[0]+' — التكلفة '+m[1].toFixed(2)+'% مقابل الساعات '+m[2].toFixed(1)+
-            '% · فارق '+(m[1]-m[2]).toFixed(1)+' نقطة';
-      }
-      c.addEventListener('mouseenter',show);
-      c.addEventListener('click',show);
-      mc.appendChild(c);
-    });
-  }
-  drawM();
-
-  document.querySelectorAll('.tgb[data-v]').forEach(function(b){
-    b.addEventListener('click',function(){
-      document.querySelectorAll('.tgb[data-v]').forEach(function(x){x.setAttribute('aria-selected','false');});
-      b.setAttribute('aria-selected','true');
-      view=b.dataset.v; drawM();
-    });
-  });
-
-  var D=[["الغياب",1667344,66.09,"linear-gradient(90deg,#065F46,#10B981)"],
-         ["بنود أخرى",678650,26.90,"linear-gradient(90deg,#0E7C63,#34D399)"],
-         ["التأخير",176705,7.00,"linear-gradient(90deg,#10B981,#A7F3D0)"]];
-  var dc=document.getElementById('dchart'), mode='sar';
-  var nf=new Intl.NumberFormat('en-US');
-
-  function drawD(){
-    dc.innerHTML='';
-    D.forEach(function(d){
-      var w = mode==='sar' ? d[1]/D[0][1]*100 : d[2]/D[0][2]*100;
-      var v = mode==='sar' ? (d[1]/1e6).toFixed(2)+'M' : d[2].toFixed(1)+'%';
-      var r=document.createElement('div'); r.className='drow';
-      r.innerHTML='<span class="l">'+d[0]+'</span>'+
-        '<div class="dtrack"><div class="dbar" style="width:'+w+'%;background:'+d[3]+'"></div></div>'+
-        '<span class="v">'+v+'</span>';
-      dc.appendChild(r);
-    });
-  }
-  drawD();
-
-  document.querySelectorAll('.tgb[data-m]').forEach(function(b){
-    b.addEventListener('click',function(){
-      document.querySelectorAll('.tgb[data-m]').forEach(function(x){x.setAttribute('aria-selected','false');});
-      b.setAttribute('aria-selected','true');
-      mode=b.dataset.m; drawD();
-    });
-  });
-
   document.querySelectorAll('.tb').forEach(function(t){
     t.addEventListener('click',function(){
       document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
       t.setAttribute('aria-selected','true');
-      document.querySelectorAll('.pg').forEach(function(p){
-        p.hidden = (p.dataset.p !== t.dataset.p);
-      });
+      document.querySelectorAll('.pv').forEach(function(p){ p.hidden = p.dataset.v !== t.dataset.v; });
     });
   });
-
-  var sb=document.getElementById('shotbtn'), sf=document.getElementById('shotfig'), sl=document.getElementById('shotlbl');
-  if(sb){
-    sb.addEventListener('click',function(){
-      var open = sb.getAttribute('aria-expanded')==='true';
-      sb.setAttribute('aria-expanded', String(!open));
-      sf.hidden = open;
-      sl.textContent = open ? 'عرض اللقطات الأصلية من Power BI' : 'إخفاء اللقطات';
-    });
-  }
 })();
 </script>
 </body>
