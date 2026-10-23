@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة مبيعات متجر Olist — وهج الكبيري</title>
+<meta name="description" content="لوحة Power BI تفاعلية لتحليل مبيعات متجر Olist البرازيلي على بيانات حقيقية لحوالي 100 ألف طلب بين 2016 و2018.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060A1A;
+  --panel:#0C1330;
+  --panel-2:#121B42;
+  --line:rgba(255,255,255,.08);
+  --text:#E8EDFB;
+  --muted:#93A0C8;
+  --ac:#3B6BFF;
+  --ac-light:#8FA9FF;
+  --ac-pale:#C5D3FF;
+  --teal:#00B8A9;
+  --amber:#F6A623;
+  --grad:linear-gradient(115deg,#9DB4FF 0%,#3B6BFF 50%,#1B3FCC 100%);
+  --display:'El Messiri',serif;
+  --mono:'Space Grotesk',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Tajawal',system-ui,sans-serif;font-weight:300;
+  line-height:1.85;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(58rem 34rem at 86% -10%,rgba(59,107,255,.17),transparent 62%),
+    radial-gradient(50rem 30rem at 2% 20%,rgba(27,63,204,.28),transparent 60%),
+    radial-gradient(44rem 28rem at 60% 105%,rgba(0,184,169,.07),transparent 62%);
+}
+::selection{background:rgba(59,107,255,.35);color:#fff}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+
+.top{padding:34px 0 0}
+.back{
+  display:inline-flex;align-items:center;gap:9px;color:var(--muted);
+  text-decoration:none;font-size:.86rem;border:1px solid var(--line);
+  border-radius:999px;padding:7px 16px;transition:.25s;
+}
+.back:hover{color:var(--text);border-color:rgba(59,107,255,.55)}
+
+.hero{padding:56px 0 30px}
+.eyebrow{
+  font-family:var(--mono);font-size:.73rem;letter-spacing:.16em;
+  color:var(--ac-light);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:var(--display);font-size:clamp(2.1rem,5.6vw,3.6rem);
+  font-weight:600;line-height:1.25;letter-spacing:-.01em;margin-bottom:22px;
+}
+h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:clamp(1.02rem,2.1vw,1.16rem);color:#C3CCE8;max-width:66ch}
+.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
+.tag{font-family:var(--mono);font-size:.75rem;color:var(--muted);
+  border:1px solid var(--line);border-radius:6px;padding:5px 12px}
+
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;margin:46px 0 8px;
+}
+.stat{background:var(--panel);padding:26px 22px}
+.stat b{display:block;font-family:var(--mono);font-size:1.9rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:5px;color:var(--ac-light)}
+.stat.alt b{color:var(--ac-pale)}
+.stat.teal b{color:var(--teal)}
+.stat.amber b{color:var(--amber)}
+.stat span{font-size:.83rem;color:var(--muted);line-height:1.6;display:block}
+
+section{padding:62px 0;border-top:1px solid var(--line);margin-top:56px}
+h2{font-family:var(--display);font-size:clamp(1.4rem,3vw,1.85rem);
+  font-weight:600;letter-spacing:-.01em;margin-bottom:10px}
+h2::before{content:"";display:block;width:46px;height:3px;border-radius:2px;
+  background:var(--grad);margin-bottom:18px}
+h3{font-size:1.06rem;font-weight:600;margin:34px 0 10px;color:#EEF2FD}
+p{margin-bottom:16px;color:#C3CCE8;max-width:70ch}
+strong{font-weight:600;color:#fff}
+code{font-family:var(--mono);font-size:.86em;color:var(--ac-pale)}
+
+/* steps */
+.steps{list-style:none;counter-reset:s;margin-top:26px}
+.steps li{counter-increment:s;display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:.82rem;background:rgba(59,107,255,.15);
+  color:var(--ac-light);border:1px solid rgba(59,107,255,.32)}
+.steps h4{font-size:1rem;font-weight:600;color:#EEF2FD;margin-bottom:4px}
+.steps p{margin-bottom:0;font-size:.97rem}
+
+/* problems */
+.dec{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:20px 22px;margin-bottom:14px;
+  position:relative;overflow:hidden;
+}
+.dec::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;
+  width:3px;background:var(--grad)}
+.dec .k{display:block;font-family:var(--mono);font-size:.7rem;
+  letter-spacing:.14em;color:var(--ac-light);margin-bottom:7px}
+.dec h4{font-size:1.02rem;font-weight:600;color:#EEF2FD;margin-bottom:8px}
+.dec p{margin-bottom:0;font-size:.96rem}
+
+/* dashboard viewer */
+.viewer{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.tb{font-family:'Tajawal',sans-serif;font-size:.9rem;color:var(--muted);background:transparent;
+  border:1px solid var(--line);border-radius:9px;padding:8px 16px;cursor:pointer;transition:.18s}
+.tb:hover{color:var(--text);border-color:rgba(59,107,255,.5)}
+.tb[aria-selected="true"]{background:var(--grad);color:#06122F;font-weight:600;border-color:transparent}
+figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0A1028}
+figure img,figure video{display:block;width:100%;height:auto}
+figcaption{padding:12px 16px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
+
+/* summary */
+.find{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:22px 24px 18px;margin-bottom:14px;position:relative;overflow:hidden}
+.find::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad)}
+.find .num{font-family:var(--mono);font-size:1.35rem;font-weight:500;color:var(--ac-light);display:block;margin-bottom:4px;direction:ltr;text-align:right}
+.find p{margin-bottom:0}
+.recs{margin:12px 0 0;padding-inline-start:20px;color:#C3CCE8}
+.recs li{margin-bottom:6px}
+.recs li::marker{color:var(--ac-light)}
+
+footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
+  color:var(--muted);font-size:.85rem}
+footer a{color:var(--ac-light);text-decoration:none}
+footer a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--ac);outline-offset:3px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:640px){
+  section{padding:46px 0;margin-top:38px}
+  .hero{padding:38px 0 18px}
+  .viewer{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">→ العودة إلى الملف التعريفي</a>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">Sales Analytics · Power BI</div>
+    <h1>لوحة مبيعات <span class="g">متجر Olist</span></h1>
+    <p class="lede">
+      اخترت بيانات متجر <strong>Olist</strong>، وهو متجر إلكتروني برازيلي نشر بيانات حوالي 100 ألف طلب حقيقي بين 2016 و2018.
+      البيانات مقسمة على أكثر من جدول، فكانت فرصة أتعلم فيها الربط بين الجداول بشكل واقعي.
+      الهدف هو إبراز مهارات التحليل لدي لبيانات المبيعات.
+    </p>
+    <div class="tags">
+      <span class="tag">Power BI</span>
+      <span class="tag">Power Query</span>
+      <span class="tag">DAX</span>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b>13.22M</b><span>إجمالي المبيعات (BRL)</span></div>
+    <div class="stat alt"><b>96.5K</b><span>طلب واصل للعميل</span></div>
+    <div class="stat teal"><b>93%</b><span>من الطلبات توصل في موعدها</span></div>
+    <div class="stat amber"><b>3%</b><span>بس من العملاء رجعوا وطلبوا</span></div>
+  </div>
+
+  <!-- ============ اللوحة ============ -->
+  <section>
+    <h2>اللوحة</h2>
+    <div class="viewer">
+      <div class="tabs" role="tablist" aria-label="عرض اللوحة">
+        <button class="tb" type="button" role="tab" data-v="0" aria-selected="true">اللوحة كاملة</button>
+        <button class="tb" type="button" role="tab" data-v="1" aria-selected="false">بعد الفلترة</button>
+        <button class="tb" type="button" role="tab" data-v="2" aria-selected="false">فيديو التفاعل</button>
+      </div>
+
+      <figure class="pv" data-v="0">
+        <img src="olist-dashboard.png" alt="لوحة مبيعات Olist كاملة: كروت المؤشرات، خط المبيعات الشهري، الخريطة، أعلى الفئات، طرق الدفع، وأداء التوصيل" loading="lazy">
+        <figcaption>اللوحة بدون فلاتر، لكل البيانات من 2016 إلى 2018.</figcaption>
+      </figure>
+      <figure class="pv" data-v="1" hidden>
+        <img src="olist-filtered.png" alt="اللوحة بعد اختيار سنة 2017 وولاية GO" loading="lazy">
+        <figcaption>بعد اختيار سنة 2017 وولاية GO: كل الأرقام والرسومات تتحدث لهالاختيار.</figcaption>
+      </figure>
+      <figure class="pv" data-v="2" hidden>
+        <video src="olist-demo.mp4" poster="olist-demo-poster.jpg" controls muted playsinline preload="none"></video>
+        <figcaption>فلاتر السنة والولاية وهي تغير اللوحة كاملة.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ خطوات العمل ============ -->
+  <section>
+    <h2>خطوات العمل</h2>
+    <ol class="steps">
+      <li><div><h4>تنظيف البيانات في Power Query</h4>
+        <p>صححت أنواع الأعمدة، وشلت المسافات الزايدة، ووحدت أسماء المدن اللي كانت مكتوبة بطريقتين، وخليت بس الطلبات اللي وصلت للعميل.</p></div></li>
+      <li><div><h4>دمج الجداول وإلحاقها</h4>
+        <p>جبت الترجمة الإنجليزية لفئات المنتجات بالدمج (Merge)، وسويت جدول للولايات بالإلحاق (Append).</p></div></li>
+      <li><div><h4>بناء العلاقات</h4>
+        <p>ربطت 8 جداول بعلاقات One to Many.</p></div></li>
+      <li><div><h4>الأعمدة المحسوبة</h4>
+        <p>سويت عمود لأيام التوصيل، وعمود يحدد هل الطلب وصل متأخر ولا في موعده.</p></div></li>
+      <li><div><h4>مقاييس DAX</h4>
+        <p>المبيعات، عدد الطلبات، متوسط قيمة الطلب، نسبة التأخير، نسبة العملاء المتكررين.</p></div></li>
+      <li><div><h4>جدول التواريخ</h4>
+        <p>سويته عشان أحسب نمو المبيعات من شهر لشهر.</p></div></li>
+      <li><div><h4>تصميم اللوحة</h4>
+        <p>خليتها تفاعلية بفلاتر السنة والولاية، ولما تضغط على أي مدينة في الخريطة تتغير كل الأرقام لها.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ============ المشاكل ============ -->
+  <section>
+    <h2>مشاكل واجهتني وكيف حليتها</h2>
+
+    <div class="dec">
+      <span class="k">المشكلة الأولى</span>
+      <h4>عدد العملاء طلع أكبر من الحقيقي</h4>
+      <p>لأن الفلتر يمشي من جدول العملاء للطلبات، مو العكس. فالعملاء اللي طلباتهم ملغية كانوا ينحسبون. حليتها بدمج <code>Inner</code> يخلي بس العملاء اللي عندهم طلبات واصلة.</p>
+    </div>
+
+    <div class="dec">
+      <span class="k">المشكلة الثانية</span>
+      <h4>مقياس الشهر اللي قبل طلع فاضي</h4>
+      <p>اكتشفت إن السبب في دالة <code>SUMMARIZE</code> نفسها، لأنها تفلتر الجدول على نفس الشهر. فاستخدمت <code>SUMMARIZECOLUMNS</code> بدالها.</p>
+    </div>
+
+    <div class="dec">
+      <span class="k">المشكلة الثالثة</span>
+      <h4>أيام التوصيل فيها طلب أخذ 210 يوم</h4>
+      <p>هذا رفع المتوسط، فحسبت الوسيط بعد عشان أطلع رقم أصدق.</p>
+    </div>
+  </section>
+
+  <!-- ============ الملخص ============ -->
+  <section>
+    <h2>الملخص</h2>
+
+    <div class="find">
+      <span class="num">13.22M BRL</span>
+      <p>إجمالي المبيعات <strong>13.22 مليون ريال برازيلي (BRL)</strong> من <strong>96.5 ألف</strong> طلب.</p>
+    </div>
+
+    <div class="find">
+      <span class="num">93%</span>
+      <p><strong>93%</strong> من الطلبات توصل في موعدها، ونص الطلبات توصل خلال <strong>10 أيام</strong>.</p>
+    </div>
+
+    <div class="find">
+      <span class="num">3%</span>
+      <p><strong>97%</strong> من العملاء طلبوا مرة وحدة بس، واللي رجعوا وطلبوا مرة ثانية نسبتهم <strong>3%</strong> بس، وهي نسبة قليلة. وهذي أكبر نقطة ضعف للمتجر، وتوصيتي برنامج ولاء أو عرض على الطلب الثاني.</p>
+    </div>
+
+    <div class="find">
+      <span class="num">+52%</span>
+      <p>أعلى نمو كان في <strong>نوفمبر 2017</strong> بزيادة <strong>52%</strong>، بسبب البلاك فرايدي.</p>
+    </div>
+
+    <div class="find">
+      <span class="num">watches_gifts</span>
+      <p>فئة الساعات والهدايا طلباتها مو الأكثر، بس جات ثانية في المبيعات لأن أسعارها عالية.</p>
+    </div>
+
+    <div class="find">
+      <span class="num">78%</span>
+      <p><strong>78%</strong> من العملاء يدفعون بالبطاقة الائتمانية، و<strong>18%</strong> بالـ boleto. وتوصيتي:</p>
+      <ul class="recs">
+        <li><strong>شراكة مع البنوك</strong> لعروض حصرية لحاملي البطاقات، لأنهم الأغلبية</li>
+        <li><strong>تقسيط بدون فوائد</strong> على المنتجات الغالية، عشان يشجع العميل يشتري أكثر</li>
+        <li><strong>كود خصم بعد أول طلب:</strong> استخدام القسائم (voucher) قليل جداً، فيقدر المتجر يرسل كود خصم للعميل بعد أول طلب. وهذا بعد يساعد في مشكلة إن 3% بس من العملاء يرجعون يطلبون</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ الأدوات ============ -->
+  <section>
+    <h2>الأدوات</h2>
+    <div class="tags" style="margin-top:18px">
+      <span class="tag">Power BI</span>
+      <span class="tag">Power Query</span>
+      <span class="tag">DAX</span>
+    </div>
+    <p style="margin-top:22px;font-size:.88rem;color:var(--muted)">
+      مصدر البيانات: Brazilian E-Commerce Public Dataset by Olist — منشورة على Kaggle.
+    </p>
+  </section>
+
+  <footer>
+    <p style="margin:0">
+      وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات ·
+      <a href="index.html">بقية المشاريع</a>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.tb').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
+      t.setAttribute('aria-selected','true');
+      document.querySelectorAll('.pv').forEach(function(p){
+        var show = p.dataset.v === t.dataset.v;
+        p.hidden = !show;
+        var v = p.querySelector('video');
+        if(v && !show){ v.pause(); }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
