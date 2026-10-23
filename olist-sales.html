@@ -7,317 +7,513 @@
 <meta name="description" content="لوحة Power BI تفاعلية لتحليل مبيعات متجر Olist البرازيلي على بيانات حقيقية لحوالي 100 ألف طلب بين 2016 و2018.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#060A1A;
-  --panel:#0C1330;
-  --panel-2:#121B42;
-  --line:rgba(255,255,255,.08);
-  --text:#E8EDFB;
-  --muted:#93A0C8;
-  --ac:#3B6BFF;
-  --ac-light:#8FA9FF;
-  --ac-pale:#C5D3FF;
-  --teal:#00B8A9;
-  --amber:#F6A623;
-  --grad:linear-gradient(115deg,#9DB4FF 0%,#3B6BFF 50%,#1B3FCC 100%);
-  --display:'El Messiri',serif;
+  --bg:#08090F; --card:#12131C; --line:rgba(255,255,255,.09);
+  --text:#F3EFE8; --muted:#BDB6AB; --dim:#9A948A;
+  --coral:#FF5E3A; --coral2:#FF7A4D; --gold:#FFB547; --mint:#5EEAD4;
+  --ease:cubic-bezier(.16,1,.3,1);
   --mono:'Space Grotesk',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:'Tajawal',system-ui,sans-serif;font-weight:300;
-  line-height:1.85;-webkit-font-smoothing:antialiased;
+body{background:var(--bg);color:var(--text);font-family:'Alexandria',system-ui,sans-serif;font-weight:400;line-height:1.85;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:rgba(255,94,58,.35);color:#fff}
+a{color:var(--gold)}
+.wrap{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:0 24px}
+
+/* background glows + cursor */
+.glow{position:fixed;pointer-events:none;z-index:0;border-radius:50%;animation:glow 6s ease-in-out infinite}
+.glow.a{top:-260px;right:8%;width:900px;height:700px;background:radial-gradient(ellipse,rgba(255,94,58,.26),transparent 62%)}
+.glow.b{top:45vh;left:-220px;width:700px;height:700px;background:radial-gradient(circle,rgba(94,234,212,.13),transparent 62%);animation-delay:-3s}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+.cursor{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(255,122,77,.20),rgba(255,181,71,.07) 35%,transparent 65%);opacity:0;transition:opacity .5s;will-change:transform}
+.cursor.on{opacity:1}
+
+/* top */
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:28px 0 0}
+.pill{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-size:.88rem;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);transition:.3s var(--ease)}
+.pill:hover{border-color:rgba(255,181,71,.6);background:rgba(255,181,71,.08)}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.24em;color:var(--dim)}
+
+/* hero */
+.hero{text-align:center;padding:70px 0 40px;display:flex;flex-direction:column;align-items:center;gap:26px}
+.badge{font-family:var(--mono);font-size:.78rem;letter-spacing:.2em;padding:8px 16px;border-radius:999px;background:rgba(255,94,58,.12);color:var(--gold);border:1px solid rgba(255,94,58,.35)}
+h1{font-size:clamp(2.8rem,8.4vw,5.8rem);line-height:1.12;font-weight:800;letter-spacing:-.02em;perspective:600px}
+.w{display:inline-block;opacity:0;transform-origin:bottom;animation:word .95s var(--ease) forwards}
+.w:nth-child(1){animation-delay:.05s}.w:nth-child(2){animation-delay:.18s}.w:nth-child(4){animation-delay:.31s}
+@keyframes word{from{opacity:0;transform:translateY(60%) rotateX(-70deg)}to{opacity:1;transform:none}}
+.grad{background:linear-gradient(90deg,var(--coral),var(--gold) 55%,var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{max-width:720px;font-size:clamp(1.02rem,2vw,1.2rem);font-weight:300;color:var(--muted)}
+.fade{opacity:0;animation:rise 1s var(--ease) .45s forwards}
+@keyframes rise{from{opacity:0;transform:translateY(46px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+
+/* hero shot */
+.shot-wrap{perspective:1400px;margin-top:10px}
+.shot{transform:rotateX(28deg) scale(.86) translateY(40px);transform-origin:center top;transition:transform 1.2s var(--ease)}
+.shot.flat{transform:none}
+.tilt{border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.55),rgba(255,255,255,.06) 40%,rgba(94,234,212,.4));
+  box-shadow:0 60px 140px -40px rgba(255,94,58,.45);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tilt:hover{box-shadow:0 70px 150px -30px rgba(255,94,58,.6)}
+.zoom{display:block;position:relative;overflow:hidden;width:100%;padding:0;border:0;background:none;border-radius:16px;cursor:zoom-in}
+.zoom img{display:block;width:100%;border-radius:16px}
+.shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);transform:translateX(120%);animation:sweep 3.4s ease-in-out 2s infinite}
+@keyframes sweep{from{transform:translateX(120%)}to{transform:translateX(-120%)}}
+
+/* sections */
+section{padding:110px 0 0}
+h2{font-size:clamp(1.9rem,4.4vw,2.9rem);font-weight:800;line-height:1.2;margin-bottom:26px}
+.rv{opacity:0;transform:translateY(46px) scale(.98);filter:blur(6px);transition:opacity 1s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}.rv.d5{transition-delay:.4s}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:210px;gap:16px}
+.tile{height:100%;border-radius:26px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  background:var(--card);border:1px solid var(--line);transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+.tile:hover{box-shadow:0 40px 90px -30px rgba(255,94,58,.5)}
+.tile .k{font-size:.95rem;color:var(--muted)}
+.tile .v{font-family:var(--mono);font-weight:700;font-size:3.6rem;line-height:1}
+.tile .s{font-size:.82rem;color:var(--dim)}
+.t-sales{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#1A120F,#0F0C0B);border-color:rgba(255,94,58,.25)}
+.t-sales .v{font-size:clamp(3.6rem,7vw,6rem);color:var(--gold);margin-top:10px}
+.t-ring{grid-row:span 2;align-items:center;text-align:center;background:linear-gradient(180deg,#0D1A18,#0A0F0E);border-color:rgba(94,234,212,.25)}
+.ring{position:relative;width:170px;height:170px}
+.ring svg{width:170px;height:170px;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:2.8rem}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--gold));transition:width 1.8s var(--ease)}
+.t-rep{grid-column:span 4;flex-direction:row;align-items:center;gap:36px;flex-wrap:wrap;background:linear-gradient(90deg,#1A0F12,#12131C 60%);border-color:rgba(255,94,58,.25)}
+.t-rep .v{font-size:4.4rem;color:var(--coral2)}
+.dots{flex:1 1 400px;display:grid;grid-template-columns:repeat(25,minmax(0,1fr));gap:7px}
+.dots span{aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.12);transform:scale(0);transition:transform .5s var(--ease)}
+.dots span.hot{background:var(--coral2);box-shadow:0 0 14px var(--coral)}
+.in .dots span{transform:scale(1)}
+.spark{width:100%;height:150px}
+.spark .ln{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 2.4s var(--ease) .3s}
+.in .spark .ln{stroke-dashoffset:0}
+.spark .pk{transform:scale(0);transform-box:fill-box;transform-origin:center;transition:transform .6s var(--ease) 2.4s}
+.in .spark .pk{transform:scale(1)}
+
+/* tour (sticky gallery) */
+.tour{display:flex;gap:44px;align-items:flex-start}
+.tour-text{flex:1 1 320px}
+.tstep{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:14px;opacity:.3;transform:translateX(-14px);transition:opacity .5s,transform .6s var(--ease)}
+.tstep.on{opacity:1;transform:none}
+.tstep .n{align-self:flex-start;font-family:var(--mono);font-size:.86rem;letter-spacing:.2em;color:var(--gold)}
+.tstep h3{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;line-height:1.3}
+.tstep p{font-size:1.06rem;font-weight:300;color:var(--muted)}
+.gbtn{align-self:flex-start;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-family:inherit;font-size:.9rem;cursor:pointer;transition:background .25s,transform .25s}
+.gbtn:hover{background:rgba(255,181,71,.18);transform:scale(1.05)}
+.tour-media{flex:1.4 1 480px;position:sticky;top:90px}
+.frame{position:relative;border-radius:26px;padding:12px;background:linear-gradient(140deg,rgba(255,94,58,.45),rgba(255,255,255,.05) 45%,rgba(94,234,212,.35));box-shadow:0 50px 120px -40px rgba(255,94,58,.4)}
+.stage{position:relative;aspect-ratio:1300/715;border-radius:16px;overflow:hidden;background:#0F0F16}
+.gimg{position:absolute;inset:0;padding:0;border:0;background:none;cursor:zoom-in;opacity:0;transform:scale(.94);filter:blur(10px);pointer-events:none;
+  transition:opacity .8s var(--ease),transform .9s var(--ease),filter .8s}
+.gimg.past{transform:scale(1.08)}
+.gimg.on{opacity:1;transform:none;filter:none;pointer-events:auto}
+.gimg img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.play{position:absolute;inset:0;display:grid;place-items:center}
+.play span{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:rgba(255,94,58,.9);color:#fff;font-size:1.6rem;box-shadow:0 0 0 12px rgba(255,94,58,.2)}
+.gfoot{display:flex;justify-content:space-between;align-items:center;padding:14px 6px 2px;font-family:var(--mono);font-size:.88rem}
+.gfoot .bar{flex:0 0 55%;height:4px}
+.gfoot .bar i{transition:width .6s var(--ease)}
+
+/* steps / problems / summary */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.step{padding:26px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.02);display:flex;flex-direction:column;gap:10px;transition:background .35s,border-color .35s,transform .35s var(--ease)}
+.step:hover{background:rgba(255,181,71,.07);border-color:rgba(255,181,71,.5);transform:translateY(-6px)}
+.step .n{font-family:var(--mono);font-weight:700;font-size:2.6rem;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+.step h4{font-size:1.12rem;font-weight:600}
+.step p{font-size:.95rem;font-weight:300;color:var(--muted)}
+.prob{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.pcard{position:relative;padding:28px;border-radius:24px;background:var(--card);border:1px solid var(--line);overflow:hidden;transition:transform .25s ease-out,box-shadow .4s;transform-style:preserve-3d}
+.pcard:hover{box-shadow:0 40px 90px -30px rgba(94,234,212,.35)}
+.pcard .tag{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;color:var(--mint)}
+.pcard h4{font-size:1.15rem;font-weight:700;margin:10px 0}
+.pcard p{font-size:.96rem;font-weight:300;color:var(--muted)}
+.pcard code{font-family:var(--mono);font-size:.88em;color:var(--gold)}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.scard{padding:26px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;gap:20px;align-items:flex-start;transition:border-color .35s,transform .35s var(--ease)}
+.scard:hover{border-color:rgba(255,181,71,.45);transform:translateY(-4px)}
+.scard .big{flex:0 0 auto;font-family:var(--mono);font-weight:700;font-size:1.7rem;color:var(--gold);direction:ltr;min-width:96px;text-align:center;line-height:1.3}
+.scard p{font-size:.97rem;font-weight:300;color:var(--muted)}
+.scard strong{color:var(--text);font-weight:600}
+.scard.wide{grid-column:1/-1}
+.recs{list-style:none;display:grid;gap:10px;margin-top:14px}
+.recs li{padding:12px 16px;border-radius:14px;background:rgba(255,181,71,.06);border:1px solid rgba(255,181,71,.18);font-size:.95rem;color:var(--muted)}
+.recs b{color:var(--gold);font-weight:600}
+
+/* marquee */
+.marq{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-top:110px}
+.marq div{display:flex;gap:60px;width:max-content;font-family:var(--mono);font-size:2.1rem;font-weight:700;color:rgba(243,239,232,.18);white-space:nowrap;animation:marq 24s linear infinite}
+.marq em{font-style:normal;color:var(--coral2)}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(50%)}}
+.src{font-size:.85rem;color:var(--dim);margin-top:18px}
+footer{padding:50px 0 60px;color:var(--dim);font-size:.86rem}
+footer a{text-decoration:none}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(5,5,9,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;opacity:0;pointer-events:none;transition:opacity .35s}
+.lb.open{opacity:1;pointer-events:auto}
+.lb-top,.lb-mid{display:flex;align-items:center;gap:16px;width:min(1200px,100%)}
+.lb-top{justify-content:space-between;font-size:1.1rem;font-weight:600}
+.lb-media{flex:1;min-width:0;display:flex;justify-content:center}
+.lb-media img,.lb-media video{max-width:100%;max-height:72vh;border-radius:14px;box-shadow:0 40px 120px -20px rgba(255,94,58,.45);animation:lbzoom .55s var(--ease) both}
+@keyframes lbzoom{from{opacity:0;transform:scale(.86) translateY(30px)}to{opacity:1;transform:none}}
+.cbtn{flex:0 0 52px;width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);color:var(--gold);font-size:1.4rem;cursor:pointer;transition:background .25s,transform .25s}
+.cbtn:hover{background:rgba(255,181,71,.2);transform:scale(1.08)}
+.cbtn.x{color:var(--text);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.thumbs{display:flex;gap:10px}
+.thumbs button{width:96px;height:54px;padding:0;border-radius:10px;overflow:hidden;border:2px solid transparent;background:none;cursor:pointer;opacity:.55;transition:.25s}
+.thumbs button.on{border-color:var(--gold);opacity:1}
+.thumbs img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+@media (max-width:900px){
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:190px}
+  .t-sales,.t-rep{grid-column:span 2}
+  .tour{flex-direction:column}
+  .tour-media{position:relative;top:0;order:-1;width:100%}
+  .tstep{min-height:auto;padding:26px 0;opacity:1;transform:none}
 }
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(58rem 34rem at 86% -10%,rgba(59,107,255,.17),transparent 62%),
-    radial-gradient(50rem 30rem at 2% 20%,rgba(27,63,204,.28),transparent 60%),
-    radial-gradient(44rem 28rem at 60% 105%,rgba(0,184,169,.07),transparent 62%);
+@media (max-width:560px){
+  .bento{grid-template-columns:1fr;grid-auto-rows:auto}
+  .t-sales,.t-rep,.t-ring{grid-column:auto;grid-row:auto}
+  .tile{min-height:190px}
+  .t-sales .spark{height:110px}
+  .dots{grid-template-columns:repeat(20,minmax(0,1fr));gap:5px}
+  .cbtn{flex-basis:44px;width:44px;height:44px}
+  .thumbs button{width:72px;height:42px}
 }
-::selection{background:rgba(59,107,255,.35);color:#fff}
-.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
-
-.top{padding:34px 0 0}
-.back{
-  display:inline-flex;align-items:center;gap:9px;color:var(--muted);
-  text-decoration:none;font-size:.86rem;border:1px solid var(--line);
-  border-radius:999px;padding:7px 16px;transition:.25s;
-}
-.back:hover{color:var(--text);border-color:rgba(59,107,255,.55)}
-
-.hero{padding:56px 0 30px}
-.eyebrow{
-  font-family:var(--mono);font-size:.73rem;letter-spacing:.16em;
-  color:var(--ac-light);text-transform:uppercase;margin-bottom:20px;
-}
-h1{
-  font-family:var(--display);font-size:clamp(2.1rem,5.6vw,3.6rem);
-  font-weight:600;line-height:1.25;letter-spacing:-.01em;margin-bottom:22px;
-}
-h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lede{font-size:clamp(1.02rem,2.1vw,1.16rem);color:#C3CCE8;max-width:66ch}
-.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}
-.tag{font-family:var(--mono);font-size:.75rem;color:var(--muted);
-  border:1px solid var(--line);border-radius:6px;padding:5px 12px}
-
-.stats{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:1px;background:var(--line);border:1px solid var(--line);
-  border-radius:14px;overflow:hidden;margin:46px 0 8px;
-}
-.stat{background:var(--panel);padding:26px 22px}
-.stat b{display:block;font-family:var(--mono);font-size:1.9rem;font-weight:500;
-  letter-spacing:-.02em;margin-bottom:5px;color:var(--ac-light)}
-.stat.alt b{color:var(--ac-pale)}
-.stat.teal b{color:var(--teal)}
-.stat.amber b{color:var(--amber)}
-.stat span{font-size:.83rem;color:var(--muted);line-height:1.6;display:block}
-
-section{padding:62px 0;border-top:1px solid var(--line);margin-top:56px}
-h2{font-family:var(--display);font-size:clamp(1.4rem,3vw,1.85rem);
-  font-weight:600;letter-spacing:-.01em;margin-bottom:10px}
-h2::before{content:"";display:block;width:46px;height:3px;border-radius:2px;
-  background:var(--grad);margin-bottom:18px}
-h3{font-size:1.06rem;font-weight:600;margin:34px 0 10px;color:#EEF2FD}
-p{margin-bottom:16px;color:#C3CCE8;max-width:70ch}
-strong{font-weight:600;color:#fff}
-code{font-family:var(--mono);font-size:.86em;color:var(--ac-pale)}
-
-/* steps */
-.steps{list-style:none;counter-reset:s;margin-top:26px}
-.steps li{counter-increment:s;display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
-.steps li:last-child{border-bottom:none}
-.steps li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  font-family:var(--mono);font-size:.82rem;background:rgba(59,107,255,.15);
-  color:var(--ac-light);border:1px solid rgba(59,107,255,.32)}
-.steps h4{font-size:1rem;font-weight:600;color:#EEF2FD;margin-bottom:4px}
-.steps p{margin-bottom:0;font-size:.97rem}
-
-/* problems */
-.dec{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:12px;padding:20px 22px;margin-bottom:14px;
-  position:relative;overflow:hidden;
-}
-.dec::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;
-  width:3px;background:var(--grad)}
-.dec .k{display:block;font-family:var(--mono);font-size:.7rem;
-  letter-spacing:.14em;color:var(--ac-light);margin-bottom:7px}
-.dec h4{font-size:1.02rem;font-weight:600;color:#EEF2FD;margin-bottom:8px}
-.dec p{margin-bottom:0;font-size:.96rem}
-
-/* dashboard viewer */
-.viewer{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:26px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:14px}
-.tb{font-family:'Tajawal',sans-serif;font-size:.9rem;color:var(--muted);background:transparent;
-  border:1px solid var(--line);border-radius:9px;padding:8px 16px;cursor:pointer;transition:.18s}
-.tb:hover{color:var(--text);border-color:rgba(59,107,255,.5)}
-.tb[aria-selected="true"]{background:var(--grad);color:#06122F;font-weight:600;border-color:transparent}
-figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0A1028}
-figure img,figure video{display:block;width:100%;height:auto}
-figcaption{padding:12px 16px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
-
-/* summary */
-.find{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-  padding:22px 24px 18px;margin-bottom:14px;position:relative;overflow:hidden}
-.find::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--grad)}
-.find .num{font-family:var(--mono);font-size:1.35rem;font-weight:500;color:var(--ac-light);display:block;margin-bottom:4px;direction:ltr;text-align:right}
-.find p{margin-bottom:0}
-.recs{margin:12px 0 0;padding-inline-start:20px;color:#C3CCE8}
-.recs li{margin-bottom:6px}
-.recs li::marker{color:var(--ac-light)}
-
-footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 0 56px;
-  color:var(--muted);font-size:.85rem}
-footer a{color:var(--ac-light);text-decoration:none}
-footer a:hover{text-decoration:underline}
-:focus-visible{outline:2px solid var(--ac);outline-offset:3px;border-radius:4px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:640px){
-  section{padding:46px 0;margin-top:38px}
-  .hero{padding:38px 0 18px}
-  .viewer{padding:14px}
+@media (hover:none){.cursor{display:none}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .w,.fade,.rv{opacity:1;transform:none;filter:none}
+  .shot{transform:none}
+  .dots span,.spark .pk{transform:none}
+  .spark .ln{stroke-dashoffset:0}
 }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="glow a" aria-hidden="true"></div>
+<div class="glow b" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <div class="top">
-    <a class="back" href="index.html">→ العودة إلى الملف التعريفي</a>
+<div class="wrap">
+  <div class="top fade">
+    <a class="pill" href="index.html">→ العودة إلى الملف التعريفي</a>
+    <span class="eyebrow">CASE STUDY · SALES ANALYTICS</span>
   </div>
 
   <header class="hero">
-    <div class="eyebrow">Sales Analytics · Power BI</div>
-    <h1>لوحة مبيعات <span class="g">متجر Olist</span></h1>
-    <p class="lede">
+    <span class="badge fade">SALES ANALYTICS · POWER BI</span>
+    <h1><span class="w">لوحة</span> <span class="w">مبيعات</span><br><span class="w grad">متجر Olist</span></h1>
+    <p class="lede fade">
       اخترت بيانات متجر <strong>Olist</strong>، وهو متجر إلكتروني برازيلي نشر بيانات حوالي 100 ألف طلب حقيقي بين 2016 و2018.
       البيانات مقسمة على أكثر من جدول، فكانت فرصة أتعلم فيها الربط بين الجداول بشكل واقعي.
       الهدف هو إبراز مهارات التحليل لدي لبيانات المبيعات.
     </p>
-    <div class="tags">
-      <span class="tag">Power BI</span>
-      <span class="tag">Power Query</span>
-      <span class="tag">DAX</span>
-    </div>
   </header>
 
-  <div class="stats">
-    <div class="stat"><b>13.22M</b><span>إجمالي المبيعات (BRL)</span></div>
-    <div class="stat alt"><b>96.5K</b><span>طلب واصل للعميل</span></div>
-    <div class="stat teal"><b>93%</b><span>من الطلبات توصل في موعدها</span></div>
-    <div class="stat amber"><b>3%</b><span>بس من العملاء رجعوا وطلبوا</span></div>
+  <div class="shot-wrap fade">
+    <div class="shot" id="heroShot">
+      <div class="tilt" data-tilt="7">
+        <button type="button" class="zoom" data-open="0" aria-label="تكبير صورة اللوحة">
+          <img src="olist-dashboard.png" alt="لوحة مبيعات Olist كاملة: كروت المؤشرات، خط المبيعات الشهري، الخريطة، أعلى الفئات، طرق الدفع، وأداء التوصيل">
+          <span class="shine" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- ============ اللوحة ============ -->
+  <!-- ============ الأرقام ============ -->
   <section>
-    <h2>اللوحة</h2>
-    <div class="viewer">
-      <div class="tabs" role="tablist" aria-label="عرض اللوحة">
-        <button class="tb" type="button" role="tab" data-v="0" aria-selected="true">اللوحة كاملة</button>
-        <button class="tb" type="button" role="tab" data-v="1" aria-selected="false">بعد الفلترة</button>
-        <button class="tb" type="button" role="tab" data-v="2" aria-selected="false">فيديو التفاعل</button>
+    <h2 class="rv">الأرقام <span style="color:var(--gold)">بلمحة</span></h2>
+    <div class="bento" id="bento">
+      <div class="rv d1 t-sales tile" data-tilt="9">
+        <div>
+          <div class="k">إجمالي المبيعات</div>
+          <div class="v" data-count="13.22" data-dec="2" data-suf="M">0</div>
+          <div class="s" style="font-family:var(--mono)">BRL · 2016 – 2018</div>
+        </div>
+        <svg class="spark" viewBox="0 0 600 160" aria-hidden="true">
+          <defs><linearGradient id="sp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5E3A" stop-opacity=".45"/><stop offset="1" stop-color="#FF5E3A" stop-opacity="0"/></linearGradient></defs>
+          <path id="spArea" fill="url(#sp)"/>
+          <path id="spLine" class="ln" fill="none" stroke="#FF7A4D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="spPeak" class="pk" r="8" fill="#FFB547"/>
+        </svg>
+        <div class="s" style="color:var(--muted)">النقطة الذهبية: نوفمبر 2017، نمو 52% بسبب البلاك فرايدي</div>
       </div>
 
-      <figure class="pv" data-v="0">
-        <img src="olist-dashboard.png" alt="لوحة مبيعات Olist كاملة: كروت المؤشرات، خط المبيعات الشهري، الخريطة، أعلى الفئات، طرق الدفع، وأداء التوصيل" loading="lazy">
-        <figcaption>اللوحة بدون فلاتر، لكل البيانات من 2016 إلى 2018.</figcaption>
-      </figure>
-      <figure class="pv" data-v="1" hidden>
-        <img src="olist-filtered.png" alt="اللوحة بعد اختيار سنة 2017 وولاية GO" loading="lazy">
-        <figcaption>بعد اختيار سنة 2017 وولاية GO: كل الأرقام والرسومات تتحدث لهالاختيار.</figcaption>
-      </figure>
-      <figure class="pv" data-v="2" hidden>
-        <video src="olist-demo.mp4" poster="olist-demo-poster.jpg" controls muted playsinline preload="none"></video>
-        <figcaption>فلاتر السنة والولاية وهي تغير اللوحة كاملة.</figcaption>
-      </figure>
+      <div class="rv d2 tile" data-tilt="12">
+        <div class="k">طلب واصل للعميل</div>
+        <div class="v" data-count="96.5" data-dec="1" data-suf="K">0</div>
+        <div class="s" style="color:var(--mint)">متوسط الطلب 137 BRL</div>
+      </div>
+
+      <div class="rv d3 t-ring tile" data-tilt="10">
+        <div class="k">توصل في موعدها</div>
+        <div class="ring">
+          <svg viewBox="0 0 140 140" aria-hidden="true">
+            <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="12"/>
+            <circle id="ringArc" cx="70" cy="70" r="54" fill="none" stroke="#5EEAD4" stroke-width="12" stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+          </svg>
+          <b data-count="93" data-dec="0" data-suf="%">0%</b>
+        </div>
+        <div class="s" style="line-height:1.7">ونص الطلبات توصل<br>خلال 10 أيام</div>
+      </div>
+
+      <div class="rv d4 tile" data-tilt="12">
+        <div class="k">يدفعون بالبطاقة الائتمانية</div>
+        <div class="v" data-count="78" data-dec="0" data-suf="%">0%</div>
+        <div class="bar"><i id="cardBar"></i></div>
+      </div>
+
+      <div class="rv d5 t-rep tile" data-tilt="4">
+        <div style="flex:0 0 300px;max-width:100%">
+          <div class="k">العملاء اللي رجعوا وطلبوا</div>
+          <div class="v" data-count="3" data-dec="0" data-suf="%">0%</div>
+          <div class="s" style="font-size:.92rem;color:var(--muted);line-height:1.8">من كل 100 عميل، 3 بس رجعوا. وهذي أكبر نقطة ضعف للمتجر.</div>
+        </div>
+        <div class="dots" id="dots" role="img" aria-label="3 من كل 100 عميل رجعوا وطلبوا"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ جولة في اللوحة ============ -->
+  <section>
+    <h2 class="rv">جولة في <span style="color:var(--gold)">اللوحة</span></h2>
+    <div class="tour">
+      <div class="tour-text">
+        <div class="tstep on" data-step="0">
+          <span class="n" dir="ltr">01 / 03</span>
+          <h3>اللوحة كاملة</h3>
+          <p>اللوحة بدون فلاتر، لكل البيانات من 2016 إلى 2018: المبيعات، والطلبات، والعملاء، والتوصيل في شاشة وحدة.</p>
+          <button type="button" class="gbtn" data-open="0">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="1">
+          <span class="n" dir="ltr">02 / 03</span>
+          <h3>بعد الفلترة</h3>
+          <p>بعد اختيار سنة 2017 وولاية GO: كل الأرقام والرسومات تتحدث لهالاختيار.</p>
+          <button type="button" class="gbtn" data-open="1">تكبير الصورة ↖</button>
+        </div>
+        <div class="tstep" data-step="2">
+          <span class="n" dir="ltr">03 / 03</span>
+          <h3>فيديو التفاعل</h3>
+          <p>فلاتر السنة والولاية وهي تغير اللوحة كاملة.</p>
+          <button type="button" class="gbtn" data-open="2">تشغيل الفيديو ▶</button>
+        </div>
+      </div>
+      <div class="tour-media">
+        <div class="frame">
+          <div class="stage">
+            <button type="button" class="gimg on" data-g="0" data-open="0" aria-label="تكبير: اللوحة كاملة"><img src="olist-dashboard.png" alt="اللوحة كاملة" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="1" data-open="1" aria-label="تكبير: بعد الفلترة"><img src="olist-filtered.png" alt="اللوحة بعد اختيار سنة 2017 وولاية GO" loading="lazy"></button>
+            <button type="button" class="gimg" data-g="2" data-open="2" aria-label="تشغيل فيديو التفاعل"><img src="olist-demo-poster.jpg" alt="فيديو التفاعل" loading="lazy"><span class="play"><span>▶</span></span></button>
+          </div>
+          <div class="gfoot"><span id="gCount" dir="ltr">01 / 03</span><div class="bar"><i id="gProg" style="width:33.3%"></i></div></div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ============ خطوات العمل ============ -->
   <section>
-    <h2>خطوات العمل</h2>
-    <ol class="steps">
-      <li><div><h4>تنظيف البيانات في Power Query</h4>
-        <p>صححت أنواع الأعمدة، وشلت المسافات الزايدة، ووحدت أسماء المدن اللي كانت مكتوبة بطريقتين، وخليت بس الطلبات اللي وصلت للعميل.</p></div></li>
-      <li><div><h4>دمج الجداول وإلحاقها</h4>
-        <p>جبت الترجمة الإنجليزية لفئات المنتجات بالدمج (Merge)، وسويت جدول للولايات بالإلحاق (Append).</p></div></li>
-      <li><div><h4>بناء العلاقات</h4>
-        <p>ربطت 8 جداول بعلاقات One to Many.</p></div></li>
-      <li><div><h4>الأعمدة المحسوبة</h4>
-        <p>سويت عمود لأيام التوصيل، وعمود يحدد هل الطلب وصل متأخر ولا في موعده.</p></div></li>
-      <li><div><h4>مقاييس DAX</h4>
-        <p>المبيعات، عدد الطلبات، متوسط قيمة الطلب، نسبة التأخير، نسبة العملاء المتكررين.</p></div></li>
-      <li><div><h4>جدول التواريخ</h4>
-        <p>سويته عشان أحسب نمو المبيعات من شهر لشهر.</p></div></li>
-      <li><div><h4>تصميم اللوحة</h4>
-        <p>خليتها تفاعلية بفلاتر السنة والولاية، ولما تضغط على أي مدينة في الخريطة تتغير كل الأرقام لها.</p></div></li>
-    </ol>
+    <h2 class="rv">خطوات <span style="color:var(--mint)">العمل</span></h2>
+    <div class="steps">
+      <div class="step rv d1"><span class="n">01</span><h4>تنظيف البيانات في Power Query</h4><p>صححت أنواع الأعمدة، وشلت المسافات الزايدة، ووحدت أسماء المدن اللي كانت مكتوبة بطريقتين، وخليت بس الطلبات اللي وصلت للعميل.</p></div>
+      <div class="step rv d2"><span class="n">02</span><h4>دمج الجداول وإلحاقها</h4><p>جبت الترجمة الإنجليزية لفئات المنتجات بالدمج (Merge)، وسويت جدول للولايات بالإلحاق (Append).</p></div>
+      <div class="step rv d3"><span class="n">03</span><h4>بناء العلاقات</h4><p>ربطت 8 جداول بعلاقات One to Many.</p></div>
+      <div class="step rv d4"><span class="n">04</span><h4>الأعمدة المحسوبة</h4><p>سويت عمود لأيام التوصيل، وعمود يحدد هل الطلب وصل متأخر ولا في موعده.</p></div>
+      <div class="step rv d1"><span class="n">05</span><h4>مقاييس DAX</h4><p>المبيعات، عدد الطلبات، متوسط قيمة الطلب، نسبة التأخير، نسبة العملاء المتكررين.</p></div>
+      <div class="step rv d2"><span class="n">06</span><h4>جدول التواريخ</h4><p>سويته عشان أحسب نمو المبيعات من شهر لشهر.</p></div>
+      <div class="step rv d3"><span class="n">07</span><h4>تصميم اللوحة</h4><p>خليتها تفاعلية بفلاتر السنة والولاية، ولما تضغط على أي مدينة في الخريطة تتغير كل الأرقام لها.</p></div>
+    </div>
   </section>
 
   <!-- ============ المشاكل ============ -->
   <section>
-    <h2>مشاكل واجهتني وكيف حليتها</h2>
-
-    <div class="dec">
-      <span class="k">المشكلة الأولى</span>
-      <h4>عدد العملاء طلع أكبر من الحقيقي</h4>
-      <p>لأن الفلتر يمشي من جدول العملاء للطلبات، مو العكس. فالعملاء اللي طلباتهم ملغية كانوا ينحسبون. حليتها بدمج <code>Inner</code> يخلي بس العملاء اللي عندهم طلبات واصلة.</p>
-    </div>
-
-    <div class="dec">
-      <span class="k">المشكلة الثانية</span>
-      <h4>نفس المدينة مكتوبة بطريقتين</h4>
-      <p>لقيت مدن مكتوبة مرة بالعلامات البرتغالية ومرة بدونها، مثل <code>são paulo</code> و <code>sao paulo</code>. لو ما توحدت، تنقسم مبيعات المدينة الوحدة على اسمين، وتطلع المدينة أصغر من حجمها الحقيقي في الخريطة والترتيب. وحدت الأسماء في Power Query بـ <code>Replace Values</code>، فصارت كل مدينة باسم واحد.</p>
-    </div>
-
-    <div class="dec">
-      <span class="k">المشكلة الثالثة</span>
-      <h4>أيام التوصيل فيها طلب أخذ 210 يوم</h4>
-      <p>هذا رفع المتوسط، فحسبت الوسيط بعد عشان أطلع رقم أصدق.</p>
+    <h2 class="rv">مشاكل واجهتني <span style="color:var(--gold)">وكيف حليتها</span></h2>
+    <div class="prob">
+      <div class="pcard rv d1" data-tilt="6">
+        <span class="tag">PROBLEM 01</span>
+        <h4>عدد العملاء طلع أكبر من الحقيقي</h4>
+        <p>لأن الفلتر يمشي من جدول العملاء للطلبات، مو العكس. فالعملاء اللي طلباتهم ملغية كانوا ينحسبون. حليتها بدمج <code>Inner</code> يخلي بس العملاء اللي عندهم طلبات واصلة.</p>
+      </div>
+      <div class="pcard rv d2" data-tilt="6">
+        <span class="tag">PROBLEM 02</span>
+        <h4>نفس المدينة مكتوبة بطريقتين</h4>
+        <p>لقيت مدن مكتوبة مرة بالعلامات البرتغالية ومرة بدونها، مثل <code>são paulo</code> و <code>sao paulo</code>. لو ما توحدت، تنقسم مبيعات المدينة الوحدة على اسمين، وتطلع المدينة أصغر من حجمها الحقيقي في الخريطة والترتيب. وحدت الأسماء في Power Query بـ <code>Replace Values</code>، فصارت كل مدينة باسم واحد.</p>
+      </div>
+      <div class="pcard rv d3" data-tilt="6">
+        <span class="tag">PROBLEM 03</span>
+        <h4>أيام التوصيل فيها طلب أخذ 210 يوم</h4>
+        <p>هذا رفع المتوسط، فحسبت الوسيط بعد عشان أطلع رقم أصدق.</p>
+      </div>
     </div>
   </section>
 
   <!-- ============ الملخص ============ -->
   <section>
-    <h2>الملخص</h2>
-
-    <div class="find">
-      <span class="num">13.22M BRL</span>
-      <p>إجمالي المبيعات <strong>13.22 مليون ريال برازيلي (BRL)</strong> من <strong>96.5 ألف</strong> طلب.</p>
-    </div>
-
-    <div class="find">
-      <span class="num">93%</span>
-      <p><strong>93%</strong> من الطلبات توصل في موعدها، ونص الطلبات توصل خلال <strong>10 أيام</strong>.</p>
-    </div>
-
-    <div class="find">
-      <span class="num">3%</span>
-      <p><strong>97%</strong> من العملاء طلبوا مرة وحدة بس، واللي رجعوا وطلبوا مرة ثانية نسبتهم <strong>3%</strong> بس، وهي نسبة قليلة. وهذي أكبر نقطة ضعف للمتجر، وتوصيتي برنامج ولاء أو عرض على الطلب الثاني.</p>
-    </div>
-
-    <div class="find">
-      <span class="num">+52%</span>
-      <p>أعلى نمو كان في <strong>نوفمبر 2017</strong> بزيادة <strong>52%</strong>، بسبب البلاك فرايدي.</p>
-    </div>
-
-    <div class="find">
-      <span class="num">watches_gifts</span>
-      <p>فئة الساعات والهدايا طلباتها مو الأكثر، بس جات ثانية في المبيعات لأن أسعارها عالية.</p>
-    </div>
-
-    <div class="find">
-      <span class="num">78%</span>
-      <p><strong>78%</strong> من العملاء يدفعون بالبطاقة الائتمانية، و<strong>18%</strong> بالـ boleto. وتوصيتي:</p>
-      <ul class="recs">
-        <li><strong>شراكة مع البنوك</strong> لعروض حصرية لحاملي البطاقات، لأنهم الأغلبية</li>
-        <li><strong>تقسيط بدون فوائد</strong> على المنتجات الغالية، عشان يشجع العميل يشتري أكثر</li>
-        <li><strong>كود خصم بعد أول طلب:</strong> استخدام القسائم (voucher) قليل جداً، فيقدر المتجر يرسل كود خصم للعميل بعد أول طلب. وهذا بعد يساعد في مشكلة إن 3% بس من العملاء يرجعون يطلبون</li>
-      </ul>
+    <h2 class="rv">الملخص</h2>
+    <div class="sum">
+      <div class="scard rv d1"><span class="big">13.22M</span><p>إجمالي المبيعات <strong>13.22 مليون ريال برازيلي (BRL)</strong> من <strong>96.5 ألف</strong> طلب.</p></div>
+      <div class="scard rv d2"><span class="big">93%</span><p><strong>93%</strong> من الطلبات توصل في موعدها، ونص الطلبات توصل خلال <strong>10 أيام</strong>.</p></div>
+      <div class="scard rv d1"><span class="big">3%</span><p><strong>97%</strong> من العملاء طلبوا مرة وحدة بس، واللي رجعوا وطلبوا مرة ثانية نسبتهم <strong>3%</strong> بس، وهي نسبة قليلة. وهذي أكبر نقطة ضعف للمتجر، وتوصيتي برنامج ولاء أو عرض على الطلب الثاني.</p></div>
+      <div class="scard rv d2"><span class="big">+52%</span><p>أعلى نمو كان في <strong>نوفمبر 2017</strong> بزيادة <strong>52%</strong>، بسبب البلاك فرايدي.</p></div>
+      <div class="scard rv d1"><span class="big" style="font-size:1.1rem">watches<br>_gifts</span><p>فئة الساعات والهدايا طلباتها مو الأكثر، بس جات ثانية في المبيعات لأن أسعارها عالية.</p></div>
+      <div class="scard rv d2 wide"><span class="big">78%</span>
+        <div>
+          <p><strong>78%</strong> من العملاء يدفعون بالبطاقة الائتمانية، و<strong>18%</strong> بالـ boleto. وتوصيتي:</p>
+          <ul class="recs">
+            <li><b>شراكة مع البنوك</b> لعروض حصرية لحاملي البطاقات، لأنهم الأغلبية</li>
+            <li><b>تقسيط بدون فوائد</b> على المنتجات الغالية، عشان يشجع العميل يشتري أكثر</li>
+            <li><b>كود خصم بعد أول طلب:</b> استخدام القسائم (voucher) قليل جداً، فيقدر المتجر يرسل كود خصم للعميل بعد أول طلب. وهذا بعد يساعد في مشكلة إن 3% بس من العملاء يرجعون يطلبون</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
+</div>
 
-  <!-- ============ الأدوات ============ -->
-  <section>
-    <h2>الأدوات</h2>
-    <div class="tags" style="margin-top:18px">
-      <span class="tag">Power BI</span>
-      <span class="tag">Power Query</span>
-      <span class="tag">DAX</span>
-    </div>
-    <p style="margin-top:22px;font-size:.88rem;color:var(--muted)">
-      مصدر البيانات: Brazilian E-Commerce Public Dataset by Olist — منشورة على Kaggle.
-    </p>
-  </section>
+<div class="marq" aria-hidden="true"><div>
+  <span>POWER BI</span><em>✦</em><span>POWER QUERY</span><em>✦</em><span>DAX</span><em>✦</em><span>DATA MODEL</span><em>✦</em>
+  <span>POWER BI</span><em>✦</em><span>POWER QUERY</span><em>✦</em><span>DAX</span><em>✦</em><span>DATA MODEL</span><em>✦</em>
+</div></div>
 
-  <footer>
-    <p style="margin:0">
-      وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات ·
-      <a href="index.html">بقية المشاريع</a>
-    </p>
-  </footer>
+<div class="wrap">
+  <p class="src">الأدوات: Power BI · Power Query · DAX — مصدر البيانات: Brazilian E-Commerce Public Dataset by Olist، منشورة على Kaggle.</p>
+  <footer>وهج الكبيري · أخصائية عمليات موارد بشرية وتحليل بيانات · <a href="index.html">بقية المشاريع</a></footer>
+</div>
 
+<!-- lightbox -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="عارض الصور" aria-hidden="true">
+  <div class="lb-top"><span id="lbTitle"></span><button type="button" class="cbtn x" id="lbClose" aria-label="إغلاق">×</button></div>
+  <div class="lb-mid">
+    <button type="button" class="cbtn" id="lbPrev" aria-label="السابقة">›</button>
+    <div class="lb-media" id="lbMedia"></div>
+    <button type="button" class="cbtn" id="lbNext" aria-label="التالية">‹</button>
+  </div>
+  <div class="thumbs" id="lbThumbs"></div>
 </div>
 
 <script>
 (function(){
-  document.querySelectorAll('.tb').forEach(function(t){
-    t.addEventListener('click',function(){
-      document.querySelectorAll('.tb').forEach(function(x){x.setAttribute('aria-selected','false');});
-      t.setAttribute('aria-selected','true');
-      document.querySelectorAll('.pv').forEach(function(p){
-        var show = p.dataset.v === t.dataset.v;
-        p.hidden = !show;
-        var v = p.querySelector('video');
-        if(v && !show){ v.pause(); }
-      });
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var G = [
+    {type:'img', src:'olist-dashboard.png', thumb:'olist-dashboard.png', title:'اللوحة كاملة'},
+    {type:'img', src:'olist-filtered.png', thumb:'olist-filtered.png', title:'بعد الفلترة: سنة 2017 وولاية GO'},
+    {type:'video', src:'olist-demo.mp4', thumb:'olist-demo-poster.jpg', title:'فيديو التفاعل'}
+  ];
+
+  /* cursor glow */
+  var cur = document.getElementById('cursor');
+  if (!reduce && matchMedia('(hover:hover)').matches) {
+    var tx=0, ty=0, cx=0, cy=0, raf=null;
+    addEventListener('mousemove', function(e){
+      tx=e.clientX; ty=e.clientY; cur.classList.add('on');
+      if(!raf) raf=requestAnimationFrame(loop);
     });
+    function loop(){ cx+=(tx-cx)*.18; cy+=(ty-cy)*.18; cur.style.transform='translate('+cx+'px,'+cy+'px)';
+      raf = (Math.abs(tx-cx)+Math.abs(ty-cy)>.5) ? requestAnimationFrame(loop) : null; }
+    document.addEventListener('mouseleave', function(){ cur.classList.remove('on'); });
+  }
+
+  /* 3D tilt */
+  if (!reduce && matchMedia('(hover:hover)').matches) {
+    document.querySelectorAll('[data-tilt]').forEach(function(el){
+      var max = +el.dataset.tilt || 8;
+      el.addEventListener('mousemove', function(e){
+        var r = el.getBoundingClientRect();
+        var px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+        el.style.transform='perspective(1100px) rotateX('+(-py*max).toFixed(2)+'deg) rotateY('+(px*max).toFixed(2)+'deg) scale(1.015)';
+      });
+      el.addEventListener('mouseleave', function(){ el.style.transform=''; });
+    });
+  }
+
+  /* hero shot flattens */
+  var hs = document.getElementById('heroShot');
+  setTimeout(function(){ hs.classList.add('flat'); }, reduce ? 0 : 650);
+
+  /* sparkline */
+  var vals=[112,234,359,341,489,422,482,555,607,648,988,726,925,826,983,996,987,866,896,854];
+  var W=600,H=150, pts=vals.map(function(v,i){return [i*(W/(vals.length-1)), H-(v/1000)*(H-14)-4];});
+  var line='M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L');
+  document.getElementById('spLine').setAttribute('d', line);
+  document.getElementById('spArea').setAttribute('d', line+' L'+W+' '+H+' L0 '+H+' Z');
+  var pk=document.getElementById('spPeak'); pk.setAttribute('cx',pts[10][0]); pk.setAttribute('cy',pts[10][1]);
+
+  /* dots */
+  var dots=document.getElementById('dots'), html='';
+  for (var i=0;i<100;i++){ html+='<span class="'+((i===12||i===47||i===81)?'hot':'')+'" style="transition-delay:'+(i*12)+'ms"></span>'; }
+  dots.innerHTML=html;
+
+  /* count up */
+  function countUp(el){
+    if (el.dataset.done) return; el.dataset.done=1;
+    var to=+el.dataset.count, dec=+el.dataset.dec, suf=el.dataset.suf||'', t0=performance.now(), dur=reduce?0:1700;
+    (function step(now){
+      var t=dur?Math.min(1,(now-t0)/dur):1, e=1-Math.pow(1-t,3);
+      el.textContent=(to*e).toFixed(dec)+suf;
+      if(t<1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  /* reveal on scroll */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el=e.target; el.classList.add('in'); io.unobserve(el);
+      el.querySelectorAll('[data-count]').forEach(countUp);
+      if (el.classList.contains('t-ring')) document.getElementById('ringArc').style.cssText='transition:stroke-dashoffset 1.8s cubic-bezier(.16,1,.3,1);stroke-dashoffset:'+(339.3*(1-.93));
+      if (el.querySelector('#cardBar')) document.getElementById('cardBar').style.width='78%';
+    });
+  },{threshold:.18});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  /* tour: sticky gallery */
+  var steps=[].slice.call(document.querySelectorAll('.tstep')), imgs=[].slice.call(document.querySelectorAll('.gimg'));
+  var gCount=document.getElementById('gCount'), gProg=document.getElementById('gProg');
+  function setActive(n){
+    steps.forEach(function(s,i){ s.classList.toggle('on', i===n); });
+    imgs.forEach(function(m,i){ m.classList.toggle('on', i===n); m.classList.toggle('past', i<n); });
+    gCount.textContent='0'+(n+1)+' / 0'+G.length; gProg.style.width=((n+1)/G.length*100)+'%';
+  }
+  var so=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) setActive(+e.target.dataset.step); });
+  },{rootMargin:'-45% 0px -45% 0px'});
+  steps.forEach(function(s){ so.observe(s); s.addEventListener('mouseenter', function(){ setActive(+s.dataset.step); }); });
+
+  /* lightbox */
+  var lb=document.getElementById('lb'), media=document.getElementById('lbMedia'), title=document.getElementById('lbTitle'), th=document.getElementById('lbThumbs'), idx=0, lastFocus=null;
+  th.innerHTML=G.map(function(g,i){ return '<button type="button" data-i="'+i+'" aria-label="'+g.title+'"><img src="'+g.thumb+'" alt=""></button>'; }).join('');
+  function show(i){
+    idx=(i+G.length)%G.length; var g=G[idx];
+    media.innerHTML = g.type==='video'
+      ? '<video src="'+g.src+'" poster="'+g.thumb+'" controls autoplay muted playsinline></video>'
+      : '<img src="'+g.src+'" alt="'+g.title+'">';
+    title.textContent=g.title;
+    th.querySelectorAll('button').forEach(function(b,j){ b.classList.toggle('on', j===idx); });
+  }
+  function open(i){ lastFocus=document.activeElement; show(i); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; document.getElementById('lbClose').focus(); }
+  function close(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; media.innerHTML=''; if(lastFocus) lastFocus.focus(); }
+  document.querySelectorAll('[data-open]').forEach(function(b){ b.addEventListener('click', function(){ open(+b.dataset.open); }); });
+  document.getElementById('lbClose').addEventListener('click', close);
+  document.getElementById('lbNext').addEventListener('click', function(){ show(idx+1); });
+  document.getElementById('lbPrev').addEventListener('click', function(){ show(idx-1); });
+  th.addEventListener('click', function(e){ var b=e.target.closest('button'); if(b) show(+b.dataset.i); });
+  lb.addEventListener('click', function(e){ if(e.target===lb) close(); });
+  addEventListener('keydown', function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape') close();
+    if(e.key==='ArrowLeft') show(idx+1);
+    if(e.key==='ArrowRight') show(idx-1);
   });
 })();
 </script>
