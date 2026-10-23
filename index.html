@@ -100,7 +100,7 @@
   .section-intro{color:var(--muted);max-width:620px;font-size:1.05rem;margin-bottom:56px}
 
   /* ---------- hero ---------- */
-  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding-top:120px}
+  .hero{min-height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding-top:120px}
   .hero .kicker{font-size:.9rem;letter-spacing:5px;color:var(--muted);text-transform:uppercase;margin-bottom:24px;
     opacity:0;animation:rise .9s .2s forwards}
   .hero-emblem{margin-bottom:-4px;opacity:0;filter:drop-shadow(0 0 18px rgba(255,150,80,.5));
@@ -117,7 +117,6 @@
   .hero .tagline{margin-top:34px;font-size:clamp(1rem,2.4vw,1.3rem);color:var(--muted);max-width:560px;
     opacity:0;animation:rise 1s 1.15s forwards}
   .hero .tagline b{color:var(--text);font-weight:500}
-  .hero-stats{display:flex;gap:clamp(26px,5vw,64px);margin-top:54px;opacity:0;animation:rise 1s 1.4s forwards}
   .hero-stats .stat{text-align:center}
   .hero-stats .num{font-family:var(--latin);font-size:clamp(1.7rem,4vw,2.3rem);font-weight:600;
     background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -225,6 +224,75 @@
   footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
   footer b{background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
 
+
+  /* ---------- hero v2 ---------- */
+  .roles{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:30px;font-size:clamp(1.05rem,2.6vw,1.45rem);
+    opacity:0;animation:rise 1s 1.05s forwards;flex-wrap:wrap}
+  .roles-pre{color:var(--muted)}
+  .roles-box{display:inline-flex;align-items:center;padding:8px 18px;border-radius:14px;background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.3);min-height:52px}
+  .roles-txt{font-weight:700;background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .roles-caret{width:2px;height:1.2em;margin-inline-start:6px;background:var(--cyan);animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero-line{margin-top:18px;color:var(--muted);font-size:clamp(.98rem,2vw,1.12rem);opacity:0;animation:rise 1s 1.2s forwards}
+  .hero-line b{color:var(--text);font-weight:600}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:30px;opacity:0;animation:rise 1s 1.3s forwards}
+  .cta{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:13px 26px;border-radius:999px;text-decoration:none;font-weight:600;font-size:.98rem;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,background .3s}
+  .cta.primary{color:#140A05;background:linear-gradient(90deg,#FF5E3A,#FFB547);box-shadow:0 14px 40px -14px rgba(255,94,58,.8)}
+  .cta.primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 20px 50px -14px rgba(255,94,58,.95)}
+  .cta.primary span{transition:transform .3s}.cta.primary:hover span{transform:translateX(-5px)}
+  .cta.ghost{color:var(--text);border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04)}
+  .cta.ghost:hover{border-color:var(--border-glow);background:rgba(255,181,71,.08);transform:translateY(-3px)}
+  .hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:46px;width:min(760px,100%);opacity:0;animation:rise 1s 1.45s forwards}
+  .hero-stats .hs{padding:20px 16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--border);backdrop-filter:blur(10px);transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .35s}
+  .hero-stats .hs:hover{transform:translateY(-5px);border-color:var(--border-glow)}
+  .hero-marq{width:100vw;overflow:hidden;margin-top:56px;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);opacity:0;animation:rise 1s 1.6s forwards}
+  .hero-marq div{display:flex;gap:44px;width:max-content;font-family:var(--latin);font-size:1.3rem;font-weight:600;color:rgba(243,239,232,.22);white-space:nowrap;animation:marq 26s linear infinite}
+  .hero-marq i{font-style:normal;color:var(--violet)}
+  @keyframes marq{from{transform:translateX(0)}to{transform:translateX(50%)}}
+
+  /* ---------- about v2 (bento) ---------- */
+  .ab-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;grid-auto-flow:row dense}
+  .ab-card{position:relative;padding:28px;border-radius:24px;background:rgba(255,255,255,.035);border:1px solid var(--border);overflow:hidden;
+    transition:transform .2s ease-out,border-color .4s,box-shadow .4s;transform-style:preserve-3d;will-change:transform}
+  .ab-card:hover{border-color:var(--border-glow);box-shadow:0 30px 70px -30px rgba(255,94,58,.5)}
+  .ab-k{display:block;font-family:var(--latin);font-size:.74rem;letter-spacing:.2em;color:var(--cyan);margin-bottom:14px;text-transform:uppercase}
+  .ab-card p{color:var(--muted);font-size:.98rem}
+  .ab-card p+p{margin-top:14px}
+  .ab-lead{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,rgba(255,94,58,.12),rgba(255,255,255,.02) 55%);border-color:rgba(255,94,58,.25)}
+  .ab-big{font-size:clamp(1.4rem,2.8vw,2rem)!important;line-height:1.5;font-weight:700;color:var(--text)!important;margin-bottom:18px}
+  .ab-big em{font-style:normal;background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ab-num{display:flex;flex-direction:column;justify-content:space-between}
+  .ab-n{font-family:var(--latin);font-weight:700;font-size:clamp(2.8rem,5vw,3.8rem);line-height:1;color:var(--cyan)}
+  .ab-mint .ab-n{color:var(--pink)}
+  .ab-mint{background:linear-gradient(180deg,rgba(94,234,212,.08),rgba(255,255,255,.02));border-color:rgba(94,234,212,.22)}
+  .ab-s{font-size:.86rem;color:var(--muted);margin-top:10px}
+  .ab-how{grid-column:span 2}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0 2px}
+  .flow span{font-size:.84rem;padding:6px 12px;border-radius:999px;background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);color:var(--text)}
+  .flow i{font-style:normal;color:var(--violet)}
+  .ab-path{grid-column:span 2}
+  .tl{list-style:none;position:relative;padding-inline-start:22px}
+  .tl::before{content:"";position:absolute;inset-block:6px;inset-inline-start:5px;width:2px;background:linear-gradient(var(--purple),var(--cyan),var(--pink));border-radius:2px}
+  .tl li{position:relative;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:10px 0}
+  .tl li::before{content:"";position:absolute;inset-inline-start:-22px;top:17px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--cyan);box-shadow:0 0 12px rgba(255,181,71,.6)}
+  .tl b{font-weight:600}
+  .tl span{color:var(--muted);font-size:.9rem;font-family:var(--latin)}
+  .ab-skills{grid-column:span 2}
+  .sk-group+.sk-group{margin-top:14px}
+  .sk-h{display:block;font-size:.82rem;color:var(--text);font-weight:600;margin-bottom:8px}
+  .ab-goal{grid-column:1/-1;display:flex;align-items:center;gap:20px;background:linear-gradient(90deg,rgba(255,94,58,.14),rgba(255,181,71,.06) 50%,rgba(94,234,212,.08));border-color:rgba(255,181,71,.3)}
+  .ab-goal p{font-size:clamp(1.15rem,2.6vw,1.6rem)!important;font-weight:700;color:var(--text)!important;line-height:1.6}
+  .ab-q{font-family:var(--latin);font-size:5rem;line-height:.6;background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent;flex:0 0 auto}
+  @media(max-width:860px){
+    .ab-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .ab-lead,.ab-how,.ab-path,.ab-skills{grid-column:1/-1}
+    .ab-lead{grid-row:auto}
+  }
+  @media(max-width:520px){
+    .ab-grid{grid-template-columns:1fr}
+    .hero-stats{grid-template-columns:1fr}
+  }
+
   /* ---------- cursor glow + tilt ---------- */
   .cursor{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;
     background:radial-gradient(circle,rgba(255,122,77,.18),rgba(255,181,71,.06) 35%,transparent 65%);opacity:0;transition:opacity .5s;will-change:transform}
@@ -253,7 +321,7 @@
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
     .reveal{opacity:1;transform:none}
-    .glow-name,.surname,.hero .kicker,.hero .tagline,.hero-stats,.scroll-cue,.hero-emblem{opacity:1}
+    .glow-name,.surname,.hero .kicker,.hero .tagline,.hero-stats,.scroll-cue,.hero-emblem,.roles,.hero-line,.hero-cta,.hero-marq{opacity:1}
   }
 </style>
 </head>
@@ -309,45 +377,77 @@
   </svg>
   <h1 class="glow-name">وهج</h1>
   <div class="surname">الكبيري</div>
-  <div class="hero-stats">
-    <div class="stat"><div class="num">+1600</div><div class="lab">موظف ضمن أنظمة أعمل عليها</div></div>
-    <div class="stat"><div class="num">4</div><div class="lab">أبحاث علمية منشورة</div></div>
-    <div class="stat"><div class="num">CS</div><div class="lab">ماجستير علوم حاسب</div></div>
+  <div class="roles" aria-live="polite">
+    <span class="roles-pre">أنا</span>
+    <span class="roles-box"><span class="roles-txt" id="roleTxt">أخصائية عمليات موارد بشرية</span><span class="roles-caret" aria-hidden="true"></span></span>
   </div>
+  <p class="hero-line">حيث تلتقي <b>الموارد البشرية</b> بـ<b>علم البيانات</b></p>
+  <div class="hero-cta">
+    <a class="cta primary" href="#projects">شوف مشاريعي <span aria-hidden="true">←</span></a>
+    <a class="cta ghost" href="#contact">تواصل معي</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hs"><div class="num" data-to="1600" data-pre="+">0</div><div class="lab">موظف ضمن أنظمة أعمل عليها</div></div>
+    <div class="hs"><div class="num" data-to="4">0</div><div class="lab">أبحاث علمية منشورة</div></div>
+    <div class="hs"><div class="num">CS</div><div class="lab">ماجستير علوم حاسب</div></div>
+  </div>
+  <div class="hero-marq" aria-hidden="true"><div>
+    <span>Power BI</span><i>✦</i><span>Python</span><i>✦</i><span>HR Analytics</span><i>✦</i><span>Machine Learning</span><i>✦</i><span>DAX</span><i>✦</i><span>Automation</span><i>✦</i>
+    <span>Power BI</span><i>✦</i><span>Python</span><i>✦</i><span>HR Analytics</span><i>✦</i><span>Machine Learning</span><i>✦</i><span>DAX</span><i>✦</i><span>Automation</span><i>✦</i>
+  </div></div>
 </header>
 
 <!-- ABOUT -->
 <section id="about">
   <div class="wrap">
     <span class="eyebrow reveal">عنّي</span>
-    <div class="about-grid">
-      <div class="about-main reveal">
-        <p class="about-lead">أخصائية عمليات موارد بشرية بخلفية في <em>علوم الحاسب والذكاء الاصطناعي</em>.</p>
-        <div class="about-body">
-          <p>عملت على إدارة ومعالجة بيانات رواتب لأكثر من 1600 موظف بدقة تشغيلية عالية، وتحليل بيانات الإجازات والعمل الإضافي لكشف الأنماط ودعم التخطيط. أحوّل البيانات التشغيلية إلى مؤشرات أداء واضحة تساعد الإدارة على اتخاذ قرارات أفضل.</p>
-          <p>بحكم دراستي للماجستير في علوم الحاسب والهندسة، أوظّف أدوات التحليل والتعلّم الآلي داخل مجال الموارد البشرية — من لوحات المعلومات في Power BI إلى نماذج التنبؤ بـ Python. وأسعى دائمًا إلى أتمتة العمليات اليدوية وتحويلها إلى أنظمة رقمية أسرع وأدق، كما لا أتوقّف عن تطوير مهاراتي ومواكبة الجديد في هذا المجال.</p>
-          <p>هدفي أن تكون كل قرارٍ في المنظمة مدعومًا برؤية واضحة من بياناتها.</p>
-        </div>
+    <div class="ab-grid">
+      <div class="ab-card ab-lead reveal" data-tilt>
+        <span class="ab-k">مين أنا</span>
+        <p class="ab-big">أخصائية عمليات موارد بشرية بخلفية في <em>علوم الحاسب والذكاء الاصطناعي</em>.</p>
+        <p>عملت على إدارة ومعالجة بيانات رواتب لأكثر من 1600 موظف بدقة تشغيلية عالية، وتحليل بيانات الإجازات والعمل الإضافي لكشف الأنماط ودعم التخطيط. أحوّل البيانات التشغيلية إلى مؤشرات أداء واضحة تساعد الإدارة على اتخاذ قرارات أفضل.</p>
       </div>
-      <aside class="about-side reveal">
-        <div class="panel">
-          <h4>المسار</h4>
-          <div class="row"><span>أخصائي عمليات موارد بشرية</span><span>2023 — الآن</span></div>
-          <div class="row"><span>ماجستير علوم وهندسة الحاسب</span><span>جامعة جدة</span></div>
-          <div class="row"><span>بكالوريوس علوم الحاسب</span><span>جامعة بيشة</span></div>
-        </div>
-        <div class="panel">
-          <h4>المهارات</h4>
-          <div class="chips">
-            <span class="chip">Python</span><span class="chip">Power BI</span>
-            <span class="chip">Excel متقدم</span><span class="chip">Pandas</span><span class="chip">NumPy</span>
-            <span class="chip">Data Analysis</span><span class="chip">Machine Learning</span><span class="chip">Deep Learning</span>
-            <span class="chip">AI Agent</span><span class="chip">HRIS / HRMS</span>
-            <span class="chip">Process Automation (RPA)</span>
-            <span class="chip">Data Visualization</span><span class="chip">KPI Dashboards</span><span class="chip">Business Intelligence</span>
-          </div>
-        </div>
-      </aside>
+
+      <div class="ab-card ab-num reveal" data-tilt>
+        <span class="ab-k">بيانات رواتب</span>
+        <div class="ab-n" data-to="1600" data-pre="+">0</div>
+        <span class="ab-s">موظف بدقة تشغيلية عالية</span>
+      </div>
+
+      <div class="ab-card ab-num ab-mint reveal" data-tilt>
+        <span class="ab-k">أبحاث منشورة</span>
+        <div class="ab-n" data-to="4">0</div>
+        <span class="ab-s">في التعلّم الآلي والعميق</span>
+      </div>
+
+      <div class="ab-card ab-how reveal" data-tilt>
+        <span class="ab-k">كيف أشتغل</span>
+        <p>بحكم دراستي للماجستير في علوم الحاسب والهندسة، أوظّف أدوات التحليل والتعلّم الآلي داخل مجال الموارد البشرية — من لوحات المعلومات في Power BI إلى نماذج التنبؤ بـ Python.</p>
+        <div class="flow" aria-hidden="true"><span>بيانات تشغيلية</span><i>←</i><span>تحليل</span><i>←</i><span>مؤشرات</span><i>←</i><span>قرار</span></div>
+        <p>وأسعى دائمًا إلى أتمتة العمليات اليدوية وتحويلها إلى أنظمة رقمية أسرع وأدق، كما لا أتوقّف عن تطوير مهاراتي ومواكبة الجديد في هذا المجال.</p>
+      </div>
+
+      <div class="ab-card ab-path reveal" data-tilt>
+        <span class="ab-k">المسار</span>
+        <ol class="tl">
+          <li><b>أخصائي عمليات موارد بشرية</b><span>2023 — الآن</span></li>
+          <li><b>ماجستير علوم وهندسة الحاسب</b><span>جامعة جدة</span></li>
+          <li><b>بكالوريوس علوم الحاسب</b><span>جامعة بيشة</span></li>
+        </ol>
+      </div>
+
+      <div class="ab-card ab-skills reveal" data-tilt>
+        <span class="ab-k">المهارات</span>
+        <div class="sk-group"><span class="sk-h">التحليل والبيانات</span><div class="chips"><span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">NumPy</span><span class="chip">Excel متقدم</span><span class="chip">Data Analysis</span><span class="chip">Data Visualization</span></div></div>
+        <div class="sk-group"><span class="sk-h">ذكاء الأعمال</span><div class="chips"><span class="chip">Power BI</span><span class="chip">KPI Dashboards</span><span class="chip">Business Intelligence</span></div></div>
+        <div class="sk-group"><span class="sk-h">الذكاء الاصطناعي</span><div class="chips"><span class="chip">Machine Learning</span><span class="chip">Deep Learning</span><span class="chip">AI Agent</span></div></div>
+        <div class="sk-group"><span class="sk-h">الموارد البشرية والأتمتة</span><div class="chips"><span class="chip">HRIS / HRMS</span><span class="chip">Process Automation (RPA)</span></div></div>
+      </div>
+
+      <div class="ab-card ab-goal reveal" data-tilt>
+        <span class="ab-q" aria-hidden="true">”</span>
+        <p>هدفي أن يكون كل قرارٍ في المنظمة مدعومًا برؤية واضحة من بياناتها.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -567,6 +667,25 @@ const io=new IntersectionObserver((es)=>es.forEach(e=>{
 }),{threshold:.14});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
+/* ---- hero roles + count-up ---- */
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var roles=['أخصائية عمليات موارد بشرية','محللة بيانات','باحثة في التعلّم الآلي','أحب أتمتة الشغل اليدوي'];
+  var el=document.getElementById('roleTxt');
+  if(el && !reduce){
+    var i=0,j=roles[0].length,del=true;
+    setTimeout(function tick(){
+      var w=roles[i];
+      if(del){ j--; el.textContent=w.slice(0,j); if(j<=0){del=false;i=(i+1)%roles.length;} setTimeout(tick,j<=0?300:35); }
+      else { j++; el.textContent=roles[i].slice(0,j); if(j>=roles[i].length){del=true;setTimeout(tick,2200);} else setTimeout(tick,70); }
+    },3000);
+  }
+  function count(n){ if(n.dataset.done)return; n.dataset.done=1; var to=+n.dataset.to, pre=n.dataset.pre||'', t0=performance.now(), d=reduce?0:1600;
+    (function st(now){ var t=d?Math.min(1,(now-t0)/d):1, e=1-Math.pow(1-t,3); n.textContent=pre+Math.round(to*e).toLocaleString('en-US'); if(t<1)requestAnimationFrame(st); })(t0); }
+  var o=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ count(e.target); o.unobserve(e.target);} });},{threshold:.4});
+  document.querySelectorAll('[data-to]').forEach(function(n){ o.observe(n); });
+})();
+
 /* ---- cursor glow + 3D tilt ---- */
 (function(){
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || !matchMedia('(hover:hover)').matches) return;
@@ -574,8 +693,8 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;cur.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);});
   function loop(){cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;cur.style.transform='translate('+cx+'px,'+cy+'px)';raf=(Math.abs(tx-cx)+Math.abs(ty-cy)>.5)?requestAnimationFrame(loop):null;}
   document.addEventListener('mouseleave',function(){cur.classList.remove('on');});
-  document.querySelectorAll('.card,.paper').forEach(function(el){
-    var max = el.classList.contains('paper') ? 3 : 7;
+  document.querySelectorAll('.card,.paper,.ab-card').forEach(function(el){
+    var max = el.classList.contains('paper') ? 3 : (el.classList.contains('ab-goal') ? 2 : 6);
     el.addEventListener('mousemove',function(e){var r=el.getBoundingClientRect();var px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
       el.classList.add('tilting');el.style.transform='perspective(1100px) rotateX('+(-py*max).toFixed(2)+'deg) rotateY('+(px*max).toFixed(2)+'deg) translateY(-6px)';});
     el.addEventListener('mouseleave',function(){el.style.transform='';setTimeout(function(){el.classList.remove('tilting');},250);});
