@@ -6,7 +6,7 @@
 <title>وهج الكبيري — حيث تلتقي الموارد البشرية بعلم البيانات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#08090F;
@@ -22,8 +22,8 @@
     --text:#F3EFE8;
     --muted:#BDB6AB;
     --glow:linear-gradient(115deg,#FF5E3A 0%,#FFB547 52%,#5EEAD4 100%);
-    --display:'Alexandria',sans-serif;
-    --body:'Alexandria',sans-serif;
+    --display:'IBM Plex Sans Arabic',sans-serif;
+    --body:'IBM Plex Sans Arabic',sans-serif;
     --latin:'Space Grotesk',sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -107,7 +107,7 @@
     animation:rise 1s .25s forwards,pulse 5s 1.6s ease-in-out infinite}
   @keyframes pulse{0%,100%{filter:drop-shadow(0 0 14px rgba(255,94,58,.4))}
     50%{filter:drop-shadow(0 0 30px rgba(255,181,71,.7))}}
-  .glow-name{font-family:var(--display);font-weight:800;font-size:clamp(5rem,21vw,15rem);line-height:1.18;
+  .glow-name{font-family:var(--display);font-weight:700;font-size:clamp(5rem,21vw,15rem);line-height:1.18;
     padding:0 .12em .08em;position:relative;background:var(--glow);-webkit-background-clip:text;background-clip:text;color:transparent;
     opacity:0;animation:ignite 1.6s .35s cubic-bezier(.2,.7,.2,1) forwards}
   .glow-name::after{content:"وهج";position:absolute;inset:0;background:var(--glow);
@@ -323,6 +323,9 @@
     .reveal{opacity:1;transform:none}
     .glow-name,.surname,.hero .kicker,.hero .tagline,.hero-stats,.scroll-cue,.hero-emblem,.roles,.hero-line,.hero-cta,.hero-marq{opacity:1}
   }
+
+/* Arabic letters must stay connected on mobile */
+*{letter-spacing:normal!important}
 </style>
 </head>
 <body>
@@ -486,7 +489,6 @@
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
         0596889517
       </a>
-      <!-- لإضافة لينكدإن مستقبلاً: انسخي زر مثل هذا وضعي رابط حسابك -->
       <a class="clink-btn" href="https://www.linkedin.com/in/wahaj-alkebiri-15664a189" target="_blank" rel="noopener">
         <svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
         LinkedIn
@@ -498,10 +500,6 @@
 <footer>صُمّم بـ <b>وهج</b> ✦ © <span id="yr"></span> وهج الكبيري — جميع الحقوق محفوظة</footer>
 
 <script>
-/* =========================================================
-   منطقة التحديث السهل — لإضافة بحث أو مشروع جديد مستقبلاً
-   فقط أضيفي عنصرًا جديدًا داخل المصفوفة وسيظهر تلقائيًا.
-   ========================================================= */
 
 const RG = "https://www.researchgate.net/profile/Wahaj-Alkebiri";
 
